@@ -1,5 +1,7 @@
 #include <iostream>
 #include <string>
+#include <vector>
+#include "Player.h"
 
 #include "game.h"
 
@@ -18,19 +20,19 @@ int getNumberOfPlayers(){
 }
 
 //create the player objects and give them countries at random
-std::string * createPlayers(int numOfPlayers){
-
-  std::string * playerNameArray = new std::string[numOfPlayers];
+Player* createPlayers(int numOfPlayers)
+{
+	Player* playerArray = new Player[numOfPlayers];
 	
 	std::cin.ignore(256,'\n'); //clears input buffer
 	for(int a = 0; a < numOfPlayers; a = a + 1 )
-		{
+	{
 		std::cout << "What is the name of player " << a << "?" << std::endl;
-		getline( std::cin, playerNameArray[a]);
+		string name;
+		getline(std::cin, name);
+		playerArray[a].setName(name);
 	}
-	
-	return playerNameArray;
-	
+	return playerArray;
 }
 
 

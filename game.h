@@ -7,11 +7,12 @@
 #include "dice.h"
 
 #include <string>
+#include "Player.h"
 #include <cstdlib>
 
 class Game{
 public:
-  Game(int newNumOfPlayers, std::string * newPlayerNames);
+  Game(int newNumOfPlayers, Player* newPlayerNames);
   ~Game();
   int play();
   
@@ -31,7 +32,7 @@ private:
   Controller * controller;
   Dice * dice;
   Map * map;
-  std::string * playerNames;
+  Player* players;
   
   int numOfPlayers;
 
