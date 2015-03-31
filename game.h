@@ -5,13 +5,15 @@
 #include "textview.h"
 #include "game_utils.h"
 #include "dice.h"
-
+#include "Player.h"
 #include <string>
 #include <cstdlib>
+
 
 class Game{
 public:
   Game(int newNumOfPlayers, std::string * newPlayerNames);
+  Game(int newNumOfPlayers, Player * playaArray);
   ~Game();
   int play();
   
@@ -32,7 +34,7 @@ private:
   Dice * dice;
   Map * map;
   std::string * playerNames;
-  
   int numOfPlayers;
-
+  Player * playerArray;
+  Player currentPlayer;
 };
