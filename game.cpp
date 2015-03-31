@@ -2,6 +2,7 @@
 #include <sstream>
 #include <iostream>
 
+
 Game::Game(int newNumOfPlayers, std::string * newPlayerNames){
   numOfPlayers = newNumOfPlayers;
   playerNames = new std::string[numOfPlayers]();
@@ -43,9 +44,7 @@ int Game::play(){
 		fortify(playerIndex);
 		
 		playerTurns++;
-		playerIndex = playerTurns % numOfPlayers;
-
-		
+		playerIndex = playerTurns % numOfPlayers;	
 	}
   return 0;
 }
