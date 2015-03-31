@@ -2,23 +2,7 @@
 #include <sstream>
 #include <iostream>
 
-/*
-Game::Game(int newNumOfPlayers, std::string * newPlayerNames){
-  numOfPlayers = newNumOfPlayers;
-  playerNames = new std::string[numOfPlayers]();
-  for(int x = 0; x < numOfPlayers; x++){
-    playerNames[x] = newPlayerNames[x];
-  }
-  
-  map = new Map("../Resources/World.map"); ///home/pc/Desktop/Concordia 15-01/Comp345/345projectWorkingFolder/
-  //map->setupHardcodedMap();  
-  map->setupCountryOwners(numOfPlayers);
-  
-  textview = new TextView(*map);
-  controller = new Controller();
-  dice = new Dice();
-}
-*/
+
 Game::Game(int newNumOfPlayers, Player * playaArray){
 	numOfPlayers = newNumOfPlayers;
 	//playerNames = new std::string[numOfPlayers]();
