@@ -2,7 +2,7 @@
 #include <sstream>
 #include <iostream>
 
-
+/*
 Game::Game(int newNumOfPlayers, std::string * newPlayerNames){
   numOfPlayers = newNumOfPlayers;
   playerNames = new std::string[numOfPlayers]();
@@ -18,6 +18,24 @@ Game::Game(int newNumOfPlayers, std::string * newPlayerNames){
   controller = new Controller();
   dice = new Dice();
 }
+*/
+Game::Game(int newNumOfPlayers, Player * playaArray){
+	numOfPlayers = newNumOfPlayers;
+	//playerNames = new std::string[numOfPlayers]();
+	playerArray = new Player[numOfPlayers];
+
+	for (int x = 0; x < numOfPlayers; x++){
+		playerArray[x] = playaArray[x];
+	}
+
+	map = new Map("../Resources/World.map"); ///home/pc/Desktop/Concordia 15-01/Comp345/345projectWorkingFolder/
+	//map->setupHardcodedMap();  
+	map->setupCountryOwners(numOfPlayers);
+
+	textview = new TextView(*map);
+	controller = new Controller();
+	dice = new Dice();
+}
 
 Game::~Game(){
   delete map;
@@ -25,16 +43,24 @@ Game::~Game(){
   delete controller;
   delete dice;
   delete [] playerNames;
+  delete [] playerArray;
 }
 
 int Game::play(){
   int playerTurns = 0;
   int playerIndex = 0;
-  
+ 
 	//Main Game Loop
 	while(true){
+		 //Player currentPlayer;
+		  for (int i = 0; i < numOfPlayers; i++){
+			  if (playerArray[i].getPlayerIndex() == playerIndex){
+				  currentPlayer = playerArray[i];
+			  }
+		  }
+
 		map->notify();
-		textview->inform("Round " + intToString(playerTurns/numOfPlayers + 1) + " : " + playerNames[playerIndex] + " (player " + intToString(playerIndex)+ ")'s turn");
+		textview->inform("Round " + intToString(playerTurns/numOfPlayers + 1) + " : " + currentPlayer.getName()/*playerNames[playerIndex]*/ + " (player " + intToString(playerIndex)+ ")'s turn");
 		
 		//reinforce, attack and move are the 3 actions a given player can do during his turn
 		reinforce(playerIndex);
@@ -72,7 +98,7 @@ void Game::outputCountryList(std::list<std::string> countryList){
 
 void Game::fortify(int playerIndex){
 	std::string answer;
-	textview->prompt (playerNames[playerIndex] + ", would you like to make a fortification move (y/n)?");
+	textview->prompt (currentPlayer.getName() + ", would you like to make a fortification move (y/n)?");
 	answer = controller->getString();
 
 	if(answer == "n"){
@@ -155,7 +181,7 @@ void Game::reinforce(int playerNum){
   
   do{
     //Get the country to be reinforced
-    textview->inform(playerNames[playerNum] + ", you have " + intToString(bonusArmies) + " armies of reinforcements to distribute.");
+    textview->inform(currentPlayer.getName() + ", you have " + intToString(bonusArmies) + " armies of reinforcements to distribute.");
 
     textview->prompt("Please input the country you want to reinforce.");
     countryToReinforce = controller->getString();
@@ -190,9 +216,9 @@ void Game::attack(int playerNum){
   //Prompt whether the user wants to make an attack move.
   while(true){
     if(inString.compare("f") == 0){
-      textview->prompt(playerNames[playerNum] + ", would you like make an attack (y/n)?");
+      textview->prompt(currentPlayer.getName() + ", would you like make an attack (y/n)?");
     }else{
-      textview->prompt(playerNames[playerNum] + ", would you like to attack another country (y/n)?");
+		textview->prompt(currentPlayer.getName() + ", would you like to attack another country (y/n)?");
     }
     inString = controller->getString();
     
@@ -399,7 +425,13 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
    outString += " still ";
  }
  
- outString += " belongs to " + playerNames[map->getCountryOwnerIndex(defendingCountry)] + "\n";
+ Player defendingPlayer;
+ for (int i = 0; i < numOfPlayers; i++){
+	 if (playerArray[i].getPlayerIndex() == map->getCountryOwnerIndex(defendingCountry)){
+		 defendingPlayer = playerArray[i];
+	 }
+ }
+ outString += " belongs to " + defendingPlayer.getName() + "\n";
  
  textview->inform(outString);
   

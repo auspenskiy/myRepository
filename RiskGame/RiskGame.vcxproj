@@ -73,9 +73,9 @@
     <ClCompile Include="..\main.cpp" />
     <ClCompile Include="..\map.cpp" />
     <ClCompile Include="..\MapConfig.cpp" />
+    <ClCompile Include="..\Player.cpp" />
     <ClCompile Include="..\Territory.cpp" />
     <ClCompile Include="..\textview.cpp" />
-    <ClCompile Include="Player.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\continent.h" />
@@ -88,9 +88,9 @@
     <ClInclude Include="..\MapConfig.h" />
     <ClInclude Include="..\observable.h" />
     <ClInclude Include="..\observer.h" />
+    <ClInclude Include="..\Player.h" />
     <ClInclude Include="..\Territory.h" />
     <ClInclude Include="..\textview.h" />
-    <ClInclude Include="Player.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\World.map" />

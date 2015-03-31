@@ -1,5 +1,5 @@
 #include "map.h"
-
+#include "Player.h"
 #include <iostream>
 #include <sstream>
 #include <time.h>
@@ -78,7 +78,7 @@ void Map::setupCountryOwners(int numOfPlayers)
 {
 	int playerIndex = 0;
 	int countryIndex = 0;
-	
+	Player* player;
 	srand(time(NULL));   //Allows to generate unique numbers
 	
 	for(int i = 0;i< countryCount;i++){
