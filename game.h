@@ -37,4 +37,5 @@ private:
   int numOfPlayers;
   Player * playerArray;
   Player currentPlayer;
+  Player defendingPlayer;
 };
