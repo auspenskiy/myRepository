@@ -16,13 +16,15 @@ public:
   Game(int newNumOfPlayers, Player * playaArray);
   ~Game();
   int play();
+  Player findPlayerByIndex(int i);	//function to find a player using index
   
 private:
   void fortify(int playerNum);
   void reinforce(int playerNum);
   void attack(int playerNum);
   void battle(std::string attackingCountry, std::string defendingCountry);
-  
+  void displayStatistics();
+  void updateCountriesAndArmies();
   void outputCountryList(std::list<std::string> countryList);
   bool countryExistsAndFriendly(std::string country, int playerIndex);
     

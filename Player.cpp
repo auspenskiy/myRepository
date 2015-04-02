@@ -18,11 +18,11 @@ Player::~Player()
 }
 
 void Player::setArmiesOwned(int armiesOwned){
-	numArmiesOwned += armiesOwned;
+	numArmiesOwned = armiesOwned;
 }
 
 void Player::setCountriesOwned(int countriesOwned){
-	numCountriesOwned += countriesOwned;
+	numCountriesOwned = countriesOwned;
 }
 
 std::string Player::getName(){
