@@ -57,5 +57,4 @@ void Player::addPlayerIntoArray(Player p){
 
 int Player::getPlayerIndex(){
 	return playerIndex;
-	//return findElement(playersArray, 10, i);
 }

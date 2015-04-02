@@ -21,7 +21,6 @@ public:
   
   //MAP LOADING RELATED FUNCTIONS---------------------------------------
   void setupCountryOwners(int numOfPlayers);
-  //void setupCountryOwners(int numOfPlayers, Player * playerArray);
   void setupHardcodedMap();
   void setPlayerArrayInMap(Player * playerArray);
   //MAIN GAME USED FUNCTIONS-------------------------------------------

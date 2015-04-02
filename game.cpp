@@ -5,7 +5,6 @@
 
 Game::Game(int newNumOfPlayers, Player * playaArray){
 	numOfPlayers = newNumOfPlayers;
-	//playerNames = new std::string[numOfPlayers]();
 	playerArray = new Player[numOfPlayers];
 
 	for (int x = 0; x < numOfPlayers; x++){
@@ -40,15 +39,7 @@ int Game::play(){
 
 
 	while (true){
-		
-		/*
-		for (int i = 0; i < numOfPlayers; i++){
-			int index = playerArray[i].getPlayerIndex();
-				playerArray[i].setCountriesOwned(map->countCountriesOwned(index));
-				playerArray[i].setArmiesOwned(map->countArmiesOwned(index));
-		}
-		*/
-		
+
 		currentPlayer = findPlayerByIndex(playerIndex);
 		map->notify();
 		//updateCountriesAndArmies();
@@ -219,24 +210,12 @@ void Game::reinforce(int playerNum){
 
 
 void Game::attack(int playerNum){
-	std::string inString = "f";
-	//bool firstAttack = true;	//boolean to prompt user if he wants to continue attack
+	//std::string inString = "f";
 	std::string attackingCountry;
 	std::string defendingCountry;
 	std::list<std::string> enemyNeighbourList;
 
-	//Prompt whether the user wants to make an attack move.
-	//while (true){
-		/*
-		if (firstAttack == false){
-			textview->prompt(currentPlayer.getName() + ", would you like to attack another country (y/n)?");
-			inString = controller->getString();
-		}
-		if (inString.compare("n") == 0){
-			return;
-		}
-		*/
-		//firstAttack = false;
+
 		//GET THE ATTACKING COUNTRY************************************************************   
 		do{
 			do{
@@ -289,7 +268,7 @@ void Game::attack(int playerNum){
 
 		battle(attackingCountry, defendingCountry);
 
-	//}
+
 
 }//end ATTACK function
 

@@ -195,8 +195,7 @@ int Map::setCountryArmies(std::string countryName, int numOfArmies, bool updateM
   if (countryExists(countryName)){
     //get the actual country object and update it
     findElement(countries, countryCount, countryName).setArmies(numOfArmies);
-	//map_playerArray[findElement(countries, countryCount, countryName).getOwnerIndex()].setArmiesOwned(numOfArmies);
-	//findElement(countries, countryCount, countryName).getName
+
     //if the action doesn't have view updates disabled
     if (updateMap){
       //update all relevant observers of the change to the model
