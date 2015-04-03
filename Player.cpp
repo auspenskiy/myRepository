@@ -8,7 +8,6 @@ Player::Player(std::string aName)
 	battlesWon = 0;
 	numArmiesOwned = 0;
 	numCountriesOwned = 0;
-	totalPlayers++;
 }
 Player::Player(){
 }
@@ -52,7 +51,12 @@ int Player::getNumArmiesOwned(){
 int Player::getNumCountriesOwned(){
 	return numCountriesOwned;
 }
-void Player::addPlayerIntoArray(Player p){
+void Player::setBattlesWon(int victories){
+	battlesWon = victories;
+}
+
+void Player::setBattlesLost(int defeats){
+	battlesLost = defeats;
 }
 
 int Player::getPlayerIndex(){

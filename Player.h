@@ -16,8 +16,9 @@ public:
 	void setArmiesOwned(int armiesOwned);
 	void setCountriesOwned(int countriesOwned);
 	int getPlayerIndex();
-	Player * playersArray;
-	void addPlayerIntoArray(Player p);
+	void setBattlesWon(int victories);
+	void setBattlesLost(int defeats);
+	//virtual void statistics();
 private:
 	int battlesWon;
 	int battlesLost;

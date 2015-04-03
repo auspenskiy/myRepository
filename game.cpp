@@ -103,8 +103,6 @@ void Game::outputCountryList(std::list<std::string> countryList){
 	}
 }
 
-//void 
-
 void Game::fortify(int playerIndex){
 	std::string answer;
 
@@ -439,6 +437,6 @@ void Game::displayStatistics(){
 		string countriesOwned = intToString(playerArray[x].getNumCountriesOwned());
 		string armiesOwned = intToString(playerArray[x].getNumArmiesOwned());
 		string playerName = playerArray[x].getName();	
-		textview->inform(playerName + " owns " + armiesOwned + " armies across " + countriesOwned + " countries");
+		textview->inform(playerName + " owns " + armiesOwned + " armies across " + countriesOwned + " countries.");
 	}
 }

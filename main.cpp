@@ -10,8 +10,11 @@ int getNumberOfPlayers(){
   Controller controller;
   int numOfPlayers = 0;
   std::cout << "How many people are playing? " << std::endl;
+
+  do{
+	std::cout << "You need between 2 and 6 players" << std::endl;
   numOfPlayers = controller.getInt();
-    
+  } while (numOfPlayers < 2 || numOfPlayers > 6);
   return numOfPlayers;
 
 }
@@ -29,7 +32,6 @@ Player * createPlayerArray(int numOfPlayers){
 		Player* player = new Player(playerNameArray[a]);
 		player->setPlayerIndex(a);
 		playerArray[a] = *player;
-		//playerArray[a]->setPlayerIndex(a);
 	}
 	return playerArray;
 
