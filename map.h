@@ -36,6 +36,7 @@ public:
   int setCountryOwnerIndex(std::string countryName, int playerIndex, bool updateMap = true);
   int getCountryArmies(std::string countryName);
   int getCountryOwnerIndex(std::string countryName);
+  int getCountryCount();
   bool countryExists(std::string countryName);
 
   

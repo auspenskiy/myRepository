@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "country.h"
+
 class Player{
 public:
 	Player();
@@ -18,7 +19,7 @@ public:
 	int getPlayerIndex();
 	void setBattlesWon(int victories);
 	void setBattlesLost(int defeats);
-	//virtual void statistics();
+	std::string statistics();
 private:
 	int battlesWon;
 	int battlesLost;

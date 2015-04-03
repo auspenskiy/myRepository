@@ -84,6 +84,10 @@ void Map::updateCountriesAndArmies(){
 	}
 }
 
+int Map::getCountryCount(){
+	return countryCount;
+}
+
 //Assigns each player to own an equal number of randomly selected countries
 void Map::setupCountryOwners(int numOfPlayers)
 {

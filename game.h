@@ -37,6 +37,7 @@ private:
   Map * map;
   std::string * playerNames;
   int numOfPlayers;
+  int totalBattles;
   Player * playerArray;
   Player currentPlayer;
   Player defendingPlayer;

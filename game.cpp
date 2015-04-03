@@ -1,12 +1,11 @@
 #include "game.h"
 #include <sstream>
 #include <iostream>
-
-
 Game::Game(int newNumOfPlayers, Player * playaArray){
 	numOfPlayers = newNumOfPlayers;
+	totalBattles = 0;
 	playerArray = new Player[numOfPlayers];
-
+	
 	for (int x = 0; x < numOfPlayers; x++){
 		playerArray[x] = playaArray[x];
 	}
@@ -277,7 +276,11 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 	int lastAttackDice;
 	int attackingArmies = map->getCountryArmies(attackingCountry);
 	int defendingArmies = map->getCountryArmies(defendingCountry);
-
+	int attackerVictory = 0;
+	int attackerDefeat = 0;
+	int defenderVictory = 0;
+	int defenderDefeat = 0;
+	std:string defendingCountryCopy = defendingCountry;
 	std::string outString;
 	std::string inString;
 	int inInt;
@@ -298,20 +301,28 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 			if (dice->getFirstAttackDie() > dice->getFirstDefendDie()){
 				outString = "The attacker won ";
 				defendingArmies--;
+				attackerVictory++;
+				defenderDefeat++;
 			}
 			else{
 				outString = "The attacker lost ";
 				attackingArmies--;
+				defenderVictory++;
+				attackerDefeat++;
 			}
 			outString += "the first attack " + intToString(dice->getFirstAttackDie()) + ":" + intToString(dice->getFirstDefendDie());
 
 			if (dice->getSecondAttackDie() > dice->getSecondDefendDie()){
 				outString += "\nThe attacker won ";
 				defendingArmies--;
+				attackerVictory++;
+				defenderDefeat++;
 			}
 			else{
 				outString += "\nThe attacker lost ";
 				attackingArmies--;
+				defenderVictory++;
+				attackerDefeat++;
 			}
 			outString += "the second attack " + intToString(dice->getSecondAttackDie()) + ":" + intToString(dice->getSecondDefendDie());
 			lastAttackDice = dice->getSecondAttackDie();
@@ -319,15 +330,24 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 		else{
 			if (dice->getFirstAttackDie() > dice->getFirstDefendDie()){
 				outString = "The attacker won ";
+				attackerVictory++;
+				defenderDefeat++;
 				defendingArmies--;
 			}
 			else{
 				outString = "The attacker lost ";
 				attackingArmies--;
+				defenderVictory++;
+				attackerDefeat++;
 			}
 			outString += "the attack " + intToString(dice->getFirstAttackDie()) + ":" + intToString(dice->getFirstDefendDie());
 			lastAttackDice = dice->getFirstAttackDie();
 		}
+		//sets the number of victories and defeats and the multiple attacks
+		playerArray[map->getCountryOwnerIndex(attackingCountry)].setBattlesWon(attackerVictory);
+		playerArray[map->getCountryOwnerIndex(attackingCountry)].setBattlesLost(attackerDefeat);
+		playerArray[map->getCountryOwnerIndex(defendingCountry)].setBattlesLost(defenderDefeat);
+		playerArray[map->getCountryOwnerIndex(defendingCountry)].setBattlesWon(defenderVictory);
 
 		textview->inform(outString);
 
@@ -392,6 +412,9 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 		}
 	} while (continueBattle);
 
+
+
+
 	//Update the number of armies in the two countries before terminating the function
 	map->setCountryArmies(defendingCountry, defendingArmies, false);
 	map->setCountryArmies(attackingCountry, attackingArmies);
@@ -416,11 +439,14 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 			defendingPlayer = playerArray[i];
 		}
 	}
-	outString += " belongs to " + defendingPlayer.getName() + "\n";
 
+	outString += " belongs to " + defendingPlayer.getName() + "\n";
+	totalBattles++;
 	textview->inform(outString);
 	
 }//END battle function
+
+
 
 Player Game::findPlayerByIndex(int i){
 	Player _player;
@@ -434,9 +460,45 @@ Player Game::findPlayerByIndex(int i){
 
 void Game::displayStatistics(){
 	for (int x = 0; x < numOfPlayers; x++){
+		//various numbers used to calculate the percentages
 		string countriesOwned = intToString(playerArray[x].getNumCountriesOwned());
 		string armiesOwned = intToString(playerArray[x].getNumArmiesOwned());
 		string playerName = playerArray[x].getName();	
+		int totalCountries = map->getCountryCount();
+		int battlesWon = playerArray[x].getBattlesWon();
+		int battlesLost = playerArray[x].getBattlesLost();
+		int totalBattles = playerArray[x].getBattlesWon() + playerArray[x].getBattlesLost();
+		//scale is used to format output to 2 digits
+		double scale = 0.01;
+		double percentCountriesOwned = (double(playerArray[x].getNumCountriesOwned()) / double(totalCountries) * 100);
+		double roundedCountriesOwned = floor(percentCountriesOwned / scale + 0.5)*scale;
+		
+
+		//calculates percentage of battles won, not rounded 
+		double percentBattlesWon = (double(playerArray[x].getBattlesWon()) / double(totalBattles) * 100);
+		
+		double roundedBattlesWon = 0; 
+		//roundedBattlesWon is implemented this way to prevent an output error
+		//rounds the percentage of battles won
+		if (totalBattles != 0){
+			roundedBattlesWon = floor(percentBattlesWon / scale + 0.5)*scale;
+		}
+		//convert double to string for countries owned
+		std::ostringstream countries;
+		countries << roundedCountriesOwned;
+		std::string str = countries.str();
+		
+		//convert double to string for battles won
+		std::ostringstream battles;
+		battles << roundedBattlesWon;
+		std::string str2 = battles.str();
+
+		//output both percentage and the numbers
+		//error: sometimes the percentage is not right, i'll fix it later
+		textview->inform("--------------------------------------");
 		textview->inform(playerName + " owns " + armiesOwned + " armies across " + countriesOwned + " countries.");
+		textview->inform(playerName + " owns " + str + "% of the map (" + countriesOwned + "/" + intToString(totalCountries) + ").");
+		textview->inform(playerName + " won " + intToString(battlesWon) + " battles and lost " + intToString(battlesLost) + " battles.");
+		textview->inform(playerName + " won " + str2 + "% of the battles (" + intToString(battlesWon) + "/" + intToString(totalBattles) + ").");
 	}
 }
