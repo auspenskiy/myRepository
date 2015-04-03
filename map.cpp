@@ -74,7 +74,14 @@ int Map::computeContinentsBonuses(int playerIndex){
 
 void Map::setPlayerArrayInMap(Player * playerArray){
 	map_playerArray = playerArray;
+}
 
+void Map::updateCountriesAndArmies(){
+	for (int i = 0; i < numPlayers; i++){
+		int index = map_playerArray[i].getPlayerIndex();
+		map_playerArray[i].setCountriesOwned(countCountriesOwned(index));
+		map_playerArray[i].setArmiesOwned(countArmiesOwned(index));
+	}
 }
 
 //Assigns each player to own an equal number of randomly selected countries
@@ -99,6 +106,8 @@ void Map::setupCountryOwners(int numOfPlayers)
 		countries[countryIndex]->setOwnerIndex(playerIndex);
 		
 	}
+
+	numPlayers = numOfPlayers;
 }
 
 

@@ -12,8 +12,6 @@
 
 class MapView;
 
-//extern Player * playerArray;
-
 class Map: public Observable{
 public:
   Map(std::string mapFilePath);
@@ -27,7 +25,9 @@ public:
   int countCountriesOwned(int playerIndex);
   int countArmiesOwned(int playerIndex);
   int computeContinentsBonuses(int playerIndex);
-  
+
+  void updateCountriesAndArmies();
+
   std::list<std::string> getEnemyNeighbours(std::string &countryName, int playerIndex);
   std::list<std::string> getConnectedFriendlyCountries(std::string &startCountry, int playerIndex);
   
@@ -37,6 +37,8 @@ public:
   int getCountryArmies(std::string countryName);
   int getCountryOwnerIndex(std::string countryName);
   bool countryExists(std::string countryName);
+
+  
   
 //IMPLEMENTING OBSERVABLE FUNCTIONS-----------------------
   void attach(Observer & ob);
@@ -69,6 +71,7 @@ private:
   std::list<Observer*> * views;
   MapConfig mapIO;
   Player * map_playerArray;
+  int numPlayers;
 };
 
 std::ostream& operator<<(std::ostream& os, Map & outputMap);

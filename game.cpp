@@ -166,7 +166,6 @@ void Game::fortify(int playerIndex){
 	map->setCountryArmies(destinationCountry, map->getCountryArmies(destinationCountry) + numToMove);
 
 	textview->inform(intToString(numToMove) + " armies moved from " + sourceCountry + " to " + destinationCountry + ".");
-	updateCountriesAndArmies();
 }
 
 
@@ -205,7 +204,6 @@ void Game::reinforce(int playerNum){
 			textview->inform(countryToReinforce + " reinforced with " + intToString(numToReinforce) + " armies and now has " + intToString(map->getCountryArmies(countryToReinforce)) + " armies.");
 		}
 	} while (bonusArmies > 0);
-	updateCountriesAndArmies();
 }
 
 
@@ -423,16 +421,8 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 	outString += " belongs to " + defendingPlayer.getName() + "\n";
 
 	textview->inform(outString);
-	updateCountriesAndArmies();
+	
 }//END battle function
-
-void Game::updateCountriesAndArmies(){
-	for (int i = 0; i < numOfPlayers; i++){
-		int index = playerArray[i].getPlayerIndex();
-		playerArray[i].setCountriesOwned(map->countCountriesOwned(index));
-		playerArray[i].setArmiesOwned(map->countArmiesOwned(index));
-	}
-}
 
 Player Game::findPlayerByIndex(int i){
 	Player _player;
@@ -450,6 +440,5 @@ void Game::displayStatistics(){
 		string armiesOwned = intToString(playerArray[x].getNumArmiesOwned());
 		string playerName = playerArray[x].getName();	
 		textview->inform(playerName + " owns " + armiesOwned + " armies across " + countriesOwned + " countries");
-
 	}
 }
