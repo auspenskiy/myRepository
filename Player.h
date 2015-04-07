@@ -17,8 +17,8 @@ public:
 	void setArmiesOwned(int armiesOwned);
 	void setCountriesOwned(int countriesOwned);
 	int getPlayerIndex();
-	void setBattlesWon(int victories);
-	void setBattlesLost(int defeats);
+	void setBattlesWon();
+	void setBattlesLost();
 	std::string statistics();
 private:
 	int battlesWon;

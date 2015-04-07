@@ -280,7 +280,7 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 	int attackerDefeat = 0;
 	int defenderVictory = 0;
 	int defenderDefeat = 0;
-	std:string defendingCountryCopy = defendingCountry;
+	std::string defendingCountryCopy = defendingCountry;
 	std::string outString;
 	std::string inString;
 	int inInt;
@@ -301,28 +301,31 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 			if (dice->getFirstAttackDie() > dice->getFirstDefendDie()){
 				outString = "The attacker won ";
 				defendingArmies--;
-				attackerVictory++;
-				defenderDefeat++;
+				playerArray[map->getCountryOwnerIndex(attackingCountry)].setBattlesWon();
+				playerArray[map->getCountryOwnerIndex(defendingCountry)].setBattlesLost();
+				//attackerVictory++;
+				//defenderDefeat++;
+				//textview->prompt("att vic, def def");
 			}
 			else{
 				outString = "The attacker lost ";
 				attackingArmies--;
-				defenderVictory++;
-				attackerDefeat++;
+				playerArray[map->getCountryOwnerIndex(defendingCountry)].setBattlesWon();
+				playerArray[map->getCountryOwnerIndex(attackingCountry)].setBattlesLost();
 			}
 			outString += "the first attack " + intToString(dice->getFirstAttackDie()) + ":" + intToString(dice->getFirstDefendDie());
 
 			if (dice->getSecondAttackDie() > dice->getSecondDefendDie()){
 				outString += "\nThe attacker won ";
 				defendingArmies--;
-				attackerVictory++;
-				defenderDefeat++;
+				playerArray[map->getCountryOwnerIndex(attackingCountry)].setBattlesWon();
+				playerArray[map->getCountryOwnerIndex(defendingCountry)].setBattlesLost();
 			}
 			else{
 				outString += "\nThe attacker lost ";
 				attackingArmies--;
-				defenderVictory++;
-				attackerDefeat++;
+				playerArray[map->getCountryOwnerIndex(defendingCountry)].setBattlesWon();
+				playerArray[map->getCountryOwnerIndex(attackingCountry)].setBattlesLost();
 			}
 			outString += "the second attack " + intToString(dice->getSecondAttackDie()) + ":" + intToString(dice->getSecondDefendDie());
 			lastAttackDice = dice->getSecondAttackDie();
@@ -330,24 +333,20 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 		else{
 			if (dice->getFirstAttackDie() > dice->getFirstDefendDie()){
 				outString = "The attacker won ";
-				attackerVictory++;
-				defenderDefeat++;
 				defendingArmies--;
+				playerArray[map->getCountryOwnerIndex(attackingCountry)].setBattlesWon();
+				playerArray[map->getCountryOwnerIndex(defendingCountry)].setBattlesLost();
 			}
 			else{
 				outString = "The attacker lost ";
 				attackingArmies--;
-				defenderVictory++;
-				attackerDefeat++;
+				playerArray[map->getCountryOwnerIndex(defendingCountry)].setBattlesWon();
+				playerArray[map->getCountryOwnerIndex(attackingCountry)].setBattlesLost();
 			}
 			outString += "the attack " + intToString(dice->getFirstAttackDie()) + ":" + intToString(dice->getFirstDefendDie());
 			lastAttackDice = dice->getFirstAttackDie();
 		}
-		//sets the number of victories and defeats and the multiple attacks
-		playerArray[map->getCountryOwnerIndex(attackingCountry)].setBattlesWon(attackerVictory);
-		playerArray[map->getCountryOwnerIndex(attackingCountry)].setBattlesLost(attackerDefeat);
-		playerArray[map->getCountryOwnerIndex(defendingCountry)].setBattlesLost(defenderDefeat);
-		playerArray[map->getCountryOwnerIndex(defendingCountry)].setBattlesWon(defenderVictory);
+		
 
 		textview->inform(outString);
 
@@ -410,6 +409,8 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 			inString = controller->getString();
 			continueBattle = inString.compare("n") != 0;
 		}
+	
+
 	} while (continueBattle);
 
 
@@ -475,14 +476,15 @@ void Game::displayStatistics(){
 		
 
 		//calculates percentage of battles won, not rounded 
-		double percentBattlesWon = (double(playerArray[x].getBattlesWon()) / double(totalBattles) * 100);
-		
+		double percentBattlesWon = (double(battlesWon) / double(totalBattles) * 100);
 		double roundedBattlesWon = 0; 
 		//roundedBattlesWon is implemented this way to prevent an output error
 		//rounds the percentage of battles won
 		if (totalBattles != 0){
 			roundedBattlesWon = floor(percentBattlesWon / scale + 0.5)*scale;
 		}
+
+
 		//convert double to string for countries owned
 		std::ostringstream countries;
 		countries << roundedCountriesOwned;

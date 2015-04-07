@@ -51,12 +51,12 @@ int Player::getNumArmiesOwned(){
 int Player::getNumCountriesOwned(){
 	return numCountriesOwned;
 }
-void Player::setBattlesWon(int victories){
-	battlesWon += victories;
+void Player::setBattlesWon(){
+	battlesWon++;
 }
 
-void Player::setBattlesLost(int defeats){
-	battlesLost += defeats;
+void Player::setBattlesLost(){
+	battlesLost++;
 }
 
 int Player::getPlayerIndex(){
