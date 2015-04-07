@@ -276,11 +276,6 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 	int lastAttackDice;
 	int attackingArmies = map->getCountryArmies(attackingCountry);
 	int defendingArmies = map->getCountryArmies(defendingCountry);
-	int attackerVictory = 0;
-	int attackerDefeat = 0;
-	int defenderVictory = 0;
-	int defenderDefeat = 0;
-	std::string defendingCountryCopy = defendingCountry;
 	std::string outString;
 	std::string inString;
 	int inInt;
@@ -303,9 +298,6 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 				defendingArmies--;
 				playerArray[map->getCountryOwnerIndex(attackingCountry)].setBattlesWon();
 				playerArray[map->getCountryOwnerIndex(defendingCountry)].setBattlesLost();
-				//attackerVictory++;
-				//defenderDefeat++;
-				//textview->prompt("att vic, def def");
 			}
 			else{
 				outString = "The attacker lost ";
