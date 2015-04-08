@@ -35,49 +35,67 @@ int Game::play(){
 	int playerIndex = 0;
 	int choice;
 	//Main Game Loop
+	int countPlayersAlive = 0;
 
-
-	while (true){
-
+	do{
 		currentPlayer = findPlayerByIndex(playerIndex);
 		map->notify();
-		//updateCountriesAndArmies();
-		textview->inform("Round " + intToString(playerTurns / numOfPlayers + 1) + " : " + currentPlayer.getName()/*playerNames[playerIndex]*/ + " (player " + intToString(playerIndex) + ")'s turn");
+		if (currentPlayer.getIsAlive()){
+			
 
-		//reinforce, attack and move are the 3 actions a given player can do during his turn
-		reinforce(playerIndex);
+			textview->inform("Round " + intToString(playerTurns / numOfPlayers + 1) + " : " + currentPlayer.getName() + " (player " + intToString(playerIndex) + ")'s turn");
+
+			//reinforce, attack and move are the 3 actions a given player can do during his turn
+			reinforce(playerIndex);
 
 
-		do{
-			textview->inform("What would you like to do?");
-			textview->inform("1 - Attack");
-			textview->inform("2 - Fortify");
-			textview->inform("3 - Display statistics");
-			textview->inform("0 - End turn");
+			do{
+				textview->inform("What would you like to do?");
+				textview->inform("1 - Attack");
+				textview->inform("2 - Fortify");
+				textview->inform("3 - Display statistics");
+				textview->inform("0 - End turn");
 
-			choice = controller->getInt();
-			switch (choice){
-			case 0:
-				break;
-			case 1:
-				attack(playerIndex);
-				break;
-			case 2:
-				fortify(playerIndex);
-				break;
-			case 3:
-				//textview->inform("Displaying statistics"); //just a placeholder until the actual function is created
-				displayStatistics();
-				break;
+				choice = controller->getInt();
+				switch (choice){
+				case 0:
+					break;
+				case 1:
+					attack(playerIndex);
+					break;
+				case 2:
+					fortify(playerIndex);
+					break;
+				case 3:
+					displayStatistics();
+					break;
 
-			default:
-				textview->inform("Invalid input");
+				default:
+					textview->inform("Invalid input");
+				}
+			} while (choice != 0);
+
+			if (currentPlayer.getNumCountriesOwned() == 0){
+				currentPlayer.setDeath();
 			}
-		} while (choice != 0);
-
+		}
+		else{
+			continue;
+		}
 		playerTurns++;
 		playerIndex = playerTurns % numOfPlayers;
-	}
+
+		
+		for (int x = 0; x < numOfPlayers; x++){
+			if (playerArray[x].getIsAlive()){
+				countPlayersAlive++;
+			}
+		}
+
+	} while (countPlayersAlive > 1);
+
+
+
 	return 0;
 }
 

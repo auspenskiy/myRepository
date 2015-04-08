@@ -19,13 +19,16 @@ public:
 	int getPlayerIndex();
 	void setBattlesWon();
 	void setBattlesLost();
+	bool getIsAlive();
+	void setDeath();
 	std::string statistics();
 private:
+	bool isAlive;
 	int battlesWon;
 	int battlesLost;
 	int playerIndex;
 	int numCountriesOwned;
 	int numArmiesOwned;
-	int totalPlayers = 0;
+	//int totalPlayers = 0;
 	std::string name;
 };

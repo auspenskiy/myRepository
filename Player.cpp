@@ -8,6 +8,7 @@ Player::Player(std::string aName)
 	battlesWon = 0;
 	numArmiesOwned = 0;
 	numCountriesOwned = 0;
+	isAlive = true;
 }
 Player::Player(){
 }
@@ -26,6 +27,14 @@ void Player::setCountriesOwned(int countriesOwned){
 
 std::string Player::getName(){
 	return name;
+}
+
+bool Player::getIsAlive(){
+	return isAlive;
+}
+
+void Player::setDeath(){
+	isAlive = false;
 }
 
 void Player::setPlayerIndex(int index){
