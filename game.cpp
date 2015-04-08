@@ -34,9 +34,8 @@ int Game::play(){
 	int playerTurns = 0;
 	int playerIndex = 0;
 	int choice;
-	//Main Game Loop
 	int countPlayersAlive = 0;
-
+	//Main Game Loop
 	do{
 		currentPlayer = findPlayerByIndex(playerIndex);
 		map->notify();
@@ -506,7 +505,6 @@ void Game::displayStatistics(){
 		std::string str2 = battles.str();
 
 		//output both percentage and the numbers
-		//error: sometimes the percentage is not right, i'll fix it later
 		textview->inform("--------------------------------------");
 		textview->inform(playerName + " owns " + armiesOwned + " armies across " + countriesOwned + " countries.");
 		textview->inform(playerName + " owns " + str + "% of the map (" + countriesOwned + "/" + intToString(totalCountries) + ").");
