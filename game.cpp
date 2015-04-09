@@ -53,6 +53,7 @@ int Game::play(){
 				textview->inform("1 - Attack");
 				textview->inform("2 - Fortify");
 				textview->inform("3 - Display statistics");
+				textview->inform("4 - Edit map");
 				textview->inform("0 - End turn");
 
 				choice = controller->getInt();
@@ -67,6 +68,10 @@ int Game::play(){
 					break;
 				case 3:
 					displayStatistics();
+					break;
+				case 4:
+					//the map editor is simply a text editor
+					system("Start notepad \"../Resources/World.map\"");
 					break;
 
 				default:
