@@ -17,7 +17,8 @@ public:
   ~Game();
   int play();
   Player findPlayerByIndex(int i);	//function to find a player using index
-  
+  Player findWinner();
+  int countPlayersAlive();
 private:
   void fortify(int playerNum);
   void reinforce(int playerNum);
@@ -38,6 +39,7 @@ private:
   std::string * playerNames;
   int numOfPlayers;
   int totalBattles;
+  int playersAlive;
   Player * playerArray;
   Player currentPlayer;
   Player defendingPlayer;

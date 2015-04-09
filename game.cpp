@@ -4,13 +4,14 @@
 Game::Game(int newNumOfPlayers, Player * playaArray){
 	numOfPlayers = newNumOfPlayers;
 	totalBattles = 0;
+	playersAlive = 0;
 	playerArray = new Player[numOfPlayers];
 	
 	for (int x = 0; x < numOfPlayers; x++){
 		playerArray[x] = playaArray[x];
 	}
 
-	map = new Map("../Resources/World.map"); ///home/pc/Desktop/Concordia 15-01/Comp345/345projectWorkingFolder/
+	map = new Map("../World.map"); ///home/pc/Desktop/Concordia 15-01/Comp345/345projectWorkingFolder/
 	//map->setupHardcodedMap();  
 	map->setPlayerArrayInMap(playerArray);
 	map->setupCountryOwners(numOfPlayers);
@@ -34,19 +35,16 @@ int Game::play(){
 	int playerTurns = 0;
 	int playerIndex = 0;
 	int choice;
-	int countPlayersAlive = 0;
+	//int playersAlive = 0;
 	//Main Game Loop
 	do{
 		currentPlayer = findPlayerByIndex(playerIndex);
 		map->notify();
 		if (currentPlayer.getIsAlive()){
-			
-
 			textview->inform("Round " + intToString(playerTurns / numOfPlayers + 1) + " : " + currentPlayer.getName() + " (player " + intToString(playerIndex) + ")'s turn");
 
 			//reinforce, attack and move are the 3 actions a given player can do during his turn
 			reinforce(playerIndex);
-
 
 			do{
 				textview->inform("What would you like to do?");
@@ -71,7 +69,7 @@ int Game::play(){
 					break;
 				case 4:
 					//the map editor is simply a text editor
-					system("Start notepad \"../Resources/World.map\"");
+					system("Start notepad \"../World.map\"");
 					break;
 
 				default:
@@ -90,17 +88,37 @@ int Game::play(){
 		playerIndex = playerTurns % numOfPlayers;
 
 		
-		for (int x = 0; x < numOfPlayers; x++){
-			if (playerArray[x].getIsAlive()){
-				countPlayersAlive++;
-			}
-		}
+		playersAlive = countPlayersAlive();
 
-	} while (countPlayersAlive > 1);
+	} while (playersAlive > 1);
 
+	//if a player wins, find that player
+	Player winner = findWinner();
+	textview->inform("The winner is " + winner.getName());
 
 
 	return 0;
+}
+
+
+int Game::countPlayersAlive(){
+	int alive = 0;
+	for (int x = 0; x < numOfPlayers; x++){
+				if (playerArray[x].getIsAlive()){
+					alive++;
+			}
+		}
+	return alive;
+}
+
+Player Game::findWinner(){
+	Player p;
+	for (int x = 0; x < numOfPlayers; x++){
+		if (playerArray[x].getIsAlive()){
+			p = playerArray[x];
+		}
+	}
+	return p;
 }
 
 bool Game::countryExistsAndFriendly(std::string country, int playerIndex){
