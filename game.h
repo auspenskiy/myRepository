@@ -7,6 +7,7 @@
 #include "dice.h"
 #include "Player.h"
 #include <string>
+#include "Player.h"
 #include <cstdlib>
 
 
@@ -26,6 +27,8 @@ private:
   void battle(std::string attackingCountry, std::string defendingCountry);
   void displayStatistics();
   void updateCountriesAndArmies();
+  void handleCards(int playerNum);
+  
   void outputCountryList(std::list<std::string> countryList);
   bool countryExistsAndFriendly(std::string country, int playerIndex);
     

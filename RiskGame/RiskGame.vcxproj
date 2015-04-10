@@ -75,6 +75,7 @@
     <ClCompile Include="..\map.cpp" />
     <ClCompile Include="..\MapConfig.cpp" />
     <ClCompile Include="..\Player.cpp" />
+    <ClCompile Include="..\Card.cpp" />
     <ClCompile Include="..\Territory.cpp" />
     <ClCompile Include="..\textview.cpp" />
   </ItemGroup>

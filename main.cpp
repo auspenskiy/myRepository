@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+
 #include "game.h"
 #include "player.h"
 
@@ -10,7 +11,7 @@ int getNumberOfPlayers(){
   Controller controller;
   int numOfPlayers = 0;
   std::cout << "How many people are playing? " << std::endl;
-
+    
   do{
 	std::cout << "You need between 2 and 6 players" << std::endl;
   numOfPlayers = controller.getInt();
@@ -26,7 +27,7 @@ Player * createPlayerArray(int numOfPlayers){
 
 	std::cin.ignore(256, '\n'); //clears input buffer
 	for (int a = 0; a < numOfPlayers; a = a + 1)
-	{
+		{
 		std::cout << "What is the name of player " << a << "?" << std::endl;
 		getline(std::cin, playerNameArray[a]);
 		Player* player = new Player(playerNameArray[a]);
