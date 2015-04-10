@@ -7,14 +7,13 @@ public:
 	Card();
 	~Card();
 	void setType(int mType);
-	int getType();
+	std::string getType(int num);
 	void setQuantity(int mQuantity);
 	int getQuantity();
 	void incrementQuantity();
 	void decrementQuantity(int qty);
-	static int numOfArmiesExchange;
 
 private:
-	int type;
+	std::string type;
 	int quantity;
 };

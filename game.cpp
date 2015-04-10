@@ -43,6 +43,8 @@ int Game::play(){
 	
 		fortify(playerIndex);
 
+		handleCards(playerIndex);
+
 		playerTurns++;
 		playerIndex = playerTurns % numOfPlayers;
 
@@ -140,8 +142,6 @@ void Game::fortify(int playerIndex){
 	map->setCountryArmies(destinationCountry, map->getCountryArmies(destinationCountry) + numToMove);
 	
 	textview->inform (intToString(numToMove) + " armies moved from " + sourceCountry + " to " + destinationCountry + ".");
-
-	players[playerIndex].addCard();
 }
 
 
@@ -158,15 +158,7 @@ void Game::reinforce(int playerNum)
   //****Need a way to track cards belonging to the player, and here check if they want 
   //to cash them in and add the appropriate armies if so********
 
-  Card* cards = players[playerNum].getCards();
-
-  for (int i = 0; i < 2; i++)
-  {
-
-  }
-
-  Card* cardsExchanged = players[playerNum].exchangeCards();
-
+  players[playerNum].processCardExchange();
 
 
   do{
@@ -356,7 +348,7 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
       continueBattle = false;
       outString += "\nYou have conquered " + defendingCountry + ".";
 
-	  //this->players[attackerIndex].setHasConquered(true);
+	  this->players[attackerIndex].setHasConquered(true);
 
 	  outString += "\nYou must settle at least " + intToString(lastAttackDice) + " armies in this newly conquered territory.";
       
@@ -427,3 +419,11 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
  textview->inform(outString);
   
 }//END battle function
+
+void Game::handleCards(int playerNum)
+{
+	if (players[playerNum].getHasConquered())
+	{
+		players[playerNum].addCard();
+	}
+}

@@ -2,23 +2,49 @@
 
 Card::Card()
 {
-	
+	quantity = 0;
 }
 
 
 Card::~Card()
 {
-
+	  
 }
 
 //sets a type of a given card 0 for infantry, 1 for cavalry 2 for artillery
-void Card::setType(int mType)
+void Card::setType(int num)
 {
-	type = mType;
+	std::string cardType;
+	switch (num)
+	{
+	case 0:
+		cardType = "infantry";
+		break;
+	case 1:
+		cardType = "cavalry";
+		break;
+	case 2:
+		cardType = "artillery";
+		break;
+	}
+	type = cardType;
 }
-int Card::getType()
+std::string Card::getType(int num)
 {
-	return type;
+	std::string cardType;
+	switch (num)
+	{
+	case 0:
+		cardType = "infantry";
+		break;
+	case 1:
+		cardType = "cavalry";
+		break;
+	case 2:
+		cardType = "artillery";
+		break;
+	}
+	return cardType;
 }
 
 void Card::setQuantity(int mQuantity)

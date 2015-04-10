@@ -21,6 +21,7 @@ private:
   void reinforce(int playerNum);
   void attack(int playerNum);
   void battle(std::string attackingCountry, std::string defendingCountry);
+  void handleCards(int playerNum);
   
   void outputCountryList(std::list<std::string> countryList);
   bool countryExistsAndFriendly(std::string country, int playerIndex);
@@ -33,7 +34,7 @@ private:
   Dice * dice;
   Map * map;
   Player* players;
-  
+
   int numOfPlayers;
 
 };
