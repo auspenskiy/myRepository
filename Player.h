@@ -18,7 +18,7 @@ public:
 	void setNumberOfArmies(int numOfArmies);
 	int getNumberOfArmies();
 	void incrementArmies(int incrementValue);
-	void transferCards(Player* player);
+	void transferCards(Player player);
 private:
 	std::string name;
 	Card* cards;

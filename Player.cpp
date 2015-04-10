@@ -287,13 +287,13 @@ bool Player::getHasConquered()
 	return hasConquered;
 }
 
-void Player::transferCards(Player* player)
+void Player::transferCards(Player player)
 {
-	if (player->getNumberOfArmies() < 1)
+	if (player.getNumberOfArmies() < 1)
 	{
 		for (int i = 0; i < 3; i++)
 		{
-			int updatedNumOfArmies = cards[i].getQuantity() + player->cards[i].getQuantity();
+			int updatedNumOfArmies = cards[i].getQuantity() + player.cards[i].getQuantity();
 			cards[i].setQuantity(updatedNumOfArmies);
 		}
 	}

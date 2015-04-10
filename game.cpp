@@ -384,6 +384,14 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
       
       //change the owner of the country
       map->setCountryOwnerIndex(defendingCountry, map->getCountryOwnerIndex(attackingCountry), false);
+
+	  //transfer cards if required
+	  int playerLostInd = map->getCountryOwnerIndex(defendingCountry);
+	  int playerWonInd = map->getCountryOwnerIndex(attackingCountry);
+	  if (map->countCountriesOwned(playerLostInd) < 1)
+	  {
+		  players[playerLostInd].transferCards(players[playerWonInd]);
+	  }
     }
     
     //If both sides attacker and defender still have armies left after the battle phase then the attacker will receive the choice to continue attacking or stop
