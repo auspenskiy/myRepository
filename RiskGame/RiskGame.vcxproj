@@ -64,7 +64,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\Card.cpp" />
     <ClCompile Include="..\continent.cpp" />
     <ClCompile Include="..\controller.cpp" />
     <ClCompile Include="..\country.cpp" />

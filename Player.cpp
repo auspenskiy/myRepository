@@ -1,7 +1,7 @@
 #include "Player.h"
 #include <ctime>
 #include <iostream>
-
+/*
 Player::Player()
 {
 	cards = new Card[3];
@@ -15,29 +15,30 @@ Player::Player()
 Player::~Player()
 {
 	delete cards;
-}
-
+}*/
+/*
 void Player::setName(std::string mName)
 {
 	name = mName;
-}
+}*/
+/*
 std::string Player::getName()
 {
 	return name;
-}
+}*/
 
 void Player::incrementArmies(int incrementValue)
 {
-	numOfArmies += incrementValue;
+	numArmiesOwned += incrementValue;
 }
 
 void Player::setNumberOfArmies(int mNumOfArmies)
 {
-	numOfArmies = mNumOfArmies;
+	numArmiesOwned = mNumOfArmies;
 }
 int Player::getNumberOfArmies()
 {
-	return numOfArmies;
+	return numArmiesOwned;
 }
 
 bool Player::canExchangeCards()
@@ -310,12 +311,25 @@ Player::Player(std::string aName)
 	numArmiesOwned = 0;
 	numCountriesOwned = 0;
 	isAlive = true;
+
+	cards = new Card[3];
+	for (int i = 0; i < 3; i++)
+	{
+		cards[i] = *new Card();
+	}
+
 }
 Player::Player(){
+	cards = new Card[3];
+	for (int i = 0; i < 3; i++)
+	{
+		cards[i] = *new Card();
+	}
 }
 
 Player::~Player()
 {
+	//delete cards;
 }
 
 void Player::setArmiesOwned(int armiesOwned){

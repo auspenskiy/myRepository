@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include "country.h"
-
+#include "Card.h"
 class Player{
 public:
 	Player();
@@ -49,5 +49,5 @@ private:
 	int numCountriesOwned;
 	int numArmiesOwned;
 	//int totalPlayers = 0;
-	std::string name;
+	//std::string name;
 };

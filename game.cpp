@@ -34,9 +34,11 @@ Game::~Game(){
 int Game::play(){
   int playerTurns = 0;
   int playerIndex = 0;
-	int choice;
+int choice;
 	//int playersAlive = 0;
 	//Main Game Loop
+	//textview->inform("Does it reach here?");
+
 	do{
 		currentPlayer = findPlayerByIndex(playerIndex);
 		map->notify();
@@ -96,7 +98,7 @@ int Game::play(){
 	//if a player wins, find that player
 	Player winner = findWinner();
 	textview->inform("The winner is " + winner.getName());
-
+	system("pause");
 
   return 0;
 }
@@ -109,6 +111,7 @@ int Game::countPlayersAlive(){
 					alive++;
 			}
 		}
+	textview->inform(intToString(alive) + "HELLOOOOOOOOOOOOOOOOOOOOO");
 	return alive;
 }
 
@@ -220,7 +223,7 @@ void Game::reinforce(int playerNum)
   //****Need a way to track cards belonging to the player, and here check if they want 
   //to cash them in and add the appropriate armies if so********
   
-  players[playerNum].processCardExchange();
+  playerArray[playerNum].processCardExchange();
 
 
   do{
@@ -405,7 +408,7 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
       continueBattle = false;
       outString += "\nYou have conquered " + defendingCountry + ".";
 
-	  this->players[attackerIndex].setHasConquered(true);
+	  playerArray[map->getCountryOwnerIndex(attackingCountry)].setHasConquered(true);
 
       outString += "\nYou must settle at least " + intToString(lastAttackDice) + " armies in this newly conquered territory.";
       
@@ -447,7 +450,7 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 	  int playerWonInd = map->getCountryOwnerIndex(attackingCountry);
 	  if (map->countCountriesOwned(playerLostInd) < 1)
 	  {
-		  players[playerLostInd].transferCards(players[playerWonInd]);
+		  playerArray[playerLostInd].transferCards(playerArray[playerWonInd]);
 	  }
     }
     
@@ -495,6 +498,15 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
  textview->inform(outString);
   
 }//END battle function
+
+
+void Game::handleCards(int playerNum)
+{
+	if (playerArray[playerNum].getHasConquered())
+	{
+		playerArray[playerNum].addCard();
+	}
+}
 
 
 
