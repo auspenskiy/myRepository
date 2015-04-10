@@ -35,9 +35,7 @@ int Game::play(){
   int playerTurns = 0;
   int playerIndex = 0;
 int choice;
-	//int playersAlive = 0;
 	//Main Game Loop
-	//textview->inform("Does it reach here?");
 
 	do{
 		currentPlayer = findPlayerByIndex(playerIndex);
@@ -111,7 +109,6 @@ int Game::countPlayersAlive(){
 					alive++;
 			}
 		}
-	textview->inform(intToString(alive) + "HELLOOOOOOOOOOOOOOOOOOOOO");
 	return alive;
 }
 
@@ -526,6 +523,7 @@ void Game::displayStatistics(){
 		string countriesOwned = intToString(playerArray[x].getNumCountriesOwned());
 		string armiesOwned = intToString(playerArray[x].getNumArmiesOwned());
 		string playerName = playerArray[x].getName();	
+		int cardsOwned = playerArray[x].getTotalCards();
 		int totalCountries = map->getCountryCount();
 		int battlesWon = playerArray[x].getBattlesWon();
 		int battlesLost = playerArray[x].getBattlesLost();
@@ -560,6 +558,7 @@ void Game::displayStatistics(){
 		textview->inform("--------------------------------------");
 		textview->inform(playerName + " owns " + armiesOwned + " armies across " + countriesOwned + " countries.");
 		textview->inform(playerName + " owns " + str + "% of the map (" + countriesOwned + "/" + intToString(totalCountries) + ").");
+		textview->inform(playerName + " owns " + intToString(cardsOwned) + " cards.");
 		textview->inform(playerName + " won " + intToString(battlesWon) + " battles and lost " + intToString(battlesLost) + " battles.");
 		textview->inform(playerName + " won " + str2 + "% of the battles (" + intToString(battlesWon) + "/" + intToString(totalBattles) + ").");
 	}

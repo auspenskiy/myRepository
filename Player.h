@@ -33,13 +33,14 @@ public:
 	int getNumberOfArmies();
 	void incrementArmies(int incrementValue);
 	void transferCards(Player player);
+	int getTotalCards();
 private:
 	std::string name;
 	Card* cards;
 	bool hasConquered;
 	bool canExchangeCards();
 	int* getExchangeChoices();
-	int getTotalCards();
+	
 	//int numOfArmies;
 	//int numOfCountriesOwned;
 	bool isAlive;
