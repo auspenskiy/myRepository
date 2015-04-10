@@ -64,6 +64,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Card.cpp" />
     <ClCompile Include="..\continent.cpp" />
     <ClCompile Include="..\controller.cpp" />
     <ClCompile Include="..\country.cpp" />
@@ -78,6 +79,7 @@
     <ClCompile Include="..\textview.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\Card.h" />
     <ClInclude Include="..\continent.h" />
     <ClInclude Include="..\controller.h" />
     <ClInclude Include="..\country.h" />
