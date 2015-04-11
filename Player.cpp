@@ -275,9 +275,6 @@ void Player::transferCards(Player player)
 	}
 }
 
-#include "Player.h"
-
-
 Player::Player(std::string aName)
 {
 	name = aName;
