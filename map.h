@@ -7,6 +7,7 @@
 #include "continent.h"
 #include "observable.h"
 #include "game_utils.h"
+#include "Player.h"
 #include "MapConfig.h"
 
 class MapView;
@@ -15,14 +16,18 @@ class Map: public Observable{
 public:
   Map(std::string mapFilePath);
   ~Map();
-       
+  
   //MAP LOADING RELATED FUNCTIONS---------------------------------------
   void setupCountryOwners(int numOfPlayers);
   void setupHardcodedMap();
-  
-  //MAIN GAME USED FUNCATIONS-------------------------------------------
+  void setPlayerArrayInMap(Player * playerArray);
+  //MAIN GAME USED FUNCTIONS-------------------------------------------
   int countCountriesOwned(int playerIndex);
+  int countArmiesOwned(int playerIndex);
   int computeContinentsBonuses(int playerIndex);
+
+  void updateCountriesAndArmies();
+
   std::list<std::string> getEnemyNeighbours(std::string &countryName, int playerIndex);
   std::list<std::string> getConnectedFriendlyCountries(std::string &startCountry, int playerIndex);
   
@@ -31,7 +36,10 @@ public:
   int setCountryOwnerIndex(std::string countryName, int playerIndex, bool updateMap = true);
   int getCountryArmies(std::string countryName);
   int getCountryOwnerIndex(std::string countryName);
+  int getCountryCount();
   bool countryExists(std::string countryName);
+
+  
   
 //IMPLEMENTING OBSERVABLE FUNCTIONS-----------------------
   void attach(Observer & ob);
@@ -63,7 +71,8 @@ private:
   Continent ** continents;
   std::list<Observer*> * views;
   MapConfig mapIO;
-    
+  Player * map_playerArray;
+  int numPlayers;
 };
 
 std::ostream& operator<<(std::ostream& os, Map & outputMap);

@@ -5,22 +5,28 @@
 #include "textview.h"
 #include "game_utils.h"
 #include "dice.h"
-
+#include "Player.h"
 #include <string>
 #include "Player.h"
 #include <cstdlib>
 
+
 class Game{
 public:
-  Game(int newNumOfPlayers, Player* newPlayerNames);
+  Game(int newNumOfPlayers, std::string * newPlayerNames);
+  Game(int newNumOfPlayers, Player * playaArray);
   ~Game();
   int play();
-  
+  Player findPlayerByIndex(int i);	//function to find a player using index
+  Player findWinner();
+  int countPlayersAlive();
 private:
   void fortify(int playerNum);
   void reinforce(int playerNum);
   void attack(int playerNum);
   void battle(std::string attackingCountry, std::string defendingCountry);
+  void displayStatistics();
+  void updateCountriesAndArmies();
   void handleCards(int playerNum);
   
   void outputCountryList(std::list<std::string> countryList);
@@ -33,8 +39,11 @@ private:
   Controller * controller;
   Dice * dice;
   Map * map;
-  Player* players;
-
+  std::string * playerNames;
   int numOfPlayers;
-
+  int totalBattles;
+  int playersAlive;
+  Player * playerArray;
+  Player currentPlayer;
+  Player defendingPlayer;
 };

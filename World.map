@@ -22,12 +22,12 @@ Ontario,199,167,North America,Northwest Territory,Alberta,Greenland,Quebec,Weste
 Quebec,253,166,North America,Greenland,Ontario,Eastern United States
 Western United States,159,204,North America,Alberta,Ontario,Eastern United States,Central America
 Eastern United States,219,216,North America,Ontario,Quebec,Western United States,Central America
-Central America,183,262,North America,Western United States,Eastern United States,Venezuala
+Central America,183,262,North America,Western United States,Eastern United States,Venezuela
 
-Venezuala,259,303,South America,Central America,Peru,Brazil
-Peru,262,349,South America,Venezuala,Brazil,Argentina
+Venezuela,259,303,South America,Central America,Peru,Brazil
+Peru,262,349,South America,Venezuela,Brazil,Argentina
 Argentina,263,407,South America,Peru,Brazil
-Brazil,308,337,South America,Venezuala,Peru,Argentina,North Africa
+Brazil,308,337,South America,Venezuela,Peru,Argentina,North Africa
 
 North Africa,420,264,Africa,Brazil,Western Europe,Southern Europe,Egypt,East Africa,Congo
 Congo,475,318,Africa,North Africa,East Africa,South Africa

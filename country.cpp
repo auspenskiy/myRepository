@@ -54,7 +54,7 @@ void Country::setArmies(int newArmies){armies = newArmies;}
  */
 void Country::addNeighbourLink(Country &newNeighbour){
   this->neighbours = insertElement(this->neighbours, this->neighbourCount, newNeighbour);
-  std::cout << newNeighbour.getName() << " connected to " << this->getName() << std::endl;
+  //std::cout << newNeighbour.getName() << " connected to " << this->getName() << std::endl;
 }
 
 std::string Country::to_string(){

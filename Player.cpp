@@ -2,42 +2,18 @@
 #include <ctime>
 #include <iostream>
 
-Player::Player()
-{
-	cards = new Card[3];
-	for (int i = 0; i < 3; i++)
-	{
-		cards[i] = *new Card();
-	}
-}
-
-
-Player::~Player()
-{
-	delete cards;
-}
-
-void Player::setName(std::string mName)
-{
-	name = mName;
-}
-std::string Player::getName()
-{
-	return name;
-}
-
 void Player::incrementArmies(int incrementValue)
 {
-	numOfArmies += incrementValue;
+	numArmiesOwned += incrementValue;
 }
 
 void Player::setNumberOfArmies(int mNumOfArmies)
 {
-	numOfArmies = mNumOfArmies;
+	numArmiesOwned = mNumOfArmies;
 }
 int Player::getNumberOfArmies()
 {
-	return numOfArmies;
+	return numArmiesOwned;
 }
 
 bool Player::canExchangeCards()
@@ -72,7 +48,7 @@ void Player::processCardExchange()
 	int infantry = cards[0].getQuantity();
 	int cavalry = cards[1].getQuantity();
 	int artillery = cards[2].getQuantity();
-	std::cout << "You have " << infantry << " infantry cards, " << cavalry << " calavry cards, and " << artillery << " artillery cards" << std::endl;
+	std::cout << "You have " << infantry << " infantry cards, " << cavalry << " cavalry cards, and " << artillery << " artillery cards" << std::endl;
 
 	if (canExchangeCards())
 	{
@@ -299,3 +275,86 @@ void Player::transferCards(Player player)
 	}
 }
 
+Player::Player(std::string aName)
+{
+	name = aName;
+	battlesLost = 0;
+	battlesWon = 0;
+	numArmiesOwned = 0;
+	numCountriesOwned = 0;
+	isAlive = true;
+
+	cards = new Card[3];
+	for (int i = 0; i < 3; i++)
+	{
+		cards[i] = *new Card();
+	}
+
+}
+Player::Player(){
+	cards = new Card[3];
+	for (int i = 0; i < 3; i++)
+	{
+		cards[i] = *new Card();
+	}
+}
+
+Player::~Player()
+{
+	//delete cards;
+}
+
+void Player::setArmiesOwned(int armiesOwned){
+	numArmiesOwned = armiesOwned;
+}
+
+void Player::setCountriesOwned(int countriesOwned){
+	numCountriesOwned = countriesOwned;
+}
+
+std::string Player::getName(){
+	return name;
+}
+
+bool Player::getIsAlive(){
+	return isAlive;
+}
+
+void Player::setDeath(){
+	isAlive = false;
+}
+
+void Player::setPlayerIndex(int index){
+	playerIndex = index;
+}
+
+void Player::setName(std::string initialName){
+	name = initialName;
+}
+
+int Player::getBattlesLost(){
+	return battlesLost;
+}
+
+int Player::getBattlesWon(){
+	return battlesWon;
+}
+
+int Player::getNumArmiesOwned(){
+	return numArmiesOwned;
+}
+
+int Player::getNumCountriesOwned(){
+	return numCountriesOwned;
+}
+void Player::setBattlesWon(){
+	battlesWon++;
+}
+
+void Player::setBattlesLost(){
+	battlesLost++;
+}
+
+int Player::getPlayerIndex(){
+	return playerIndex;
+}

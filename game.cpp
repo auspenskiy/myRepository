@@ -1,19 +1,22 @@
 #include "game.h"
 #include <sstream>
 #include <iostream>
-
-Game::Game(int newNumOfPlayers, Player* newPlayerNames)
-{
+Game::Game(int newNumOfPlayers, Player * playaArray){
   numOfPlayers = newNumOfPlayers;
-  players = new Player[numOfPlayers]();
-  for(int x = 0; x < numOfPlayers; x++){
-	  players[x] = newPlayerNames[x];
-}
+	totalBattles = 0;
+	playersAlive = 0;
+	playerArray = new Player[numOfPlayers];
+	
+	for (int x = 0; x < numOfPlayers; x++){
+		playerArray[x] = playaArray[x];
+  }
   
-  map = new Map("../Resources/World.map"); ///home/pc/Desktop/Concordia 15-01/Comp345/345projectWorkingFolder/
+	map = new Map("../World.map"); ///home/pc/Desktop/Concordia 15-01/Comp345/345projectWorkingFolder/
   //map->setupHardcodedMap();  
+	map->setPlayerArrayInMap(playerArray);
   map->setupCountryOwners(numOfPlayers);
   
+
   textview = new TextView(*map);
   controller = new Controller();
   dice = new Dice();
@@ -24,33 +27,99 @@ Game::~Game(){
   delete textview;
   delete controller;
   delete dice;
-  delete [] players;
+	delete[] playerNames;
+	delete[] playerArray;
 }
 
 int Game::play(){
   int playerTurns = 0;
   int playerIndex = 0;
-  
+int choice;
 	//Main Game Loop
-	while(true){
+
+	do{
+		currentPlayer = findPlayerByIndex(playerIndex);
 		map->notify();
-		textview->inform("Round " + intToString(playerTurns/numOfPlayers + 1) + " : " + players[playerIndex].getName() + " (player " + intToString(playerIndex + 1)+ ")'s turn");
+		if (currentPlayer.getIsAlive()){
+			textview->inform("Round " + intToString(playerTurns / numOfPlayers + 1) + " : " + currentPlayer.getName() + " (player " + intToString(playerIndex) + ")'s turn");
 		
 		//reinforce, attack and move are the 3 actions a given player can do during his turn
 		reinforce(playerIndex);
 		
+			do{
+				textview->inform("What would you like to do?");
+				textview->inform("1 - Attack");
+				textview->inform("2 - Fortify");
+				textview->inform("3 - Display statistics");
+				textview->inform("4 - Edit map");
+				textview->inform("0 - End turn");
+
+				choice = controller->getInt();
+				switch (choice){
+				case 0:
+					break;
+				case 1:
 		attack(playerIndex);
+					break;
+				case 2:
+					fortify(playerIndex);
+					break;
+				case 3:
+					displayStatistics();
+					break;
+				case 4:
+					//the map editor is simply a text editor
+					system("Start notepad \"../World.map\"");
+					break;
 	
-		fortify(playerIndex);
-
+				default:
+					textview->inform("Invalid input");
+				}
+			} while (choice != 0);
+		
+			if (currentPlayer.getNumCountriesOwned() == 0){
+				currentPlayer.setDeath();
+			}
+		}
+		else{
+			continue;
+		}
 		handleCards(playerIndex);
-
 		playerTurns++;
 		playerIndex = playerTurns % numOfPlayers;
 
 		
-	}
+		playersAlive = countPlayersAlive();
+
+	} while (playersAlive > 1);
+
+	//if a player wins, find that player
+	Player winner = findWinner();
+	textview->inform("The winner is " + winner.getName());
+	system("pause");
+
   return 0;
+}
+
+
+int Game::countPlayersAlive(){
+	int alive = 0;
+	for (int x = 0; x < numOfPlayers; x++){
+				if (playerArray[x].getIsAlive()){
+					alive++;
+			}
+		}
+	return alive;
+}
+
+Player Game::findWinner(){
+	Player p;
+	for (int x = 0; x < numOfPlayers; x++){
+		if (playerArray[x].getIsAlive()){
+			p = playerArray[x];
+		}
+	}
+	return p;
 }
 
 bool Game::countryExistsAndFriendly(std::string country, int playerIndex){
@@ -58,7 +127,7 @@ bool Game::countryExistsAndFriendly(std::string country, int playerIndex){
     textview->inform(country + " does not exist.");
     return false;
   }
-  else if(map->getCountryOwnerIndex(country) != playerIndex){
+	else if (map->getCountryOwnerIndex(country) != playerIndex){
     textview->inform(country + " does not belong to you.");
     return false;
   }
@@ -68,7 +137,7 @@ bool Game::countryExistsAndFriendly(std::string country, int playerIndex){
 void Game::outputCountryList(std::list<std::string> countryList){
   //output list of countries
   std::list<std::string>::iterator iter = countryList.begin();
-  while(iter != countryList.end()){
+	while (iter != countryList.end()){
     textview->inform("  " + *iter);
     iter++;
   }
@@ -76,13 +145,7 @@ void Game::outputCountryList(std::list<std::string> countryList){
 
 void Game::fortify(int playerIndex){
 	std::string answer;
-	textview->prompt (players[playerIndex].getName() + ", would you like to make a fortification move (y/n)?");
-	answer = controller->getString();
 
-	if(answer == "n"){
-		return;
-	}
-	
 	std::string sourceCountry;
 	std::string destinationCountry;
 	std::list<std::string> lst;
@@ -95,53 +158,52 @@ void Game::fortify(int playerIndex){
 	    textview->prompt("Choose a country to move troops from.");
 	    sourceCountry = controller->getString();	    
 	    //if country doesn't have enough armies to move some to a neighbour
-	    if(map->countryExists(sourceCountry) && map->getCountryOwnerIndex(destinationCountry) == playerIndex && map->getCountryArmies(sourceCountry) < 2){
+			if (map->countryExists(sourceCountry) && map->getCountryOwnerIndex(destinationCountry) == playerIndex && map->getCountryArmies(sourceCountry) < 2){
 		textview->inform(sourceCountry + " does not have enough armies to move troops to another country");
 	    }
 	  
-	  }while(!(countryExistsAndFriendly(sourceCountry, playerIndex) && map->getCountryArmies(sourceCountry) > 2));
+		} while (!(countryExistsAndFriendly(sourceCountry, playerIndex) && map->getCountryArmies(sourceCountry) > 2));
 	
 	  //get list of all countries connected to the selected country
 	  lst = map->getConnectedFriendlyCountries(sourceCountry, playerIndex);
 	  
 	  //if the country has no countries connected to it (other than itself)
-	  if(lst.size() <= 1){
+		if (lst.size() <= 1){
 	    textview->inform(sourceCountry + " is not connected to any friendly neighbours to which it can move armies.");
 	  }
-	}while(lst.size() <= 1);
+	} while (lst.size() <= 1);
 	
 	textview->inform(sourceCountry + " is connected to:");
 	outputCountryList(lst);
 	
 	//Input loop: prompt for a friendly country until they enter one on the list of connected countries
 	do{
-
 	    textview->prompt("Choose the country to fortify.");
 	    destinationCountry = controller->getString();   
 	
 	  //if the entered country is not on the list of connected countries
-	  if(map->countryExists(destinationCountry) && map->getCountryOwnerIndex(destinationCountry) == playerIndex && !listContains(lst,destinationCountry)){
+		if (map->countryExists(destinationCountry) && map->getCountryOwnerIndex(destinationCountry) == playerIndex && !listContains(lst, destinationCountry)){
 	    textview->inform(destinationCountry + " is not connected to " + sourceCountry + " and therefore cannot be fortified with armies from " + sourceCountry + ".");
 	  }
-	}while(!(countryExistsAndFriendly(destinationCountry, playerIndex) && listContains(lst,destinationCountry)));
+	} while (!(countryExistsAndFriendly(destinationCountry, playerIndex) && listContains(lst, destinationCountry)));
 	
 	//Input loop: prompt for the number of armies to move until they pick a number between 1 and the max they can move
-	textview->prompt (sourceCountry + " can move up to " + intToString (map->getCountryArmies(sourceCountry) -1) + " armies to " + destinationCountry + ".  How many would you like to move?");
+	textview->prompt(sourceCountry + " can move up to " + intToString(map->getCountryArmies(sourceCountry) - 1) + " armies to " + destinationCountry + ".  How many would you like to move?");
 	do{	  
 	  numToMove = controller->getInt();
 	  
 	  //if they pick a number not between 1 and the number they are allowed to move
-	  if (numToMove < 1 || numToMove > map->getCountryArmies(sourceCountry) -1){
+		if (numToMove < 1 || numToMove > map->getCountryArmies(sourceCountry) - 1){
 	    textview->inform("Invalid input.");
-	    textview->prompt("Please enter a number between 1 and " + intToString(map->getCountryArmies(sourceCountry)-1) + ".");
+			textview->prompt("Please enter a number between 1 and " + intToString(map->getCountryArmies(sourceCountry) - 1) + ".");
 	}
-	} while(numToMove < 1 || numToMove > map->getCountryArmies(sourceCountry) -1);
+	} while (numToMove < 1 || numToMove > map->getCountryArmies(sourceCountry) - 1);
 	
 	//update the two countries army counts
 	map->setCountryArmies(sourceCountry, map->getCountryArmies(sourceCountry) - numToMove, false);
 	map->setCountryArmies(destinationCountry, map->getCountryArmies(destinationCountry) + numToMove);
 	
-	textview->inform (intToString(numToMove) + " armies moved from " + sourceCountry + " to " + destinationCountry + ".");
+	textview->inform(intToString(numToMove) + " armies moved from " + sourceCountry + " to " + destinationCountry + ".");
 }
 
 
@@ -154,16 +216,16 @@ void Game::reinforce(int playerNum)
   //calculate # of reinforcements
   bonusArmies = map->computeContinentsBonuses(playerNum);  
   bonusArmies += map->countCountriesOwned(playerNum) / 3;
-
+  
   //****Need a way to track cards belonging to the player, and here check if they want 
   //to cash them in and add the appropriate armies if so********
-
-  players[playerNum].processCardExchange();
+  
+  playerArray[playerNum].processCardExchange();
 
 
   do{
     //Get the country to be reinforced
-    textview->inform(players[playerNum].getName() + ", you have " + intToString(bonusArmies) + " armies of reinforcements to distribute.");
+		textview->inform(currentPlayer.getName() + ", you have " + intToString(bonusArmies) + " armies of reinforcements to distribute.");
 
     textview->prompt("Please input the country you want to reinforce.");
     countryToReinforce = controller->getString();
@@ -176,61 +238,47 @@ void Game::reinforce(int playerNum)
 	if (numToReinforce < 1 || numToReinforce > bonusArmies){
 	  textview->inform("Invalid input, please enter a number between 1 and " + intToString(bonusArmies));
 	}
-      } while(numToReinforce < 1 || numToReinforce > bonusArmies);
+			} while (numToReinforce < 1 || numToReinforce > bonusArmies);
       
       //put the number of armies specified in the country specifeid and decrement the number of bonus armies
       map->setCountryArmies(countryToReinforce, map->getCountryArmies(countryToReinforce) + numToReinforce);
       bonusArmies -= numToReinforce;
       textview->inform(countryToReinforce + " reinforced with " + intToString(numToReinforce) + " armies and now has " + intToString(map->getCountryArmies(countryToReinforce)) + " armies.");
     }    
-  }while(bonusArmies > 0);
-  
+	} while (bonusArmies > 0);
 }
 
 
 void Game::attack(int playerNum){
-  std::string inString = "f";
-  
+	//std::string inString = "f";
   std::string attackingCountry;
   std::string defendingCountry;
   std::list<std::string> enemyNeighbourList;
   
-  //Prompt whether the user wants to make an attack move.
-  while(true){
-    if(inString.compare("f") == 0){
-      textview->prompt(players[playerNum].getName() + ", would you like make an attack (y/n)?");
-    }else{
-      textview->prompt(players[playerNum].getName() + ", would you like to attack another country (y/n)?");
-    }
-    inString = controller->getString();
-    
-    //If the user indicated no, exit the attack phase
-    if(inString.compare("n") == 0){
-      return;
-    }
         
 //GET THE ATTACKING COUNTRY************************************************************   
     do{
       do{
+
 	textview->prompt("Choose a country you wish to launch your attack from.");
 	attackingCountry = controller->getString();    
   
 	//if country doesn't have enough armies to attack another country
-	if(map->countryExists(attackingCountry) && map->getCountryOwnerIndex(attackingCountry) == playerNum && map->getCountryArmies(attackingCountry) < 2){
+				if (map->countryExists(attackingCountry) && map->getCountryOwnerIndex(attackingCountry) == playerNum && map->getCountryArmies(attackingCountry) < 2){
 	  textview->inform(attackingCountry + " does not have enough armies to launch an attack.");
 	}
   
-      }while(!(countryExistsAndFriendly(attackingCountry, playerNum) && map->getCountryArmies(attackingCountry) > 1));
+			} while (!(countryExistsAndFriendly(attackingCountry, playerNum) && map->getCountryArmies(attackingCountry) > 1));
       
       enemyNeighbourList = map->getEnemyNeighbours(attackingCountry, playerNum);
       
       //it is possible that a country has nothing to attack; for example when a country is in between friendly countries
       //the statement below avoids such possiblity
-      if(enemyNeighbourList.empty()){
-		textview->inform(attackingCountry + " has no enemy neighbours to attack.");
+			if (enemyNeighbourList.empty()){
+	textview->inform(attackingCountry + " has no enemy neighbours to attack.");
       }
       
-    }while(enemyNeighbourList.empty());
+		} while (enemyNeighbourList.empty());
   
 //GET THE DEFENDING COUNTRY************************************************************
     //output all available countries to attack
@@ -244,24 +292,24 @@ void Game::attack(int playerNum){
       defendingCountry = controller->getString();
       
       //if you selected a country that isn't a neighbour
-      if(!map->countryExists(defendingCountry)){
-		textview->inform(defendingCountry + " does not exist.");
+			if (!map->countryExists(defendingCountry)){
+	textview->inform(defendingCountry + " does not exist.");
       }
       //if you selected a friendly country to attack
       else if (map->getCountryOwnerIndex(defendingCountry) == playerNum)
       {
-		textview->inform("Invalid choice: " + defendingCountry + " already belongs to you.");
+	textview->inform("Invalid choice: " + defendingCountry + " already belongs to you.");
       }
       else if (!listContains(enemyNeighbourList, defendingCountry)){
-		textview->inform("Invalid choice: " + defendingCountry + " is not a neighbour of " + attackingCountry + ".");
+	textview->inform("Invalid choice: " + defendingCountry + " is not a neighbour of " + attackingCountry + ".");
       }
-    }while(!(map->countryExists(defendingCountry) && map->getCountryOwnerIndex(defendingCountry) != playerNum && 
+		} while (!(map->countryExists(defendingCountry) && map->getCountryOwnerIndex(defendingCountry) != playerNum &&
       listContains(enemyNeighbourList, defendingCountry)));
     
     battle(attackingCountry, defendingCountry);
     
-  }
   
+
 }//end ATTACK function
   
   //Pre: attackingCountry and defendingCountry are validly selected countries to do battle.
@@ -274,15 +322,11 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
   int lastAttackDice;
   int attackingArmies = map->getCountryArmies(attackingCountry);
   int defendingArmies = map->getCountryArmies(defendingCountry);
-
-  int attackerIndex = map->getCountryOwnerIndex(attackingCountry);
-  int defenderIndex = map->getCountryOwnerIndex(defendingCountry);
-  
   std::string outString;
   std::string inString;
   int inInt;
   
-  textview->inform("\n" + attackingCountry +" attacks " + defendingCountry + " with " + intToString(attackingArmies) + " armies against " + intToString(defendingArmies) + " armies.");
+	textview->inform("\n" + attackingCountry + " attacks " + defendingCountry + " with " + intToString(attackingArmies) + " armies against " + intToString(defendingArmies) + " armies.");
   
   // This while loop is placed to verify whether the attacker wants to keep attacking in case the battle phase is finished and no one won yet
   
@@ -294,78 +338,91 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
     //function to determine the fightning phase, who wins and who losses
     
     outString = "";
-    if(attackingArmies >1 && defendingArmies > 1){
-      if(dice->getFirstAttackDie() > dice->getFirstDefendDie()){
+		if (attackingArmies >1 && defendingArmies > 1){
+			if (dice->getFirstAttackDie() > dice->getFirstDefendDie()){
 	outString = "The attacker won ";
 	defendingArmies--;
+				playerArray[map->getCountryOwnerIndex(attackingCountry)].setBattlesWon();
+				playerArray[map->getCountryOwnerIndex(defendingCountry)].setBattlesLost();
       }
       else{
 	outString = "The attacker lost "; 
 	attackingArmies--;
+				playerArray[map->getCountryOwnerIndex(defendingCountry)].setBattlesWon();
+				playerArray[map->getCountryOwnerIndex(attackingCountry)].setBattlesLost();
       }
       outString += "the first attack " + intToString(dice->getFirstAttackDie()) + ":" + intToString(dice->getFirstDefendDie());
       
-      if(dice->getSecondAttackDie() > dice->getSecondDefendDie()){
+			if (dice->getSecondAttackDie() > dice->getSecondDefendDie()){
 	outString += "\nThe attacker won ";
 	defendingArmies--;
+				playerArray[map->getCountryOwnerIndex(attackingCountry)].setBattlesWon();
+				playerArray[map->getCountryOwnerIndex(defendingCountry)].setBattlesLost();
       }
       else{
 	outString += "\nThe attacker lost ";
 	attackingArmies--;
+				playerArray[map->getCountryOwnerIndex(defendingCountry)].setBattlesWon();
+				playerArray[map->getCountryOwnerIndex(attackingCountry)].setBattlesLost();
       }
       outString += "the second attack " + intToString(dice->getSecondAttackDie()) + ":" + intToString(dice->getSecondDefendDie());
       lastAttackDice = dice->getSecondAttackDie();
     }  
     else{
-      if(dice->getFirstAttackDie() > dice->getFirstDefendDie()){
+			if (dice->getFirstAttackDie() > dice->getFirstDefendDie()){
 	outString = "The attacker won ";
 	defendingArmies--;
+				playerArray[map->getCountryOwnerIndex(attackingCountry)].setBattlesWon();
+				playerArray[map->getCountryOwnerIndex(defendingCountry)].setBattlesLost();
       }
       else{
 	outString = "The attacker lost "; 
 	attackingArmies--;
+				playerArray[map->getCountryOwnerIndex(defendingCountry)].setBattlesWon();
+				playerArray[map->getCountryOwnerIndex(attackingCountry)].setBattlesLost();
       }
       outString += "the attack " + intToString(dice->getFirstAttackDie()) + ":" + intToString(dice->getFirstDefendDie());
       lastAttackDice = dice->getFirstAttackDie();
     }
     
+
     textview->inform(outString);
     
     //output updated army counts 
-    textview->inform(attackingCountry +": " + intToString(attackingArmies) + " armies remaining \n" + defendingCountry + ": " + intToString(defendingArmies) + " armies remaining");
+		textview->inform(attackingCountry + ": " + intToString(attackingArmies) + " armies remaining \n" + defendingCountry + ": " + intToString(defendingArmies) + " armies remaining");
     
     
 //BATTLE OUTCOME CALCULATIONS--------------------------------------------------------------
     outString = "";
-    if(attackingArmies <= 1)    //Verify whether the attacker has no army left
+		if (attackingArmies <= 1)    //Verify whether the attacker has no army left
     {
       continueBattle = false;
-      outString += "\n" + attackingCountry +" does not have enough armies to continue the attack";
+			outString += "\n" + attackingCountry + " does not have enough armies to continue the attack";
       
     }
-    else if(defendingArmies <= 0)    //Verify whether the defender has no army left
+		else if (defendingArmies <= 0)    //Verify whether the defender has no army left
     {
       continueBattle = false;
       outString += "\nYou have conquered " + defendingCountry + ".";
 
-	  this->players[attackerIndex].setHasConquered(true);
+	  playerArray[map->getCountryOwnerIndex(attackingCountry)].setHasConquered(true);
 
-	  outString += "\nYou must settle at least " + intToString(lastAttackDice) + " armies in this newly conquered territory.";
+      outString += "\nYou must settle at least " + intToString(lastAttackDice) + " armies in this newly conquered territory.";
       
       //The attacker won, so now he must deploy his army
-      if(attackingArmies > lastAttackDice)                 
+			if (attackingArmies > lastAttackDice)
       {
 	//Validates to see whether the player has deployed a valid amount of army to conquered country
 	do{
 	  textview->inform(outString);
 	  outString = "";
-	  textview->prompt("How many armies would you like to settle in "+ defendingCountry + "?");
+					textview->prompt("How many armies would you like to settle in " + defendingCountry + "?");
 	  inInt = controller->getInt();
 	  //Asking the user again to deploy the right amount
-	  if(inInt > attackingArmies - 1 || inInt < lastAttackDice){
-	    textview->inform("Invalid input. Need to add between " + intToString(lastAttackDice) + " and " + intToString(attackingArmies-1) + " armies.");
+					if (inInt > attackingArmies - 1 || inInt < lastAttackDice){
+						textview->inform("Invalid input. Need to add between " + intToString(lastAttackDice) + " and " + intToString(attackingArmies - 1) + " armies.");
 	  }
-	}while(inInt > attackingArmies - 1 || inInt < lastAttackDice);
+				} while (inInt > attackingArmies - 1 || inInt < lastAttackDice);
 	
 	//Update the number of armies in the two countries
 	defendingArmies = inInt;
@@ -375,10 +432,10 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
       }
       else    // This is when the attacker won but doesn't have enough army greater than his previous rolled dice
       {
-	outString += "\nBecause you have only " + intToString(attackingArmies) + " armies left in " + attackingCountry + ", you automatically settle " + intToString(attackingArmies-1) + " in " + defendingCountry + ".";
+				outString += "\nBecause you have only " + intToString(attackingArmies) + " armies left in " + attackingCountry + ", you automatically settle " + intToString(attackingArmies - 1) + " in " + defendingCountry + ".";
 	
 	//Update the army counts
-	defendingArmies = attackingArmies-1;
+				defendingArmies = attackingArmies - 1;
 	attackingArmies = 1;
       }
       
@@ -390,7 +447,7 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 	  int playerWonInd = map->getCountryOwnerIndex(attackingCountry);
 	  if (map->countCountriesOwned(playerLostInd) < 1)
 	  {
-		  players[playerLostInd].transferCards(players[playerWonInd]);
+		  playerArray[playerLostInd].transferCards(playerArray[playerWonInd]);
 	  }
     }
     
@@ -401,7 +458,12 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
       inString = controller->getString();
       continueBattle = inString.compare("n") != 0;
     }
-  }while(continueBattle);
+	
+
+	} while (continueBattle);
+
+
+
   
   //Update the number of armies in the two countries before terminating the function
   map->setCountryArmies(defendingCountry, defendingArmies, false);
@@ -422,16 +484,82 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
    outString += " still ";
  }
  
- outString += " belongs to " + players[map->getCountryOwnerIndex(defendingCountry)].getName() + "\n";
+	for (int i = 0; i < numOfPlayers; i++){
+		if (playerArray[i].getPlayerIndex() == map->getCountryOwnerIndex(defendingCountry)){
+			defendingPlayer = playerArray[i];
+		}
+	}
  
+	outString += " belongs to " + defendingPlayer.getName() + "\n";
+	totalBattles++;
  textview->inform(outString);
   
 }//END battle function
 
+
 void Game::handleCards(int playerNum)
 {
-	if (players[playerNum].getHasConquered())
+	if (playerArray[playerNum].getHasConquered())
 	{
-		players[playerNum].addCard();
+		playerArray[playerNum].addCard();
+	}
+}
+
+
+
+Player Game::findPlayerByIndex(int i){
+	Player _player;
+	for (int x = 0; x < numOfPlayers; x++){
+		if (playerArray[x].getPlayerIndex() == i){
+			_player = playerArray[x];
+		}
+	}
+	return _player;
+}
+
+void Game::displayStatistics(){
+	for (int x = 0; x < numOfPlayers; x++){
+		//various numbers used to calculate the percentages
+		string countriesOwned = intToString(playerArray[x].getNumCountriesOwned());
+		string armiesOwned = intToString(playerArray[x].getNumArmiesOwned());
+		string playerName = playerArray[x].getName();	
+		int cardsOwned = playerArray[x].getTotalCards();
+		int totalCountries = map->getCountryCount();
+		int battlesWon = playerArray[x].getBattlesWon();
+		int battlesLost = playerArray[x].getBattlesLost();
+		int totalBattles = playerArray[x].getBattlesWon() + playerArray[x].getBattlesLost();
+		//scale is used to format output to 2 digits
+		double scale = 0.01;
+		double percentCountriesOwned = (double(playerArray[x].getNumCountriesOwned()) / double(totalCountries) * 100);
+		double roundedCountriesOwned = floor(percentCountriesOwned / scale + 0.5)*scale;
+		
+
+		//calculates percentage of battles won, not rounded 
+		double percentBattlesWon = (double(battlesWon) / double(totalBattles) * 100);
+		double roundedBattlesWon = 0; 
+		//roundedBattlesWon is implemented this way to prevent an output error
+		//rounds the percentage of battles won
+		if (totalBattles != 0){
+			roundedBattlesWon = floor(percentBattlesWon / scale + 0.5)*scale;
+		}
+
+
+		//convert double to string for countries owned
+		std::ostringstream countries;
+		countries << roundedCountriesOwned;
+		std::string str = countries.str();
+		
+		//convert double to string for battles won
+		std::ostringstream battles;
+		battles << roundedBattlesWon;
+		std::string str2 = battles.str();
+
+		//output both percentage and the numbers
+		textview->inform("--------------------------------------");
+		textview->inform(playerName + " owns " + armiesOwned + " armies across " + countriesOwned + " countries.");
+		textview->inform(playerName + " owns " + str + "% of the map (" + countriesOwned + "/" + intToString(totalCountries) + ").");
+		textview->inform(playerName + " owns " + intToString(cardsOwned) + " cards.");
+		textview->inform(playerName + " won " + intToString(battlesWon) + " battles and lost " + intToString(battlesLost) + " battles.");
+		textview->inform(playerName + " won " + str2 + "% of the battles (" + intToString(battlesWon) + "/" + intToString(totalBattles) + ").");
 	}
 }

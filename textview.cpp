@@ -1,7 +1,7 @@
 #include "textview.h"
 #include <iostream>
 #include <string>
-
+#include "game.h"
 //Store a reference to the map being observed and the attach itself to it as an observer
 TextView::TextView(Map & newMap){
   m = & newMap;
@@ -14,6 +14,7 @@ TextView::~TextView(){
 //update simply outputs the map's string representation
 void TextView::update(){
   inform(m->to_string());
+  m->updateCountriesAndArmies();
 }
 
 //output something normally
