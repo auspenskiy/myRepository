@@ -14,32 +14,81 @@ Player::Player()
 
 Player::~Player()
 {
-	delete cards;
+	delete[] cards;
 }
 
-void Player::setName(std::string mName)
+
+Player::Player(std::string aName)
 {
-	name = mName;
+	name = aName;
+	battlesLost = 0;
+	battlesWon = 0;
+	numArmiesOwned = 0;
+	numCountriesOwned = 0;
+	isAlive = true;
+	cards = new Card[3];
+	for (int i = 0; i < 3; i++)
+	{
+		cards[i] = *new Card();
+	}
 }
-std::string Player::getName()
-{
+
+
+
+void Player::setArmiesOwned(int armiesOwned){
+	numArmiesOwned = armiesOwned;
+}
+
+void Player::setCountriesOwned(int countriesOwned){
+	numCountriesOwned = countriesOwned;
+}
+
+std::string Player::getName(){
 	return name;
 }
 
-void Player::incrementArmies(int incrementValue)
-{
-	numOfArmies += incrementValue;
+bool Player::getIsAlive(){
+	return isAlive;
 }
 
-void Player::setNumberOfArmies(int mNumOfArmies)
-{
-	numOfArmies = mNumOfArmies;
-}
-int Player::getNumberOfArmies()
-{
-	return numOfArmies;
+void Player::setDeath(){
+	isAlive = false;
 }
 
+void Player::setPlayerIndex(int index){
+	playerIndex = index;
+}
+
+void Player::setName(std::string initialName){
+	name = initialName;
+}
+
+int Player::getBattlesLost(){
+	return battlesLost;
+}
+
+int Player::getBattlesWon(){
+	return battlesWon;
+}
+
+int Player::getNumArmiesOwned(){
+	return numArmiesOwned;
+}
+
+int Player::getNumCountriesOwned(){
+	return numCountriesOwned;
+}
+void Player::setBattlesWon(){
+	battlesWon++;
+}
+
+void Player::setBattlesLost(){
+	battlesLost++;
+}
+
+int Player::getPlayerIndex(){
+	return playerIndex;
+}
 bool Player::canExchangeCards()
 {
 	int infantry = cards[0].getQuantity();
@@ -76,7 +125,7 @@ void Player::processCardExchange()
 
 	if (canExchangeCards())
 	{
-		std::cout << "You can exchange 3 cards of the same type or three cards of all different types for armies. " <<std::endl;
+		std::cout << "You can exchange 3 cards of the same type or three cards of all different types for armies. " << std::endl;
 		exchangeCards(getExchangeChoices());
 	}
 	else
@@ -289,7 +338,7 @@ bool Player::getHasConquered()
 
 void Player::transferCards(Player player)
 {
-	if (player.getNumberOfArmies() < 1)
+	if (player.getNumArmiesOwned() < 1)
 	{
 		for (int i = 0; i < 3; i++)
 		{
@@ -299,3 +348,8 @@ void Player::transferCards(Player player)
 	}
 }
 
+
+void Player::incrementArmies(int incrementValue)
+{
+	numCountriesOwned += incrementValue;
+}

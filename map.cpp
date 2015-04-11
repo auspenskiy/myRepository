@@ -1,5 +1,4 @@
 #include "map.h"
-
 #include <iostream>
 #include <sstream>
 #include <time.h>
@@ -33,7 +32,7 @@ Map::~Map(){
 void Map::addContinent(Continent * newContinent){
   continents = insertElement(continents, continentCount, *newContinent);
   
-  std::cout << newContinent->getName() << " added to the map" << std::endl;
+  //std::cout << newContinent->getName() << " added to the map" << std::endl;
 }
 
 //Simply add countries to a big array of countries
@@ -41,7 +40,7 @@ void Map::addContinent(Continent * newContinent){
 void Map::addCountry(Country * newCountry){
   countries = insertElement(countries, countryCount, *newCountry);
   
-  std::cout << newCountry->getName() << " added to the map." << std::endl;
+  //std::cout << newCountry->getName() << " added to the map." << std::endl;
 }
 
 //retrieve a continent based on its name alone
@@ -73,12 +72,29 @@ int Map::computeContinentsBonuses(int playerIndex){
   return continentBonuses;
 }
 
+void Map::setPlayerArrayInMap(Player * playerArray){
+	map_playerArray = playerArray;
+}
+
+void Map::updateCountriesAndArmies(){
+	for (int i = 0; i < numPlayers; i++){
+		int index = map_playerArray[i].getPlayerIndex();
+		map_playerArray[i].setCountriesOwned(countCountriesOwned(index));
+		map_playerArray[i].setArmiesOwned(countArmiesOwned(index));
+	}
+}
+
+int Map::getCountryCount(){
+	return countryCount;
+}
+
 //Assigns each player to own an equal number of randomly selected countries
 void Map::setupCountryOwners(int numOfPlayers)
 {
+
 	int playerIndex = 0;
 	int countryIndex = 0;
-	
+	Player* player;
 	srand(time(NULL));   //Allows to generate unique numbers
 	
 	for(int i = 0;i< countryCount;i++){
@@ -90,8 +106,12 @@ void Map::setupCountryOwners(int numOfPlayers)
 		while(countries[countryIndex]->getOwnerIndex() != -1){
 		  countryIndex = rand() % countryCount;
 		}
+		//map_playerArray[playerIndex].setCountriesOwned(1);
 		countries[countryIndex]->setOwnerIndex(playerIndex);
+		
 	}
+
+	numPlayers = numOfPlayers;
 }
 
 
@@ -188,6 +208,7 @@ int Map::setCountryArmies(std::string countryName, int numOfArmies, bool updateM
   if (countryExists(countryName)){
     //get the actual country object and update it
     findElement(countries, countryCount, countryName).setArmies(numOfArmies);
+
     //if the action doesn't have view updates disabled
     if (updateMap){
       //update all relevant observers of the change to the model
@@ -201,6 +222,7 @@ int Map::setCountryArmies(std::string countryName, int numOfArmies, bool updateM
 int Map::setCountryOwnerIndex(std::string countryName, int playerIndex, bool updateMap){
   //if the country actually exists
   if (countryExists(countryName)){
+	  
     //update the country object's owner
     findElement(countries, countryCount, countryName).setOwnerIndex(playerIndex);
     //if the action doesn't have view updates disabled
@@ -219,6 +241,17 @@ int Map::getCountryArmies(std::string countryName){
     return findElement(countries, countryCount, countryName).getArmies();
   }
   return -1;  
+}
+
+//counts total armies for a given player
+int Map::countArmiesOwned(int playerIndex){
+	int armiesOwnedCount = 0;
+	for (int x = 0; x < countryCount; x++){
+		if (countries[x]->getOwnerIndex() == playerIndex){
+			armiesOwnedCount += countries[x]->getArmies();
+		}
+	}
+	return armiesOwnedCount;
 }
 
 //simple accessor.  Finds the country and returns its owner
