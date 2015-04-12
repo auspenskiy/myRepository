@@ -205,6 +205,196 @@ void Game::fortify(int playerIndex){
 	textview->inform(intToString(numToMove) + " armies moved from " + sourceCountry + " to " + destinationCountry + ".");
 }
 
+int Game::getCardsExchange(int playerNum)
+{
+	int infantry = playerArray[playerNum].getCards()[0].getQuantity();
+	int cavalry = playerArray[playerNum].getCards()[1].getQuantity();
+	int artillery = playerArray[playerNum].getCards()[2].getQuantity();
+
+	int armiesAdded = 0;
+
+	std::cout << "You have " << infantry << " infantry cards, " << cavalry << " calavry cards, and " << artillery << " artillery cards" << std::endl;
+
+	if (playerArray[playerNum].canExchangeCards())
+	{
+		std::cout << "You can exchange 3 cards of the same type or three cards of all different types for armies. " << std::endl;
+		armiesAdded = exchangeCards(getExchangeChoices(playerNum), playerNum);
+	}
+	else
+	{
+		std::cout << "You are not eligible to exchange cards for armies. " << std::endl;
+	}
+
+	return armiesAdded;
+}
+
+int Game::exchangeCards(int* choices, int playerNum)
+{
+	static int numOfArmiesExchange = 5;//local static incremented by 5 every time the function is called by any player - the requirement to update the value is met; be careful if change it
+	int localNumOfArmiesExchanged = numOfArmiesExchange;
+	for (int i = 0; i < 3; i++)
+	{
+		playerArray[playerNum].getCards()[i].decrementQuantity(choices[i]);
+	}
+	numOfArmiesExchange += 5;
+	return localNumOfArmiesExchanged;
+}
+
+int* Game::getExchangeChoices(int playerNum)
+{
+	int* choices = new int[3];
+	std::fill(choices, choices + 3, 0);
+
+	std::cout << "You need to choose 3 cards of the same type or three cards of all different types to exchange for armies. " << std::endl;
+
+	if (playerArray[playerNum].getTotalCards() >= 5)
+	{
+		std::cout << "You have more than 5 cards. You must exchange three of them for armies. " << std::endl;
+		int sumOfChoices = choices[0] + choices[1] + choices[2];
+		do
+		{
+			//check if a player will exchange all cards of the same type
+			for (int i = 0; i < 3; i++)
+			{
+				if (playerArray[playerNum].getCards()[i].getQuantity() > 3)
+				{
+					std::cout << "You have more than 3 cards of " << playerArray[playerNum].getCards()[i].getType(i) << ". Would you like to exchange all of them for armies ? (y / n)" << std::endl;
+					char decision = 'n';
+					do
+					{
+						if (decision != 'n' && decision != 'y')
+						{
+							std::cout << "Your choice is invalid. Please choose y or n " << std::endl;
+						}
+						std::cin >> decision;
+					} while (decision != 'n' && decision != 'y');
+
+					if (decision == 'y')
+					{
+						choices[i] = 3;
+						return choices;
+					}
+					else
+					{
+						continue;
+					}
+				}
+			}
+
+			for (int i = 0; i < 3; i++)
+			{
+				if (playerArray[playerNum].getCards()[i].getQuantity() > 0)
+				{
+					char choice;
+					std::cout << "You have " << playerArray[playerNum].getCards()[i].getQuantity() << " of " << playerArray[playerNum].getCards()[i].getType(i) << ". Would you like to use " << playerArray[playerNum].getCards()[i].getType(i) << " cards for exchange (y/n): ";
+					std::cin >> choice;
+					do
+					{
+						if (choice != 'y' && choice != 'n')
+						{
+							std::cout << "Your choice is invalid. Please choose y or n " << std::endl;
+						}
+
+					} while (choice != 'y' && choice != 'n');
+
+					if (choice == 'y')
+					{
+						int numChoice = 1;
+						do
+						{
+							if (numChoice < 0 && numChoice > playerArray[playerNum].getCards()[i].getQuantity())
+							{
+								std::cout << "Your choice is invalid " << std::endl;
+							}
+							std::cout << "How many " << playerArray[playerNum].getCards()[i].getType(i) << " cards would you like to exchange? Enter the number between 1 and " << playerArray[playerNum].getCards()[i].getQuantity() << std::endl;
+							std::cin >> numChoice;
+						} while (numChoice < 1 && numChoice > playerArray[playerNum].getCards()[i].getQuantity());
+
+						choices[i] = numChoice;
+					}
+					else
+					{
+						continue;
+					}
+				}
+			}
+			sumOfChoices = choices[0] + choices[1] + choices[2];
+
+			if (sumOfChoices > 3)
+			{
+				return choices;
+			}
+
+		} while (sumOfChoices < 3);
+	}
+	//check if a player will exchange all cards of the same type
+	for (int i = 0; i < 3; i++)
+	{
+		if (playerArray[playerNum].getCards()[i].getQuantity() > 3)
+		{
+			std::cout << "You have more than 3 cards of " << playerArray[playerNum].getCards()[i].getType(i) << ". Would you like to exchange all of them for armies ? (y / n)" << std::endl;
+			char decision = 'n';
+			do
+			{
+				if (decision != 'n' && decision != 'y')
+				{
+					std::cout << "Your choice is invalid. Please choose y or n " << std::endl;
+				}
+				std::cin >> decision;
+			} while (decision != 'n' && decision != 'y');
+
+			if (decision == 'y')
+			{
+				choices[i] = 3;
+				return choices;
+			}
+			else
+			{
+				continue;
+			}
+		}
+	}
+
+	for (int i = 0; i < 3; i++)
+	{
+		if (playerArray[playerNum].getCards()[i].getQuantity() > 0)
+		{
+			char choice;
+			std::cout << "You have " << playerArray[playerNum].getCards()[i].getQuantity() << " of " << playerArray[playerNum].getCards()[i].getType(i) << ". Would you like to use " << playerArray[playerNum].getCards()[i].getType(i) << " cards for exchange (y/n): ";
+			std::cin >> choice;
+			do
+			{
+				if (choice != 'y' && choice != 'n')
+				{
+					std::cout << "Your choice is invalid. Please choose y or n " << std::endl;
+				}
+
+			} while (choice != 'y' && choice != 'n');
+
+			if (choice == 'y')
+			{
+				int numChoice = 1;
+				do
+				{
+					if (numChoice < 0 && numChoice > playerArray[playerNum].getCards()[i].getQuantity())
+					{
+						std::cout << "Your choice is invalid " << std::endl;
+					}
+					std::cout << "How many " << playerArray[playerNum].getCards()[i].getType(i) << " cards would you like to exchange? Enter the number between 1 and " << playerArray[playerNum].getCards()[i].getQuantity() << std::endl;
+					std::cin >> numChoice;
+				} while (numChoice < 1 && numChoice > playerArray[playerNum].getCards()[i].getQuantity());
+
+				choices[i] = numChoice;
+			}
+			else
+			{
+				continue;
+			}
+		}
+	}
+
+	return choices;
+}
 
 void Game::reinforce(int playerNum){
 	int bonusArmies = 0;
@@ -218,7 +408,7 @@ void Game::reinforce(int playerNum){
 	//****Need a way to track cards belonging to the player, and here check if they want 
 	//to cash them in and add the appropriate armies if so********
 
-	playerArray[playerNum].processCardExchange();
+	bonusArmies += getCardsExchange(playerNum);
 
 	do{
 		//Get the country to be reinforced

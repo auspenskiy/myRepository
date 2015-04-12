@@ -31,6 +31,8 @@ public:
 	void processCardExchange();
 	void incrementArmies(int incrementValue);
 	void transferCards(Player player);
+	bool canExchangeCards();
+	int getTotalCards();
 private:
 	bool isAlive;
 	int battlesWon;
@@ -42,7 +44,5 @@ private:
 	std::string name;
 	Card* cards;
 	bool hasConquered;
-	bool canExchangeCards();
-	int* getExchangeChoices();
-	int getTotalCards();
+	//int* getExchangeChoices();
 };

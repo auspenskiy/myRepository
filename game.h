@@ -25,6 +25,9 @@ private:
 	void attack(int playerNum);
 	void battle(std::string attackingCountry, std::string defendingCountry);
 	void displayStatistics();
+	int getCardsExchange(int playerNum);
+	int* getExchangeChoices(int playerNum);
+	int exchangeCards(int* choices, int playerNum);//returns number of armies which the player got as a result of exchange for cards
 	void updateCountriesAndArmies();
 	void outputCountryList(std::list<std::string> countryList);
 	bool countryExistsAndFriendly(std::string country, int playerIndex);
