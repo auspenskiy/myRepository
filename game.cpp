@@ -23,12 +23,14 @@ Game::Game(int newNumOfPlayers, Player * playaArray){
 }
 
 Game::~Game(){
-  delete map;
-  delete textview;
-  delete controller;
-  delete dice;
+	delete map;
+	delete textview;
+	delete controller;
+	delete dice;
 	delete[] playerNames;
 	delete[] playerArray;
+
+
 }
 
 int Game::play(){
