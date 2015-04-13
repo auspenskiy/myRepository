@@ -2,12 +2,26 @@
 
 
 #include <algorithm> //std::find function
+#include <fstream>
 
 //HELPER METHOD FOR FORTIFY
 bool listContains(std::list<std::string> & lst, std::string str){
   std::list<std::string>::iterator findIter = std::find(lst.begin(), lst.end(), str);
   
   return findIter != lst.end() || findIter == lst.end() && lst.back().compare(str) == 0;
+}
+
+bool fileExists(std::string fileName){
+  std::ifstream inStream;
+  bool fileExists = false;
+  
+  inStream.open(fileName.c_str());
+  if (inStream.good()) {
+    fileExists = true;
+  }
+  inStream.close();
+  
+  return fileExists;
 }
 
 std::string intToString(int i){

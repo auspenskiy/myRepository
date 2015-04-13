@@ -5,3 +5,4 @@
 
 bool listContains(std::list<std::string> & lst, std::string str);
 std::string intToString(int i);
+bool fileExists(std::string fileName);

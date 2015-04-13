@@ -3,11 +3,20 @@
 #include <sstream>
 #include <time.h>
 
-Map::Map(std::string mapFilePath){
-  countryCount = 0;
-  continentCount = 0;
+Map::Map(int numOfCountries, Country ** newCountries, int numOfContinents, Continent ** newContinents, 
+	 std::string newAuthor, std::string newImage, std::string newWrap, std::string newScroll, std::string newWarn){
+  countryCount = numOfCountries;
+  continentCount = numOfContinents;
+  countries = newCountries;
+  continents = newContinents;
+  
+  author = newAuthor;
+  image = newImage;
+  wrap = newWrap;
+  scroll = newScroll;
+  warn = newWarn;
+
   views = new std::list<Observer*>();
-  loadMap(mapFilePath);
 }
 
 Map::~Map(){
@@ -27,26 +36,12 @@ Map::~Map(){
   continents = NULL;
   
 }
-
-//add a continent to a big array of continents
-void Map::addContinent(Continent * newContinent){
-  continents = insertElement(continents, continentCount, *newContinent);
-  
-  //std::cout << newContinent->getName() << " added to the map" << std::endl;
-}
-
-//Simply add countries to a big array of countries
-//It is expected that they will be connected later using "addNeighbour" functions
-void Map::addCountry(Country * newCountry){
-  countries = insertElement(countries, countryCount, *newCountry);
-  
-  //std::cout << newCountry->getName() << " added to the map." << std::endl;
-}
-
+/*
 //retrieve a continent based on its name alone
-Continent& Map::getContinent(std::string continentName){
+const Continent& Map::getContinent(std::string continentName){
   return findElement(continents, continentCount, continentName);
 }
+*/
 
 //Returns the number of countries owned by the given player
 int Map::countCountriesOwned(int playerIndex){
@@ -72,20 +67,16 @@ int Map::computeContinentsBonuses(int playerIndex){
   return continentBonuses;
 }
 
-void Map::setPlayerArrayInMap(Player * playerArray){
+void Map::setPlayerArrayInMap(Player ** playerArray){
 	map_playerArray = playerArray;
 }
 
 void Map::updateCountriesAndArmies(){
 	for (int i = 0; i < numPlayers; i++){
-		int index = map_playerArray[i].getPlayerIndex();
-		map_playerArray[i].setCountriesOwned(countCountriesOwned(index));
-		map_playerArray[i].setArmiesOwned(countArmiesOwned(index));
+		int index = map_playerArray[i]->getPlayerIndex();
+		map_playerArray[i]->setCountriesOwned(countCountriesOwned(index));
+		map_playerArray[i]->setArmiesOwned(countArmiesOwned(index));
 	}
-}
-
-int Map::getCountryCount(){
-	return countryCount;
 }
 
 //Assigns each player to own an equal number of randomly selected countries
@@ -114,11 +105,12 @@ void Map::setupCountryOwners(int numOfPlayers)
 	numPlayers = numOfPlayers;
 }
 
-
+/*
 //retrieve a country based on its name alone
-Country& Map::getCountry(std::string countryName){
+const Country& Map::getCountry(std::string countryName){
   return findElement(countries, countryCount, countryName);   
 }
+*/
 
 //IMPLEMENTING OBSERVABLE-----------------------
 void Map::attach(Observer & ob){
@@ -170,7 +162,7 @@ std::list<std::string> Map::getEnemyNeighbours(std::string &countryName, int pla
 
 //COUNTRY CONNECTION FUNCTIONS---------------------------------------------------
 //recursively searches for any friendly neighbouring countries (and any of their friendly neightbours) and add them to the list parameter
-void Map::recursiveGetConnectedFriendlyCountries(Country &startCountry, int playerIndex, std::list<std::string> &connectedCountryList){
+void Map::recursiveGetConnectedFriendlyCountries(const Country &startCountry, int playerIndex, std::list<std::string> &connectedCountryList){
   //the the current country to the list
   connectedCountryList.push_front(startCountry.getName());
   //for every neighbour of the country
@@ -266,195 +258,10 @@ int Map::getCountryOwnerIndex(std::string countryName){
 bool Map::countryExists(std::string countryName){return &(findElement(countries, countryCount, countryName)) != NULL;}
   
   //returns a string representation of the map
-std::string Map::to_string(){
+std::string Map::to_string() const {
   std::ostringstream oss;
   for (int x = 0; x < continentCount; x++){
     oss << continents[x]->to_string();
   }
   return oss.str();
 } 
-
-
-void Map::loadMap(std::string mapFilePath){
-  
-  
-  mapIO.openInputFile(mapFilePath);
-  mapIO.readMapFromFile();
-  mapIO.closeInputFile();
-  
-  //add the continents to the map
-  std::list<Continent> continents = mapIO.getContinents();
-  
-  for (std::list<Continent>::iterator it = continents.begin(); it != continents.end(); ++it)
-  {
-    addContinent(new Continent((*it).getName()));
-  }
-  
-  //add the countries to the map and register them with their continents
-  std::list<Territory> territories = mapIO.getTerritories();
-  
-  for (std::list<Territory>::iterator it = territories.begin(); it != territories.end(); ++it)
-  {
-    addCountry(new Country((*it).getName(), getContinent((*it).getParentCont())));
-  }
-  
-  //connect the countries
-  for (std::list<Territory>::iterator it = territories.begin(); it != territories.end(); ++it)
-  {
-    Territory tempTerr = *it;
-    std::list<string> terr = tempTerr.getAdjacent();
-    
-    for (std::list<string>::iterator itStr = terr.begin(); itStr != terr.end(); ++itStr)
-    {
-      getCountry((*it).getName()).addNeighbour(getCountry(*itStr));
-    }  
-  } 
-}
-
-void Map::saveMap(std::string mapFilePath){
-  
-  mapIO.openOutputFile(mapFilePath);
-  mapIO.saveMapToFile();
-  mapIO.closeOutputFile();
-}
-
-//Sets up a map (hard coded for now until file loading can be implemented
-void Map::setupHardcodedMap(){
-  //add the continents to the map
-  addContinent(new Continent("North America"));
-  addContinent(new Continent("South America"));
-  addContinent(new Continent("Europe"));
-  addContinent(new Continent("Africa"));
-  addContinent(new Continent("Asia"));
-  addContinent(new Continent("Australia"));
-  
-  //add the countries to the map and register them with their continents
-  addCountry(new Country("Alaska", getContinent("North America")));
-  addCountry(new Country("Alberta", getContinent("North America")));
-  addCountry(new Country("Ontario", getContinent("North America")));
-  addCountry(new Country("Quebec", getContinent("North America")));
-  addCountry(new Country("Greenland", getContinent("North America")));
-  addCountry(new Country("Northwest Territory", getContinent("North America")));
-  addCountry(new Country("Western United States", getContinent("North America")));
-  addCountry(new Country("Eastern United States", getContinent("North America")));
-  addCountry(new Country("Central America", getContinent("North America")));
-  
-  addCountry(new Country("Argentina", getContinent("South America")));
-  addCountry(new Country("Brazil", getContinent("South America")));
-  addCountry(new Country("Peru", getContinent("South America")));
-  addCountry(new Country("Venezuela", getContinent("South America")));
-  
-  addCountry(new Country("Great Britain", getContinent("Europe")));
-  addCountry(new Country("Iceland", getContinent("Europe")));
-  addCountry(new Country("Northern Europe", getContinent("Europe")));
-  addCountry(new Country("Scandinavia", getContinent("Europe")));
-  addCountry(new Country("Southern Europe", getContinent("Europe")));
-  addCountry(new Country("Ukraine", getContinent("Europe")));
-  addCountry(new Country("Western Europe", getContinent("Europe")));
-  
-  addCountry(new Country("Congo", getContinent("Africa")));
-  addCountry(new Country("East Africa", getContinent("Africa")));
-  addCountry(new Country("Egypt", getContinent("Africa")));
-  addCountry(new Country("Madagascar", getContinent("Africa")));
-  addCountry(new Country("North Africa", getContinent("Africa")));
-  addCountry(new Country("South Africa", getContinent("Africa")));
-  
-  addCountry(new Country("Afghanistan", getContinent("Asia")));
-  addCountry(new Country("China", getContinent("Asia")));
-  addCountry(new Country("India", getContinent("Asia")));
-  addCountry(new Country("Irkutsk", getContinent("Asia")));
-  addCountry(new Country("Japan", getContinent("Asia")));
-  addCountry(new Country("Kamchatka", getContinent("Asia")));
-  addCountry(new Country("Middle East", getContinent("Asia")));
-  addCountry(new Country("Mongolia", getContinent("Asia")));
-  addCountry(new Country("Siam", getContinent("Asia")));
-  addCountry(new Country("Siberia", getContinent("Asia")));
-  addCountry(new Country("Ural", getContinent("Asia")));
-  addCountry(new Country("Yakutsk", getContinent("Asia")));
-  
-  addCountry(new Country("Eastern Australia", getContinent("Australia")));
-  addCountry(new Country("Indonesia", getContinent("Australia")));
-  addCountry(new Country("New Guinea", getContinent("Australia")));
-  addCountry(new Country("Western Australia", getContinent("Australia")));
-  
-  //connect the countries
-  getCountry("Argentina").addNeighbour(getCountry("Brazil"));
-  getCountry("Argentina").addNeighbour(getCountry("Peru"));
-  getCountry("Peru").addNeighbour(getCountry("Brazil"));
-  getCountry("Peru").addNeighbour(getCountry("Venezuela"));
-  getCountry("Brazil").addNeighbour(getCountry("Venezuela"));
-  getCountry("Brazil").addNeighbour(getCountry("North Africa"));
-  getCountry("Venezuela").addNeighbour(getCountry("Central America"));
-  getCountry("Central America").addNeighbour(getCountry("Eastern United States"));
-  getCountry("Central America").addNeighbour(getCountry("Western United States"));
-  getCountry("Western United States").addNeighbour(getCountry("Eastern United States"));
-  getCountry("Western United States").addNeighbour(getCountry("Ontario"));
-  getCountry("Western United States").addNeighbour(getCountry("Alberta"));
-  getCountry("Eastern United States").addNeighbour(getCountry("Ontario"));
-  getCountry("Eastern United States").addNeighbour(getCountry("Quebec"));
-  getCountry("Alberta").addNeighbour(getCountry("Ontario"));
-  getCountry("Alberta").addNeighbour(getCountry("Alaska"));
-  getCountry("Alberta").addNeighbour(getCountry("Northwest Territory"));
-  getCountry("Ontario").addNeighbour(getCountry("Quebec"));
-  getCountry("Ontario").addNeighbour(getCountry("Northwest Territory"));
-  getCountry("Ontario").addNeighbour(getCountry("Greenland"));
-  getCountry("Quebec").addNeighbour(getCountry("Greenland"));
-  getCountry("Northwest Territory").addNeighbour(getCountry("Greenland"));
-  getCountry("Northwest Territory").addNeighbour(getCountry("Alaska"));
-  getCountry("Greenland").addNeighbour(getCountry("Iceland"));
-  getCountry("Alaska").addNeighbour(getCountry("Kamchatka"));
-  getCountry("Iceland").addNeighbour(getCountry("Scandinavia"));
-  getCountry("Iceland").addNeighbour(getCountry("Great Britain"));
-  getCountry("Great Britain").addNeighbour(getCountry("Scandinavia"));
-  getCountry("Great Britain").addNeighbour(getCountry("Northern Europe"));
-  getCountry("Great Britain").addNeighbour(getCountry("Western Europe"));
-  getCountry("Scandinavia").addNeighbour(getCountry("Northern Europe"));
-  getCountry("Scandinavia").addNeighbour(getCountry("Ukraine"));
-  getCountry("Western Europe").addNeighbour(getCountry("North Africa"));
-  getCountry("Western Europe").addNeighbour(getCountry("Northern Europe"));
-  getCountry("Western Europe").addNeighbour(getCountry("Southern Europe"));
-  getCountry("Northern Europe").addNeighbour(getCountry("Southern Europe"));
-  getCountry("Northern Europe").addNeighbour(getCountry("Ukraine"));
-  getCountry("Southern Europe").addNeighbour(getCountry("Egypt"));
-  getCountry("Southern Europe").addNeighbour(getCountry("North Africa"));
-  getCountry("Southern Europe").addNeighbour(getCountry("Middle East"));
-  getCountry("Ukraine").addNeighbour(getCountry("Ural"));
-  getCountry("Ukraine").addNeighbour(getCountry("Afghanistan"));
-  getCountry("Ukraine").addNeighbour(getCountry("Middle East"));
-  getCountry("North Africa").addNeighbour(getCountry("Egypt"));
-  getCountry("North Africa").addNeighbour(getCountry("East Africa"));
-  getCountry("North Africa").addNeighbour(getCountry("Congo"));
-  getCountry("Egypt").addNeighbour(getCountry("East Africa"));
-  getCountry("East Africa").addNeighbour(getCountry("Congo"));
-  getCountry("East Africa").addNeighbour(getCountry("Madagascar"));
-  getCountry("East Africa").addNeighbour(getCountry("South Africa"));
-  getCountry("Congo").addNeighbour(getCountry("South Africa"));
-  getCountry("South Africa").addNeighbour(getCountry("Madagascar"));  
-  getCountry("Middle East").addNeighbour(getCountry("Afghanistan"));
-  getCountry("Middle East").addNeighbour(getCountry("India"));
-  getCountry("Afghanistan").addNeighbour(getCountry("India"));
-  getCountry("Afghanistan").addNeighbour(getCountry("China"));
-  getCountry("Afghanistan").addNeighbour(getCountry("Ural"));
-  getCountry("Ural").addNeighbour(getCountry("Siberia"));
-  getCountry("Ural").addNeighbour(getCountry("China"));
-  getCountry("Siberia").addNeighbour(getCountry("China"));
-  getCountry("Siberia").addNeighbour(getCountry("Yakutsk"));
-  getCountry("Siberia").addNeighbour(getCountry("Irkutsk"));
-  getCountry("Siberia").addNeighbour(getCountry("Mongolia"));
-  getCountry("Yakutsk").addNeighbour(getCountry("Irkutsk"));
-  getCountry("Yakutsk").addNeighbour(getCountry("Kamchatka"));
-  getCountry("Irkutsk").addNeighbour(getCountry("Mongolia"));
-  getCountry("Irkutsk").addNeighbour(getCountry("Kamchatka"));
-  getCountry("Kamchatka").addNeighbour(getCountry("Japan"));
-  getCountry("Mongolia").addNeighbour(getCountry("Japan"));
-  getCountry("Mongolia").addNeighbour(getCountry("China"));
-  getCountry("China").addNeighbour(getCountry("India"));
-  getCountry("China").addNeighbour(getCountry("Siam"));
-  getCountry("India").addNeighbour(getCountry("Siam"));
-  getCountry("Siam").addNeighbour(getCountry("Indonesia"));
-  getCountry("Indonesia").addNeighbour(getCountry("New Guinea"));
-  getCountry("Indonesia").addNeighbour(getCountry("Western Australia"));
-  getCountry("Western Australia").addNeighbour(getCountry("Eastern Australia"));
-  getCountry("Western Australia").addNeighbour(getCountry("New Guinea"));
-  getCountry("Eastern Australia").addNeighbour(getCountry("New Guinea"));
-}

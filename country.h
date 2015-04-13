@@ -7,21 +7,25 @@ class Continent; //forward declaration needed due to circular dependancy between
 
 class Country{
 public:
-  Country(std::string cName, Continent & setContinent);
+  Country(std::string cName, Continent & setContinent, int newX, int newY);
   
   void addNeighbour(Country & newNeighbour, bool unidirectional = true); 
   
   
   //ACCESSORS------------------------------------
-  int getArmies();
-  std::string getName();
-  int getNeighbourCount();
-  Country ** getAllNeighbours();
-  Country * getNeighbour(std::string countryName);
-  int getOwnerIndex();
+  inline int getArmies() const {return armies;}
+  inline std::string getName() const {return name;}
+  inline int getNeighbourCount() const {return neighbourCount;}
+  inline int getOwnerIndex() const {return ownerIndex;}
+  inline Country const*const* getAllNeighbours() const {return neighbours;}
+  inline Continent const* getContinent()const{return myContinent;}
+  inline int getX()const {return xCoord;}
+  inline int getY()const {return yCoord;}
+ 
   bool isNeighbour(std::string countryName);
-  std::string to_string();
-
+  std::string to_string() const;
+  
+  const Country * getNeighbour(std::string countryName);
 
   //MUTATORS-------------------------------------
   void setOwnerIndex(int newOwnerIndex);
@@ -43,10 +47,59 @@ private:
   Country ** neighbours; //array of countries that constitute the countries adjacent to this country
   int ownerIndex;
   Continent * myContinent;
+  int xCoord;
+  int yCoord;
     
 };
 
-std::ostream& operator<<(std::ostream& os, Country & outputCountry);
+
+/*
+ * Returns an element searched for by name using binary search
+ * NOTE: RETURNS NULL IF NO ELEMENT IS FOUND
+ * 
+ * Pre: array is sorted.
+ */
+template<typename T>
+T & findElement( T * array[],  int & elementCount, std::string elementName){
+  T * returnElement = NULL;
+  bool end = false;
+  int leftBound = 0;
+  int checkElement;
+  int rightBound = elementCount - 1;
+  
+  if (elementCount != 0){
+    
+   while(!end){
+     
+      checkElement = rightBound + (leftBound - rightBound) /2  ;
+      
+      //if the element has been found, return it
+      if(array[checkElement]->getName().compare(elementName) == 0){
+	returnElement = array[checkElement];
+	end = true;
+      }
+      //if the lower bound, the upper bound and the element being checked are all the same
+      //  or if the lowerBound is higher than the upper bound
+      //  then quit.
+      else if (leftBound == checkElement && rightBound == checkElement || leftBound > rightBound){
+		if (returnElement == NULL){
+	}
+		  end = true;
+      }
+      //if the element being checked is alphabetically lower than the search item
+      //   move the lowest possible search item to one higher than the element being checked
+      else if (array[checkElement]->getName().compare(elementName) < 0){
+	leftBound = checkElement + 1;
+      }
+      //if the element being checked is alphabetically higher than the search item
+      //   move the highest possible search item to one lower than the element being checked
+      else {
+	rightBound = checkElement - 1;
+      }
+    }
+  }
+  return *returnElement;
+}
 
 //INDEPENDANT HELPER TEMPLATE METHODS------------------
 //(Templates have to be defined entirely in headers because they don't have function headers)
@@ -91,53 +144,4 @@ T** insertElement(T * oldArray[], int & elementCount, T & newElement){
   
   return newElementArray;
   
-}
-
-
-/*
- * Returns an element searched for by name using binary search
- * NOTE: RETURNS NULL IF NO ELEMENT IS FOUND
- * 
- * Pre: array is sorted.
- */
-template<typename T>
-T & findElement(T * array[], int & elementCount, std::string & elementName){
-  T * returnElement = NULL;
-  bool end = false;
-  int leftBound = 0;
-  int checkElement;
-  int rightBound = elementCount - 1;
-  
-  if (elementCount != 0){
-    
-   while(!end){
-     
-      checkElement = rightBound + (leftBound - rightBound) /2  ;
-      
-      //if the element has been found, return it
-      if(array[checkElement]->getName().compare(elementName) == 0){
-	returnElement = array[checkElement];
-	end = true;
-      }
-      //if the lower bound, the upper bound and the element being checked are all the same
-      //  or if the lowerBound is higher than the upper bound
-      //  then quit.
-      else if (leftBound == checkElement && rightBound == checkElement || leftBound > rightBound){
-		if (returnElement == NULL){
-	}
-		  end = true;
-      }
-      //if the element being checked is alphabetically lower than the search item
-      //   move the lowest possible search item to one higher than the element being checked
-      else if (array[checkElement]->getName().compare(elementName) < 0){
-	leftBound = checkElement + 1;
-      }
-      //if the element being checked is alphabetically higher than the search item
-      //   move the highest possible search item to one lower than the element being checked
-      else {
-	rightBound = checkElement - 1;
-      }
-    }
-  }
-  return *returnElement;
 }

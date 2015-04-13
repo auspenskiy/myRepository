@@ -2,14 +2,17 @@
 #include <sstream>
 #include <iostream>
 
-
-Country::Country(std::string cName, Continent & setContinent){
-  neighbourCount = 0;
+Country::Country(std::string cName, Continent & setContinent, int newX, int newY){
   name = cName;
   myContinent = &setContinent;
-  myContinent->addCountry(*this);
+  xCoord = newX;
+  yCoord = newY;
+  
+  neighbourCount = 0;
   ownerIndex = -1;
   armies = 2;
+  
+    myContinent->addCountry(*this);
 }
 
 /*
@@ -23,20 +26,16 @@ void Country::addNeighbour(Country & newNeighbour, bool unidirectional){
   if (!unidirectional){
     newNeighbour.addNeighbourLink(*this);
   }
+  
+  //std::cout << this->getName() << " connected to "<< newNeighbour.getName() << std::endl;
 }
 
 //ACCESSORS------------------------------------
-int Country::getArmies(){return armies;}
-Country ** Country::getAllNeighbours(){return neighbours;}
-int Country::getNeighbourCount(){return neighbourCount;}
-std::string Country::getName(){return name;}
-int Country::getOwnerIndex(){return ownerIndex;}
-
-Country * Country::getNeighbour(std::string countryName){
+const Country * Country::getNeighbour(std::string countryName) {
   return & (findElement(neighbours, neighbourCount, countryName));
 }
 
-bool Country::isNeighbour(std::string countryName){
+bool Country::isNeighbour(std::string countryName) {
   return &(findElement(neighbours, neighbourCount, countryName)) != NULL;
 }
 
@@ -52,12 +51,13 @@ void Country::setArmies(int newArmies){armies = newArmies;}
  * 
  * Post: newNeighbour is added to neighbours in alphabetical order by name.
  */
+
 void Country::addNeighbourLink(Country &newNeighbour){
   this->neighbours = insertElement(this->neighbours, this->neighbourCount, newNeighbour);
   //std::cout << newNeighbour.getName() << " connected to " << this->getName() << std::endl;
 }
 
-std::string Country::to_string(){
+std::string Country::to_string() const{
   std::ostringstream oss;
   oss << name << " : player "  << ownerIndex <<" : " <<  armies << " armies" << " : Connected to " ;
   if(neighbourCount == 0){

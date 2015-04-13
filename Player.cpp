@@ -1,16 +1,8 @@
 #include "Player.h"
 #include <ctime>
+#include <cstdlib>
+
 #include <iostream>
-
-Player::Player()
-{
-	cards = new Card[3];
-	for (int i = 0; i < 3; i++)
-	{
-		cards[i] = *new Card();
-	}
-}
-
 
 Player::~Player()
 {
@@ -18,18 +10,21 @@ Player::~Player()
 }
 
 
-Player::Player(std::string aName)
+Player::Player(std::string aName, int newPlayerIndex)
 {
 	name = aName;
+	playerIndex = newPlayerIndex;
 	battlesLost = 0;
 	battlesWon = 0;
 	numArmiesOwned = 0;
 	numCountriesOwned = 0;
+	hasConquered = false;
 	isAlive = true;
-	cards = new Card[3];
+	cards = new Card*[3];
+	
 	for (int i = 0; i < 3; i++)
 	{
-		cards[i] = *new Card();
+		cards[i] = new Card(0,i);
 	}
 }
 
@@ -91,9 +86,9 @@ int Player::getPlayerIndex(){
 }
 bool Player::canExchangeCards()
 {
-	int infantry = cards[0].getQuantity();
-	int cavalry = cards[1].getQuantity();
-	int artillery = cards[2].getQuantity();
+	int infantry = cards[0]->getQuantity();
+	int cavalry = cards[1]->getQuantity();
+	int artillery = cards[2]->getQuantity();
 
 	if (infantry >= 1 && cavalry >= 1 && artillery >= 1)
 	{
@@ -155,17 +150,17 @@ void Player::addCard()
 		int xRan;
 		srand(time(0)); // This will ensure a really randomized number by help of time.
 		xRan = rand() % 3;
-		cards[xRan].incrementQuantity();
+		cards[xRan]->incrementQuantity();
 		hasConquered = false;
 	}
 }
 
 int Player::getTotalCards()
 {
-	return cards[0].getQuantity() + cards[1].getQuantity() + cards[2].getQuantity();
+	return cards[0]->getQuantity() + cards[1]->getQuantity() + cards[2]->getQuantity();
 }
 
-Card* Player::getCards()
+Card** Player::getCards()
 {
 	return cards;
 }
@@ -180,14 +175,14 @@ bool Player::getHasConquered()
 	return hasConquered;
 }
 
-void Player::transferCards(Player player)
+void Player::transferCards(Player * player)
 {
-	if (player.getNumArmiesOwned() < 1)
+	if (player->getNumArmiesOwned() < 1)
 	{
 		for (int i = 0; i < 3; i++)
 		{
-			int updatedNumOfArmies = cards[i].getQuantity() + player.cards[i].getQuantity();
-			cards[i].setQuantity(updatedNumOfArmies);
+			int updatedNumOfArmies = cards[i]->getQuantity() + player->cards[i]->getQuantity();
+			cards[i]->setQuantity(updatedNumOfArmies);
 		}
 	}
 }

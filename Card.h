@@ -4,7 +4,8 @@
 class Card
 {
 public:
-	Card();
+	inline Card(){}
+	Card(int newQuantity, int newTypeNum);
 	~Card();
 	void setType(int mType);
 	std::string getType(int num);

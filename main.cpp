@@ -1,49 +1,48 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include "game.h"
-#include "player.h"
+#include "Player.h"
+#include "GameBuilder.h"
+#include "GameBuilderDirector.h"
+#include "GameBuildNew.h"
+#include "GameBuildLoad.h"
+#include "textview.h"
+#include "game_utils.h"
 
-
-int getNumberOfPlayers(){
-	using std::cin;
-
-	Controller controller;
-	int numOfPlayers = 0;
-	std::cout << "How many people are playing? " << std::endl;
-
-	do{
-		std::cout << "You need between 2 and 6 players" << std::endl;
-		numOfPlayers = controller.getInt();
-	} while (numOfPlayers < 2 || numOfPlayers > 6);
-	return numOfPlayers;
-
-}
-//create the player objects and give them countries at random
-Player * createPlayerArray(int numOfPlayers){
-
-	//std::string * playerNameArray = new std::string[numOfPlayers];
-	Player * playerArray = new Player[numOfPlayers];
-
-	std::cin.ignore(256, '\n'); //clears input buffer
-	for (int a = 0; a < numOfPlayers; a = a + 1)
-	{
-		std::cout << "What is the name of player " << a << "?" << std::endl;
-		string name;
-		getline(std::cin, name);
-		Player* player = new Player(name);
-		player->setPlayerIndex(a);
-		playerArray[a] = *player;
-	}
-	return playerArray;
-
-}
 
 int main(){
-
-	int numOfPlayers = getNumberOfPlayers();
-
-	Game * game = new Game(numOfPlayers, createPlayerArray(numOfPlayers));
-
-	return game->play();
+  
+  Controller cr;
+  std::string inString = "";
+  GameBuilderDirector gbd;
+  GameBuilder * gb;
+  Game * game;
+  
+  while (inString.compare("n") != 0 && inString.compare("l") != 0){
+    std::cout << "Please select:\n n - start a new game\n l - load an existing game" << std::endl;
+    inString = cr.getString();
+  }
+  
+  if(inString.compare("n") == 0){
+    gb = new GameBuildNew();
+  }
+  else{    
+    int inInt;
+    
+    do{
+      std::cout << "Please input a save slot (0-9)" << std::endl;
+      inInt = cr.getInt();
+      
+    }while(!(inInt >= 0 && inInt <= 9) || !fileExists("save" +intToString(inInt) + ".msv"));
+    
+    gb = new GameBuildLoad(inInt);
+  }
+  gbd.setGameBuilder(gb);
+  
+  gbd.constructGame();
+  game = gbd.getGame();
+  
+  return game->play();
 
 }

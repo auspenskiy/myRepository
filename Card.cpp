@@ -1,10 +1,10 @@
 #include "Card.h"
+#include <iostream>
 
-Card::Card()
-{
-	quantity = 0;
+Card::Card(int newQuantity, int newTypeNum){
+  setType(newTypeNum);
+  quantity = newQuantity;
 }
-
 
 Card::~Card()
 {

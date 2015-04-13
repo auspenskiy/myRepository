@@ -1,13 +1,15 @@
+#pragma once
+
 #include <string>
 #include <list>
 using namespace std;
 
-#pragma once
-class Territory
+
+class TempCountry
 {
 public:
-	Territory(void);
-	~Territory(void);
+	TempCountry(void);
+	~TempCountry(void);
 	void setAdjacent(list<string> adjacent);
 	void setX(int x);
 	void setY(int y);

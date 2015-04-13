@@ -7,37 +7,31 @@ class Country; //forward declaration needed due to circular dependancy between C
 
 class Continent{
 public:
-	Continent(void);
-  Continent(std::string name);
+  Continent();
+  
+  //!!!should be added as an initialization parameter with country count and removed from here
   void addCountry(Country& newCountry);
-  Country& getCountry(std::string countryName);
-  bool isOwnedByPlayer(int playerIndex);
+  
+  const Country& getCountry(std::string countryName);
+  bool isOwnedByPlayer(int playerIndex) const;
   
 //ACCESSORS-------------------------------------  
-  int getControlValue();
-  Country ** getCountries();
-  int getCountryCount();
-  std::string getName();
-
+  inline int getControlValue() const {return controlValue;}
+  inline Country const*const* getCountries() const {return countries;}
+  inline int getCountryCount() const {return countryCount;}
+  inline const std::string getName()const {return name;}
  
-	void setName(std::string cContName);
-	void setScore(int score);
-	int getScore();
-	
-  std::string to_string();
+  std::string to_string() const;
   
 //MUTATORS-------------------------------------
-  void setControlValue(int newControlValue);
+  inline void setControlValue(int newControlValue){controlValue = newControlValue;}
+  inline void setName(std::string cContName){name = cContName;}
   
 private:
   int countryCount;
   Country ** countries;
   std::string name;
   int controlValue;
-
-  //andrey's stuff
-  std::string continentName;
-	int score;
     
 };
 

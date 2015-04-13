@@ -5,8 +5,8 @@
 
 class Player{
 public:
-	Player();
-	Player(std::string aName);
+	inline Player(){}
+	Player(std::string aName, int newPlayerIndex);
 	~Player();
 	void setName(std::string);
 	std::string getName();
@@ -27,10 +27,10 @@ public:
 	void addCard();
 	void setHasConquered(bool mIsConquered);
 	bool getHasConquered();
-	Card* getCards();
+	Card** getCards();
 	void processCardExchange();
 	void incrementArmies(int incrementValue);
-	void transferCards(Player player);
+	void transferCards(Player * player);
 	bool canExchangeCards();
 	int getTotalCards();
 private:
@@ -42,7 +42,7 @@ private:
 	int numArmiesOwned;
 	//int totalPlayers = 0;
 	std::string name;
-	Card* cards;
+	Card** cards;
 	bool hasConquered;
 	//int* getExchangeChoices();
 };

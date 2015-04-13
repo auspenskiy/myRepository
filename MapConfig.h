@@ -1,58 +1,43 @@
+#pragma once
+
 #include<string>
 #include <iostream>
 #include <fstream>
 #include <list>
-#include "Territory.h"
+#include "TempCountry.h"
 #include "continent.h"
+#include "map.h"
+#include "country.h"
 using namespace std;
-
-#pragma once
 
 class MapConfig
 {
 public:
 	MapConfig(void);
 	~MapConfig(void);
-
-	void openInputFile(string path);
+	
+	void saveMap(const Map * mapToSave, std::string mapFilePath);
+	Map * loadMap(std::string mapFilePath);
+	  
+private:
+  	void openInputFile(string path);
 	void closeInputFile();
 
-	void openOutputFile(string path);
+	void openOutputFile(string path) ;
 	void closeOutputFile();
 
-	void readMapFromFile();
-	void saveMapToFile();
+	Map * loadMapFromFile();
+	void saveMapToFile(const Map * mapToSave);
 
-	void setAuthor(string author);
-	void setImage(string image);
-	void setWrap(string wrap);
-	void setScroll(string scroll);
-	void setWarn(string warn);
-	void setContinents(std::list<Continent> cContinents);
-	void setTerritories(list<Territory> sTerritories);
-	void displayMapFileContent();
+	//void displayMapFileContent();
 
-	string getAuthor();
-	string getImage();
-	string getWrap();
-	string getScroll();
-	string getWarn();
-	list<Continent> getContinents();
-	list<Territory> getTerritories();
 	//list<Territory> MapConfig::getTerritoriesArray();
-	bool isConnectedGraph();
-	bool areContinentsSubGraphs();
-	bool isOneCountyPerContinent();
-
-private:
-	string author;
-	string image;
-	string wrap;
-	string scroll;
-	string warn;
-	std::list<Continent> continents;
-	list<Territory> territories;
+	bool isConnectedGraph() ;
+	bool areContinentsSubGraphs() ;
+	bool isOneCountyPerContinent() ;
+	
+	
+//PRIVATE ATTRIBUTES-------------------------------------------------
 	std::ifstream inStream;
 	std::ofstream outStream;
 };
-
