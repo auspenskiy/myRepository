@@ -8,6 +8,19 @@ public:
 	inline Player(){}
 	Player(std::string aName, int newPlayerIndex);
 	~Player();
+	
+	/*
+	virtual std::string chooseCountryToReinforce()=0;
+	virtual int chooseNumberToReinforce()=0;
+	
+	virtual std::string chooseSourceFortificationCountry()=0;
+	virtual std::string chooseDestinationFortificationCountry()=0;
+	virtual int chooseNumberOfFortificationArmies()=0;
+	
+	virtual std::string chooseAttackingCountry()=0;
+	virtual std::string chooseDefendingCountry()=0;
+	virtual bool chooseContinueAttack()=0;
+	*/
 	void setName(std::string);
 	std::string getName();
 	void setPlayerIndex(int index);
@@ -33,8 +46,10 @@ public:
 	void transferCards(Player * player);
 	bool canExchangeCards();
 	int getTotalCards();
+	inline bool getIsHuman(){return isHuman;}
 private:
 	bool isAlive;
+	bool isHuman;
 	int battlesWon;
 	int battlesLost;
 	int playerIndex;

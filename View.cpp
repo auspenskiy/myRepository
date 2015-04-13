@@ -1,9 +1,17 @@
-#include "controller.h"
-#include <iostream>
+#include "View.h"
+
+//output something normally
+void View::inform(std::string msg){
+  std::cout << msg << std::endl;
+}
+
+//output something with formatting to indicate to the user that they should input something
+void View::prompt(std::string msg){
+  std::cout << "--> "  << msg << std::endl;
+}
 
 
-
-int Controller::getInt(){
+int View::getInt(){
   using std::cin;
   
   int inInt = 0;
@@ -24,7 +32,7 @@ int Controller::getInt(){
   
 }
 
-std::string Controller::getString(){
+std::string View::getString(){
 	  std::string i;
 	  //This filters out extra \n's left over from previous input and gets input
 	  do{

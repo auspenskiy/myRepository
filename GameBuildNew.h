@@ -13,8 +13,6 @@ public:
   Game * getResult();
   
 private:
-  Controller cr;
-  TextView tv; 
   Player ** playerArray;
   int numOfPlayers;
   Map * newMap;

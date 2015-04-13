@@ -9,11 +9,11 @@
 #include "GameBuildLoad.h"
 #include "textview.h"
 #include "game_utils.h"
+#include "View.h"
 
 
 int main(){
   
-  Controller cr;
   std::string inString = "";
   GameBuilderDirector gbd;
   GameBuilder * gb;
@@ -21,7 +21,7 @@ int main(){
   
   while (inString.compare("n") != 0 && inString.compare("l") != 0){
     std::cout << "Please select:\n n - start a new game\n l - load an existing game" << std::endl;
-    inString = cr.getString();
+    inString = View::getString();
   }
   
   if(inString.compare("n") == 0){
@@ -32,7 +32,7 @@ int main(){
     
     do{
       std::cout << "Please input a save slot (0-9)" << std::endl;
-      inInt = cr.getInt();
+      inInt = View::getInt();
       
     }while(!(inInt >= 0 && inInt <= 9) || !fileExists("save" +intToString(inInt) + ".msv"));
     

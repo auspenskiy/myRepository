@@ -13,14 +13,14 @@ void GameBuildNew::buildMap(){
   bool mapLoaded = false;
     
   do{
-    tv.prompt("Please enter the name of the map you would like to play");
-    loadFile = cr.getString();
+    View::prompt("Please enter the name of the map you would like to play");
+    loadFile = View::getString();
     inStream.open (loadFile.c_str());
     
     
     if (!inStream.good())
     {
-      tv.inform("Map file not found");
+      View::inform("Map file not found");
       inStream.close();
     }
     else
@@ -37,19 +37,19 @@ void GameBuildNew::buildMap(){
 
 void GameBuildNew::buildPlayers(){
   
-  tv.inform("How many people are playing?");
+  View::inform("How many people are playing?");
   
   do{
-    tv.prompt("Please enter between 2 and 6 players");  
-    numOfPlayers = cr.getInt();
+    View::prompt("Please enter between 2 and 6 players");  
+    numOfPlayers = View::getInt();
   }while (numOfPlayers < 2 || numOfPlayers > 6);
   
   playerArray = new Player*[numOfPlayers];
   
   for (int a = 0; a < numOfPlayers; a++)
   {
-    tv.prompt("What is the name of player " + intToString(a) + "?");
-    playerArray[a] = new Player(cr.getString(), a);
+    View::prompt("What is the name of player " + intToString(a) + "?");
+    playerArray[a] = new Player(View::getString(), a);
   }
 }
 

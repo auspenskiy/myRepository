@@ -3,7 +3,6 @@
 #include "map.h"
 #include "continent.h"
 #include "country.h"
-#include "controller.h"
 #include "textview.h"
 #include "game_utils.h"
 #include "dice.h"
@@ -53,8 +52,7 @@ private:
 	int bonusArmies;
 	int playerTurns;
 	int playerIndex;
-	TextView * textview;
-	Controller * controller;
+	Observer * textview;
 	Dice * dice;
 	Map * map;
 	std::string * playerNames;
