@@ -63,6 +63,14 @@ public:
   inline const std::string getWrap()const {return wrap;}
   inline const std::string getScroll()const {return scroll;}
   inline const std::string getWarn()const {return warn;}
+
+  void setAuthor(std::string cAuthor);
+  void setImage(std::string cImage);
+  void setWrap(std::string cWrap);
+  void setScroll(std::string cScroll);
+  void setWarn(std::string cWarn);
+
+
   
 private:
  
