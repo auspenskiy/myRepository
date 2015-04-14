@@ -1,7 +1,5 @@
 #include "map.h"
-#include <iostream>
-#include <sstream>
-#include <time.h>
+
 
 Map::Map(int numOfCountries, Country ** newCountries, int numOfContinents, Continent ** newContinents, 
 	 std::string newAuthor, std::string newImage, std::string newWrap, std::string newScroll, std::string newWarn){
@@ -162,7 +160,7 @@ std::list<std::string> Map::getEnemyNeighbours(std::string &countryName, int pla
 
 //COUNTRY CONNECTION FUNCTIONS---------------------------------------------------
 //recursively searches for any friendly neighbouring countries (and any of their friendly neightbours) and add them to the list parameter
-void Map::recursiveGetConnectedFriendlyCountries(const Country &startCountry, int playerIndex, std::list<std::string> &connectedCountryList){
+void Map::recursiveGetConnectedFriendlyCountries(const Country &startCountry, int playerIndex, std::list<std::string> &connectedCountryList)const{
   //the the current country to the list
   connectedCountryList.push_front(startCountry.getName());
   //for every neighbour of the country
@@ -265,3 +263,12 @@ std::string Map::to_string() const {
   }
   return oss.str();
 } 
+
+bool Map::countryIsFriendly(const std::string country, const int playerIndex) {
+	if (countryExists(country)){
+	  if (getCountryOwnerIndex(country) == playerIndex){
+	    return true;
+	  }
+	}
+	return false;
+}

@@ -41,3 +41,24 @@ std::string View::getString(){
 
 	  return i;
 }
+
+void View::outputCountryList(std::list<std::string> countryList){
+	//output list of countries
+	std::list<std::string>::iterator iter = countryList.begin();
+	while (iter != countryList.end()){
+		View::inform("  " + *iter);
+		iter++;
+	}
+}
+
+bool View::putCountryExistsAndFriendly(std::string country, int currentPlayerIndex, Map * map){
+	if (!map->countryExists(country)){
+		View::inform(country + " does not exist.");
+		return false;
+	}
+	else if (map->getCountryOwnerIndex(country) != currentPlayerIndex){
+		View::inform(country + " does not belong to you.");
+		return false;
+	}
+	return true;
+}

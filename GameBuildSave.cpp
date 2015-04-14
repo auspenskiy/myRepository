@@ -26,6 +26,7 @@ void GameBuildSave::buildPlayers(){
   for(int x = 0; x < gameToSave->getNumOfPlayers(); x++){
     outStream << gameToSave->getPlayerArray()[x]->getName() << ",";
     outStream << gameToSave->getPlayerArray()[x]->getPlayerIndex() << ",";
+    outStream << gameToSave->getPlayerArray()[x]->getPlayerType() << ",";
     outStream << gameToSave->getPlayerArray()[x]->getIsAlive() << ",";
     outStream << gameToSave->getPlayerArray()[x]->getHasConquered() << ",";
     outStream << gameToSave->getPlayerArray()[x]->getBattlesLost() << ",";

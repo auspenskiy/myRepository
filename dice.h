@@ -1,8 +1,11 @@
 #pragma once
 
+#include <time.h>
+#include <cstdlib>
 class Dice
 {
 public:
+  inline Dice(){srand(time(NULL));}   //Allows to generate unique numbers
   void roll_dice(int attackingArmies, int defendingArmies);  //function to generate dice roll
   inline int getFirstAttackDie(){return attack_dice[0];}
   inline int getFirstDefendDie(){return defend_dice[0];}

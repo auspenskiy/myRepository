@@ -1,13 +1,12 @@
 #include "dice.h"
 
-#include <time.h>
-#include <cstdlib>
+
 
 void Dice::roll_dice(int attackingArmies, int defendingArmies)
 {		
 	int replace;
 	
-	srand(time(NULL) );   //Allows to generate unique numbers
+	
 		
 	attack_dice[2] = 0;
 	attack_dice[1] = 0;
