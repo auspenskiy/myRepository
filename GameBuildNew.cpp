@@ -6,6 +6,7 @@
 #include "PlayerAggressive.h"
 #include "PlayerDefensive.h"
 #include "PlayerRandom.h"
+#include "MapFileAdapter.h"
 
 GameBuildNew::GameBuildNew(){
   
@@ -18,8 +19,9 @@ void GameBuildNew::buildMap(){
     
   do{
     View::prompt("Please enter the name of the map you would like to play");
-    //loadFile = View::getString();
-    inStream.open ("../Resources/World.map");
+	loadFile = View::getString();
+	inStream.open(loadFile.c_str());
+    //inStream.open ("../Resources/World.map");
     
     if (!inStream.good())
     {
@@ -30,8 +32,8 @@ void GameBuildNew::buildMap(){
     {
       //inStream.close();
       //!!!future improvement: try and catch exceptions of bad map formats
-		MapConfig mapLoad;
-		newMap = mapLoad.loadMap(loadFile);
+		MapFileAdapter *mapLoad = new MapFileAdapter;
+		newMap = mapLoad->loadMap(loadFile);
       mapLoaded = true;
 
     }
