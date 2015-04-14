@@ -256,3 +256,28 @@ bool Map::countryIsFriendly(const std::string country, const int playerIndex) {
 	}
 	return false;
 }
+
+void Map::setAuthor(std::string cAuthor)
+{
+	author = cAuthor;
+}
+
+void Map::setImage(std::string cImage)
+{
+	image = cImage;
+}
+
+void Map::setWrap(std::string cWrap)
+{
+	wrap = cWrap;
+}
+
+void Map::setScroll(std::string cScroll)
+{
+	scroll = cScroll;
+}
+
+void Map::setWarn(std::string cWarn)
+{
+	warn = cWarn;
+}

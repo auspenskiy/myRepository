@@ -1,8 +1,10 @@
+#pragma once
 #include "MapFile.h"
 #include "MapConfig.h"
 #include "Game.h"
 
-#pragma once
+
+
 class MapFileAdapter : public MapConfig
 {
 private:
@@ -14,4 +16,7 @@ public:
 
 	Map* loadMap(string fileName);
 	void saveMapToFile(const Map* mapToSave, string fileName);
+
+	Map* createMap();
+
 };

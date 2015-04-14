@@ -17,4 +17,5 @@ private:
   Player ** playerArray;
   int numOfPlayers;
   Map * newMap;
+  void buildCustomMap();
 };

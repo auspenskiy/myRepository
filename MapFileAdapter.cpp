@@ -14,8 +14,12 @@ MapFileAdapter::MapFileAdapter()
 
 Map* MapFileAdapter::loadMap(string fileName)
 {
-	Game game(fileName);
 	return mapFileAdaptee->loadMap(fileName);
+}
+
+Map* MapFileAdapter::createMap()
+{
+	return mapFileAdaptee->createCustomMap();
 }
 
 void MapFileAdapter::saveMapToFile(const Map* mapToSave, string fileName)

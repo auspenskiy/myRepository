@@ -1,7 +1,7 @@
 #include "GameBuildNew.h"
 #include <fstream>
 #include "game_utils.h"
-#include "MapConfig.h"
+#include "MapFileAdapter.h"
 #include "PlayerHuman.h"
 #include "PlayerAggressive.h"
 #include "PlayerDefensive.h"
@@ -13,15 +13,29 @@ GameBuildNew::GameBuildNew(){
 }
 
 void GameBuildNew::buildMap(){
+	std::string inString = "";
   std::string loadFile;
   std::ifstream inStream;
   std::string extension;
   bool mapLoaded = false;
     
+	View::prompt("Would you like to create a custom map or play on an existing map?");
+	View::prompt("Please select:\n c - custom map\n e - play on an existing map");
+
+	inString = View::getString();
+
+	if (inString.compare("c") == 0){
+		MapFileAdapter* mapLoad = new MapFileAdapter();
+		newMap = mapLoad->createMap();
+		MapFileAdapter* adapter = new MapFileAdapter();
+		adapter->saveMapToFile(newMap, "../Resources/Test.map");
+	}
+	else
+	{
+
   do{
     View::prompt("Please enter the name of the map you would like to play");
 	loadFile = View::getString();
-	inStream.open(loadFile.c_str());
 	extension = loadFile.substr(loadFile.find_last_of(".")+1);
 
 	if (!fileExists(loadFile) || extension != "map")
@@ -33,12 +47,14 @@ void GameBuildNew::buildMap(){
     {
       //inStream.close();
       //!!!future improvement: try and catch exceptions of bad map formats
-		MapFileAdapter *mapLoad = new MapFileAdapter;
+
+		MapFileAdapter* mapLoad = new MapFileAdapter();
 		newMap = mapLoad->loadMap(loadFile);
       mapLoaded = true;
 
     }
-  }while(!mapLoaded);
+		} while (!mapLoaded);
+	}
 } 
 
 void GameBuildNew::buildPlayers(){
@@ -55,7 +71,7 @@ void GameBuildNew::buildPlayers(){
   for (int a = 0; a < numOfPlayers; a++)
   {
     do{
-      View::inform("Player "+ intToString(a) + ": Please select player type");
+      View::inform("Player "+ intToString(a+1) + ": Please select player type");
       View::inform("1 - Human");
       View::inform("2 - Aggressive Computer");
       View::inform("3 - Defensive Computer");
@@ -67,11 +83,11 @@ void GameBuildNew::buildPlayers(){
     }while(inInt < 1 || inInt > 4);
     
     if(inInt == 1){
-	View::prompt("Please enter the name of player " + intToString(a) + ":");
+	View::prompt("Please enter the name of player " + intToString(a+1) + ":");
 	playerArray[a] = new PlayerHuman(View::getString(), a);
     }
     else{
-      View::prompt("Please enter the name of computer player " + intToString(a) + ":");
+      View::prompt("Please enter the name of computer player " + intToString(a+1) + ":");
       if (inInt ==2){
 	playerArray[a] = new PlayerAggressive(View::getString()+ " (Aggressive Computer)", a);
       }
@@ -87,6 +103,10 @@ void GameBuildNew::buildPlayers(){
 
 void GameBuildNew::buildGameState(){
   //Nothing to do here for a new game.  Intentionally left empty.
+}
+
+void GameBuildNew::buildCustomMap(){
+
 }
 
 Game * GameBuildNew::getResult(){
