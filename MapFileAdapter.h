@@ -14,4 +14,5 @@ public:
 
 	Map* loadMap(string fileName);
 	void saveMapToFile(const Map* mapToSave, string fileName);
+	Map* createMap();
 };

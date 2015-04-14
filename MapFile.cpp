@@ -16,8 +16,8 @@ void MapFile::openInputFile(string path)
 	inStream.open(path.c_str());
 	if (!inStream.good())
 	{
-		cout << "FILE OPENING ERROR - file path: " << path << endl;
-		cin.get();
+		std::cout << "FILE OPENING ERROR - file path: " << path << endl;
+		std::cin.get();
 		exit(0);
 	}
 }
@@ -30,8 +30,8 @@ void MapFile::openOutputFile(string path)
 	outStream.open(path.c_str());
 	if (!outStream.good())
 	{
-		cout << "FILE CLOSING ERROR - file path: " << path << endl;
-		cin.get();
+		std::cout << "FILE CLOSING ERROR - file path: " << path << endl;
+		std::cin.get();
 		exit(0);
 	}
 }
@@ -202,10 +202,163 @@ void MapFile::saveMapToFile(const Map * mapToSave)
 	}
 	else
 	{
-		cout << "The map you are providing doesn't meet the criteria of the game";
+		std::cout << "The map you are providing doesn't meet the criteria of the game";
 	}
-	outStream.close();
+	closeOutputFile();
 }
+
+Map* MapFile::createMapFile()
+{
+		int contNum;
+		string skip;
+		string read;
+		string author;
+		string image;
+		string wrap;
+		string scroll;
+		string warn;
+
+		Continent ** continents = NULL;
+		Country ** countries = NULL;
+		int numOfContinents = 0;
+		int numOfCountries = 0;
+
+		View::prompt("Enter the author's name: ");
+		author = View::getString();
+
+		View::prompt("Enter the image file path: ");
+		image = View::getString();
+
+		View::prompt("Enter the wrap value: ");
+		wrap = View::getString();
+
+		View::prompt("Enter the scroll value: ");
+		scroll = View::getString();
+
+		View::prompt("Enter the warn value: ");
+		warn = View::getString();
+
+		View::prompt("How many continents do you want to have in a game?");
+		contNum = View::getInt();
+		string contName;
+		int controlValue;
+		Continent * newContinent;
+		std::list<string> continentNames;
+		for (int k = 0; k < contNum; k++)
+			{
+				View::prompt("Enter the name of the continent");
+				cin.get();
+				getline(cin, contName);
+				newContinent = new Continent();
+				newContinent->setName(contName);
+
+				std::cout << "Enter the control value for the continent" << endl;
+				std::cin >> controlValue;
+				newContinent->setControlValue(controlValue);
+				continents = insertElement(continents, numOfContinents, *newContinent);
+				continentNames.push_back(contName);
+			}
+
+			int numTer;
+			string terrName;
+			cout << "How many countries do you want to create?" << endl;
+			cin >> numTer;
+			cin.get();
+
+			TempCountry tempCountry;
+			string tempCountryName;
+			string parentContinent;
+			std::list<TempCountry> listTempCountries;
+			int x, y;
+			for (int i = 0; i < numTer; i++)
+			{
+					std::list<string> adjacent;
+					View::prompt("Enter country name: ");
+					//cin.get();
+					getline(cin, tempCountryName, '\n');
+					tempCountry.setName(tempCountryName);
+
+					View::prompt("Enter x value: ");
+					x = View::getInt();
+					tempCountry.setX(x);
+
+					View::prompt("Enter y value: ");
+					y = View::getInt();
+					tempCountry.setY(y);
+					cin.get();
+
+					bool valid = false;
+					do
+					{
+						View::prompt("Enter the name of a parent continent for " + tempCountryName);
+						//sgetline(cin, skip, '\n');
+						getline(cin, parentContinent, '\n');
+
+						for (std::list<string>::iterator it = continentNames.begin(); it != continentNames.end(); ++it)
+						{
+							Continent cont;
+							string curName = (*it);
+							if (curName == parentContinent)
+							{
+								valid = true;
+								tempCountry.setParentCont(parentContinent);
+								break;
+							}
+							else
+							{
+								continue;
+							}
+						}
+						if (!valid)
+						{
+							View::inform("You didn't create this continent. Please enter the name of a valid continent ");
+						}
+					} while (!valid);
+					
+					View::prompt("How many adjacent countries does " + tempCountryName + " has?: ");
+
+					int numOfAdj = View::getInt();
+					string adj = "";
+					for (int a = 0; a < numOfAdj; a++)
+					{
+						View::prompt("Enter the name of the adjacent country: ");
+						//getline(cin, skip, '\n');
+						cin.get();
+						getline(cin, adj);
+						adjacent.push_back(adj);
+					}
+					tempCountry.setAdjacent(adjacent);
+					listTempCountries.push_back(tempCountry);
+			}
+
+			for (std::list<TempCountry>::iterator it = listTempCountries.begin(); it != listTempCountries.end(); ++it)
+			{
+				//find the new country's continent
+				Continent * inContinent = &findElement(continents, numOfContinents, (*it).getParentCont());
+				//Create new country (which automatically adds it to its continent
+				Country * newCountry = new Country((*it).getName(), *inContinent, (*it).getX(), (*it).getY());
+				//Add Country to Map's Country array
+				countries = insertElement(countries, numOfCountries, *newCountry);
+				//std::cout << newCountry->getName() << " added to the map." << std::endl;
+			}
+			//connect the countries to their neighbours
+			//for each country in the list of loaded countries
+			for (std::list<TempCountry>::iterator it = listTempCountries.begin(); it != listTempCountries.end(); ++it)
+			{
+				//find the country object
+				Country * neighbourCountry = &findElement(countries, numOfCountries, (*it).getName());
+				std::list<string> neighbourList = (*it).getAdjacent();
+				//for each entry in its attached territories
+				for (std::list<string>::iterator itNeighbours = neighbourList.begin(); itNeighbours != neighbourList.end(); ++itNeighbours)
+				{
+					//find the neighbour's country object, add them as neighbours
+					findElement(countries, numOfCountries, (*itNeighbours)).addNeighbour(*neighbourCountry);
+				}
+			}
+
+		return new Map(numOfCountries, countries, numOfContinents, continents, author, image, wrap, scroll, warn);
+}
+
 Map * MapFile::loadMap(std::string mapFilePath){
 	Map * newMap;
 	openInputFile(mapFilePath);
@@ -217,4 +370,11 @@ void MapFile::saveMap(const Map * mapToSave, std::string mapFilePath){
 	openOutputFile(mapFilePath);
 	saveMapToFile(mapToSave);
 	closeOutputFile();
+
+}
+
+Map* MapFile::createCustomMap(){
+	Map * newMap;
+	newMap = createMapFile();
+	return newMap;
 }

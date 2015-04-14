@@ -68,6 +68,7 @@ int Game::play(){
 			  choice = currentPlayer->chooseAction(getMap());
 				switch (choice){
 				case 0:
+					handleCards(playerIndex);
 					break;
 				case 1:
 					attackingCountry = currentPlayer->chooseAttackingCountry(getMap());

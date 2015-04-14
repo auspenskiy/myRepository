@@ -1,7 +1,7 @@
 #include "GameBuildNew.h"
 #include <fstream>
 #include "game_utils.h"
-#include "MapConfig.h"
+#include "MapFileAdapter.h"
 #include "PlayerHuman.h"
 #include "PlayerAggressive.h"
 #include "PlayerDefensive.h"
@@ -12,31 +12,47 @@ GameBuildNew::GameBuildNew(){
 }
 
 void GameBuildNew::buildMap(){
-  std::string loadFile;
-  std::ifstream inStream;
-  bool mapLoaded = false;
-    
-  do{
-    View::prompt("Please enter the name of the map you would like to play");
-    //loadFile = View::getString();
-    inStream.open ("../Resources/World.map");
-    
-    if (!inStream.good())
-    {
-      View::inform("Map file not found");
-      inStream.close();
-    }
-    else
-    {
-      //inStream.close();
-      //!!!future improvement: try and catch exceptions of bad map formats
-		MapConfig mapLoad;
-		newMap = mapLoad.loadMap(loadFile);
-      mapLoaded = true;
+	std::string inString = "";
+	std::string loadFile;
+	std::ifstream inStream;
+	bool mapLoaded = false;
 
-    }
-  }while(!mapLoaded);
-} 
+	View::prompt("Would you like to create a custom map or play on an existing map?");
+	View::prompt("Please select:\n c - custom map\n e - play on an existing map");
+
+	inString = View::getString();
+
+	if (inString.compare("c") == 0){
+		MapFileAdapter* mapLoad = new MapFileAdapter();
+		newMap = mapLoad->createMap();
+		MapFileAdapter* adapter = new MapFileAdapter();
+		adapter->saveMapToFile(newMap, "../Resources/Test.map");
+	}
+	else
+	{
+
+		do{
+			View::prompt("Please enter the name of the map you would like to play");
+			loadFile = View::getString();
+			inStream.open("../Resources/Canada.map");
+
+			if (!inStream.good())
+			{
+				View::inform("Map file not found");
+				inStream.close();
+			}
+			else
+			{
+				//inStream.close();
+				//!!!future improvement: try and catch exceptions of bad map formats
+				MapFileAdapter* mapLoad = new MapFileAdapter();
+				newMap = mapLoad->loadMap("../Resources/Canada.map");
+				mapLoaded = true;
+
+			}
+		} while (!mapLoaded);
+	}
+}
 
 void GameBuildNew::buildPlayers(){
   int inInt;
@@ -84,6 +100,10 @@ void GameBuildNew::buildPlayers(){
 
 void GameBuildNew::buildGameState(){
   //Nothing to do here for a new game.  Intentionally left empty.
+}
+
+void GameBuildNew::buildCustomMap(){
+
 }
 
 Game * GameBuildNew::getResult(){

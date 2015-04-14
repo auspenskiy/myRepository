@@ -18,6 +18,7 @@ public:
 	
 	void saveMap(const Map * mapToSave, std::string mapFilePath);
 	Map * loadMap(std::string mapFilePath);
+	Map* createCustomMap();
 	  
 private:
   	void openInputFile(string path);
@@ -28,6 +29,7 @@ private:
 
 	Map * loadMapFromFile();
 	void saveMapToFile(const Map * mapToSave);
+	Map* createMapFile();
 
 	//void displayMapFileContent();
 

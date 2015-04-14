@@ -80,6 +80,10 @@
     <ClCompile Include="..\MapFileAdapter.cpp" />
     <ClCompile Include="..\Player.cpp" />
     <ClCompile Include="..\Card.cpp" />
+    <ClCompile Include="..\PlayerAggressive.cpp" />
+    <ClCompile Include="..\PlayerDefensive.cpp" />
+    <ClCompile Include="..\PlayerHuman.cpp" />
+    <ClCompile Include="..\PlayerRandom.cpp" />
     <ClCompile Include="..\TempCountry.cpp" />
     <ClCompile Include="..\textview.cpp" />
     <ClCompile Include="..\View.cpp" />
@@ -103,6 +107,10 @@
     <ClInclude Include="..\observable.h" />
     <ClInclude Include="..\observer.h" />
     <ClInclude Include="..\Player.h" />
+    <ClInclude Include="..\PlayerAggressive.h" />
+    <ClInclude Include="..\PlayerDefensive.h" />
+    <ClInclude Include="..\PlayerHuman.h" />
+    <ClInclude Include="..\PlayerRandom.h" />
     <ClInclude Include="..\TempCountry.h" />
     <ClInclude Include="..\textview.h" />
     <ClInclude Include="..\View.h" />
