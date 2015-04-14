@@ -42,9 +42,10 @@ std::string PlayerRandom::chooseAttackingCountry( Map * gameMap) {
   bool hasEnemyCountries = false;
   do{
     attackingCountryIndex = getRandomFriendlyCountryIndex(gameMap->getCountries(), gameMap->getCountryCount());
+
     for(int x = 0; x < gameMap->getCountries()[attackingCountryIndex]->getNeighbourCount(); x ++){
       if (gameMap->getCountries()[attackingCountryIndex]->getAllNeighbours()[x]->getOwnerIndex() != this->getPlayerIndex()){
-	hasEnemyCountries = true;
+		hasEnemyCountries = true;
       }
     }
   } while (!hasEnemyCountries);

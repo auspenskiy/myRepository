@@ -4,6 +4,7 @@
 
 Continent::Continent()
 {
+	countryCount = 0;
 }
 
 void Continent::addCountry(Country & newCountry){
