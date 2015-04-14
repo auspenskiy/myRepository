@@ -105,33 +105,19 @@ int Game::play(){
 				default:
 					View::inform("Invalid input");
 				}
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 3d2feef5b49e69365f5ce71d6306a6f0af05bdd3
 			} while (!turnIsOver);
 		}
 
 		playerTurns++;
 		playerIndex = playerTurns % numOfPlayers;
-
-<<<<<<< HEAD
-		playersAlive = countPlayersAlive();
-
-=======
->>>>>>> 3d2feef5b49e69365f5ce71d6306a6f0af05bdd3
 	} while (playersAlive > 1);
 
 	//if a player wins, find that player
 	Player* winner = findWinner();
 	View::inform("The winner is " + winner->getName());
-<<<<<<< HEAD
-	View::getInt();
-=======
 	View::inform("(Enter any key to exit the game)");
 	View::getString();
->>>>>>> 3d2feef5b49e69365f5ce71d6306a6f0af05bdd3
+
 
 	return 0;
 }
@@ -516,33 +502,6 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 					}else if (inInt > attackingArmies - 1){
 					  inInt = attackingArmies - 1;
 					}
-<<<<<<< HEAD
-
-					//Update the number of armies in the two countries
-					defendingArmies = inInt;
-					attackingArmies -= inInt;
-
-					outString = intToString(inInt) + " armies moved from " + attackingCountry + " to " + defendingCountry + ".\n";
-				}
-				else    // This is when the attacker won but doesn't have enough army greater than his previous rolled dice
-				{
-					outString += "\nBecause you have only " + intToString(attackingArmies) + " armies left in " + attackingCountry + ", you automatically settle " + intToString(attackingArmies - 1) + " in " + defendingCountry + ".";
-
-					//Update the army counts
-					defendingArmies = attackingArmies - 1;
-					attackingArmies = 1;
-				}
-
-				//change the owner of the country
-				map->setCountryOwnerIndex(defendingCountry, map->getCountryOwnerIndex(attackingCountry), false);
-				//transfer cards if required
-				int playerLostInd = map->getCountryOwnerIndex(defendingCountry);
-				int playerWonInd = map->getCountryOwnerIndex(attackingCountry);
-				if (map->countCountriesOwned(playerLostInd) < 1)
-				{
-					playerArray[playerLostInd]->transferCards(playerArray[playerWonInd]);
-				}
-=======
 
 					//Update the number of armies in the two countries
 					defendingArmies = inInt;
@@ -571,7 +530,6 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 
 				}
 
->>>>>>> 3d2feef5b49e69365f5ce71d6306a6f0af05bdd3
 			}
 
 			//If both sides attacker and defender still have armies left after the battle phase then the attacker will receive the choice to continue attacking or stop
@@ -598,15 +556,6 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 		outString += "\n  " + defendingCountry + " has " + intToString(defendingArmies) + " armies";
 		outString += "\n  " + defendingCountry;
 
-<<<<<<< HEAD
-=======
-		//Output summary of the battle via outString
-		outString += "\nAt the end of battle:";
-		outString += "\n  " + attackingCountry + " has " + intToString(attackingArmies) + " armies";
-		outString += "\n  " + defendingCountry + " has " + intToString(defendingArmies) + " armies";
-		outString += "\n  " + defendingCountry;
-
->>>>>>> 3d2feef5b49e69365f5ce71d6306a6f0af05bdd3
 		if (map->getCountryOwnerIndex(defendingCountry) == map->getCountryOwnerIndex(attackingCountry)){
 			outString += " now";
 		}
@@ -614,11 +563,7 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 		{
 			outString += " still";
 		}
-<<<<<<< HEAD
 
-		defendingPlayer = findPlayerByIndex(map->getCountryOwnerIndex(defendingCountry));
-		outString += " belongs to " + defendingPlayer->getName() + "\n";
-=======
 		
 		outString += " belongs to " + playerArray[map->getCountryOwnerIndex(defendingCountry)]->getName() + "\n";
 
@@ -626,7 +571,6 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 			outString += "  " + playerArray[defendingPlayerIndex]->getName() + " has been defeated.\n";
 		}
 
->>>>>>> 3d2feef5b49e69365f5ce71d6306a6f0af05bdd3
 		totalBattles++;
 		View::inform(outString);
 	}
