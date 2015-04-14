@@ -30,12 +30,6 @@ public:
   //MUTATORS-------------------------------------
   void setOwnerIndex(int newOwnerIndex);
   void setArmies(int newArmies);
-
-/*  
-	int defender_army; //other person's army
-	inline void set_country(std::string);
-	inline void set_defender(std::string);
-*/
   
 private:
   void addNeighbourLink(Country &newNeighbour);

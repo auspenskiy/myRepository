@@ -1,6 +1,7 @@
 #include "game.h"
 #include <sstream>
 #include <iostream>
+#include <string>
 #include <cmath>
 #include "GameBuilderDirector.h"
 #include "GameBuildSave.h"
@@ -33,6 +34,10 @@ Game::Game(int newNumOfPlayers, Player ** playaArray, Map * newMap, int newPlaye
 
 }
 
+Game::Game(std::string aFileName){
+	fileName = aFileName;
+}
+
 Game::~Game(){
 	delete map;
 	delete mapView;
@@ -43,30 +48,41 @@ Game::~Game(){
 
 int Game::play(){
 	int choice;
+	bool turnIsOver = false;
 	std::string attackingCountry;
 	std::string defendingCountry;
 	//Main Game Loop
 	
 	do{
 		currentPlayer = playerArray[playerIndex];
+		turnIsOver = false;
 		map->notify();
 		
-					//If this was the losing player's last country, set that player as dead.
+		//If this was the losing player's last country, set that player as dead.
 		if (currentPlayer->getNumCountriesOwned() == 0){
 		  currentPlayer->setDeath();
 		}
 
+		
+		//for(int z = 0; z < map->getCountryCount(); z++){
+		if (!currentPlayer->getIsAlive()){
+						View::inform("DEAD PLAYER!");
+						View::getInt();
+					}
+				//}
+	
 		if (currentPlayer->getIsAlive()){
-
 			View::inform("Round " + intToString(playerTurns / numOfPlayers + 1) + " : " + currentPlayer->getName() + " (player " + intToString(playerIndex) + ")'s turn");
 
 			//reinforce, attack and move are the 3 actions a given player can do during his turn
 			reinforce(playerIndex);
 			
 			do{
+				
 			  choice = currentPlayer->chooseAction(getMap());
 				switch (choice){
 				case 0:
+					turnIsOver = true;
 					break;
 				case 1:
 					attackingCountry = currentPlayer->chooseAttackingCountry(getMap());
@@ -75,15 +91,16 @@ int Game::play(){
 					break;
 				case 2:
 					fortify(playerIndex);
+					turnIsOver = true;
 					break;
 				case 3:
 					map->notify();					
 					break;
 				case 4:
+					map->updateCountriesAndArmies();
 					displayStatistics();
 					break;
 				case 5:
-					//the map editor is simply a text editor
 					system("Start notepad \"../World.map\"");
 					break;
 				case 6:
@@ -96,11 +113,13 @@ int Game::play(){
 				default:
 					View::inform("Invalid input");
 				}
-			} while (choice != 0);
+
+
+			} while (!turnIsOver);
 		}
+
 		playerTurns++;
 		playerIndex = playerTurns % numOfPlayers;
-
 
 		playersAlive = countPlayersAlive();
 
@@ -109,7 +128,7 @@ int Game::play(){
 	//if a player wins, find that player
 	Player* winner = findWinner();
 	View::inform("The winner is " + winner->getName());
-
+	View::getInt();
 
 	return 0;
 }
@@ -146,7 +165,6 @@ void Game::fortify(int playerIndex){
   lst = map->getConnectedFriendlyCountries(sourceCountry, playerIndex);
   
   if (lst.size() > 1){
-    
     destinationCountry = currentPlayer->chooseDestinationFortificationCountry(getMap(), lst);
     
     if (listContains(lst, destinationCountry) && destinationCountry.compare(sourceCountry) != 0){
@@ -154,9 +172,9 @@ void Game::fortify(int playerIndex){
       numToMove = currentPlayer->chooseNumberOfFortificationArmies(getMap());
       
       if (numToMove > 1 && numToMove < map->getCountryArmies(sourceCountry) - 1){ 
-	map->setCountryArmies(sourceCountry, map->getCountryArmies(sourceCountry) - numToMove, false);
-	map->setCountryArmies(destinationCountry, map->getCountryArmies(destinationCountry) + numToMove);
-	View::inform(intToString(numToMove) + " armies moved from " + sourceCountry + " to " + destinationCountry + ".");
+		map->setCountryArmies(sourceCountry, map->getCountryArmies(sourceCountry) - numToMove, false);
+		map->setCountryArmies(destinationCountry, map->getCountryArmies(destinationCountry) + numToMove);
+		View::inform(intToString(numToMove) + " armies moved from " + sourceCountry + " to " + destinationCountry + ".");
       }
     }
   }
@@ -170,7 +188,7 @@ int Game::getCardsExchange(int playerNum)
 
 	int armiesAdded = 0;
 
-	std::cout << "You have " << infantry << " infantry cards, " << cavalry << " calavry cards, and " << artillery << " artillery cards" << std::endl;
+	std::cout << "You have " << infantry << " infantry cards, " << cavalry << " cavalry cards, and " << artillery << " artillery cards" << std::endl;
 
 	if (playerArray[playerNum]->canExchangeCards())
 	{
@@ -375,7 +393,7 @@ void Game::reinforce(int playerNum){
       numToReinforce = currentPlayer->chooseNumberToReinforce(getMap(), bonusArmies);
       
       if (numToReinforce > bonusArmies){
-	numToReinforce = bonusArmies;
+		numToReinforce = bonusArmies;
       }
       
       //put the number of armies specified in the country specifeid and decrement the number of bonus armies
@@ -399,166 +417,168 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 	std::string inString;
 	int inInt;
 
-	View::inform("\n" + attackingCountry + " attacks " + defendingCountry + " with " + intToString(attackingArmies) + " armies against " + intToString(defendingArmies) + " armies.");
+	if (attackingArmies >1){
 
-	// This while loop is placed to verify whether the attacker wants to keep attacking in case the battle phase is finished and no one won yet
+		View::inform("\n" + attackingCountry + " attacks " + defendingCountry + " with " + intToString(attackingArmies) + " armies against " + intToString(defendingArmies) + " armies.");
 
-	do{
-		//function to randomly generates the dices
-		dice->roll_dice(attackingArmies, defendingArmies);
+		// This while loop is placed to verify whether the attacker wants to keep attacking in case the battle phase is finished and no one won yet
 
-		//BATTLE DAMAGES CALCULATIONS--------------------------------------------------------------
-		//function to determine the fightning phase, who wins and who losses
+		do{
+			//function to randomly generates the dices
+			dice->roll_dice(attackingArmies, defendingArmies);
 
-		outString = "";
-		if (attackingArmies >2 && defendingArmies > 1){
-			if (dice->getFirstAttackDie() > dice->getFirstDefendDie()){
-				outString = "The attacker won ";
-				defendingArmies--;
-				playerArray[map->getCountryOwnerIndex(attackingCountry)]->setBattlesWon();
-				playerArray[map->getCountryOwnerIndex(defendingCountry)]->setBattlesLost();
+			//BATTLE DAMAGES CALCULATIONS--------------------------------------------------------------
+			//function to determine the fightning phase, who wins and who losses
+
+			outString = "";
+			if (attackingArmies >2 && defendingArmies > 1){
+				if (dice->getFirstAttackDie() > dice->getFirstDefendDie()){
+					outString = "The attacker won ";
+					defendingArmies--;
+					playerArray[map->getCountryOwnerIndex(attackingCountry)]->setBattlesWon();
+					playerArray[map->getCountryOwnerIndex(defendingCountry)]->setBattlesLost();
+				}
+				else{
+					outString = "The attacker lost ";
+					attackingArmies--;
+					playerArray[map->getCountryOwnerIndex(defendingCountry)]->setBattlesWon();
+					playerArray[map->getCountryOwnerIndex(attackingCountry)]->setBattlesLost();
+				}
+				outString += "the first attack " + intToString(dice->getFirstAttackDie()) + ":" + intToString(dice->getFirstDefendDie());
+
+				if (dice->getSecondAttackDie() > dice->getSecondDefendDie()){
+					outString += "\nThe attacker won ";
+					defendingArmies--;
+					playerArray[map->getCountryOwnerIndex(attackingCountry)]->setBattlesWon();
+					playerArray[map->getCountryOwnerIndex(defendingCountry)]->setBattlesLost();
+				}
+				else{
+					outString += "\nThe attacker lost ";
+					attackingArmies--;
+					playerArray[map->getCountryOwnerIndex(defendingCountry)]->setBattlesWon();
+					playerArray[map->getCountryOwnerIndex(attackingCountry)]->setBattlesLost();
+				}
+				outString += "the second attack " + intToString(dice->getSecondAttackDie()) + ":" + intToString(dice->getSecondDefendDie());
+				lastAttackDice = dice->getSecondAttackDie();
 			}
 			else{
-				outString = "The attacker lost ";
-				attackingArmies--;
-				playerArray[map->getCountryOwnerIndex(defendingCountry)]->setBattlesWon();
-				playerArray[map->getCountryOwnerIndex(attackingCountry)]->setBattlesLost();
+				if (dice->getFirstAttackDie() > dice->getFirstDefendDie()){
+					outString = "The attacker won ";
+					defendingArmies--;
+					playerArray[map->getCountryOwnerIndex(attackingCountry)]->setBattlesWon();
+					playerArray[map->getCountryOwnerIndex(defendingCountry)]->setBattlesLost();
+				}
+				else{
+					outString = "The attacker lost ";
+					attackingArmies--;
+					playerArray[map->getCountryOwnerIndex(defendingCountry)]->setBattlesWon();
+					playerArray[map->getCountryOwnerIndex(attackingCountry)]->setBattlesLost();
+				}
+				outString += "the attack " + intToString(dice->getFirstAttackDie()) + ":" + intToString(dice->getFirstDefendDie());
+				lastAttackDice = dice->getFirstAttackDie();
 			}
-			outString += "the first attack " + intToString(dice->getFirstAttackDie()) + ":" + intToString(dice->getFirstDefendDie());
-
-			if (dice->getSecondAttackDie() > dice->getSecondDefendDie()){
-				outString += "\nThe attacker won ";
-				defendingArmies--;
-				playerArray[map->getCountryOwnerIndex(attackingCountry)]->setBattlesWon();
-				playerArray[map->getCountryOwnerIndex(defendingCountry)]->setBattlesLost();
-			}
-			else{
-				outString += "\nThe attacker lost ";
-				attackingArmies--;
-				playerArray[map->getCountryOwnerIndex(defendingCountry)]->setBattlesWon();
-				playerArray[map->getCountryOwnerIndex(attackingCountry)]->setBattlesLost();
-			}
-			outString += "the second attack " + intToString(dice->getSecondAttackDie()) + ":" + intToString(dice->getSecondDefendDie());
-			lastAttackDice = dice->getSecondAttackDie();
-		}
-		else{
-			if (dice->getFirstAttackDie() > dice->getFirstDefendDie()){
-				outString = "The attacker won ";
-				defendingArmies--;
-				playerArray[map->getCountryOwnerIndex(attackingCountry)]->setBattlesWon();
-				playerArray[map->getCountryOwnerIndex(defendingCountry)]->setBattlesLost();
-			}
-			else{
-				outString = "The attacker lost ";
-				attackingArmies--;
-				playerArray[map->getCountryOwnerIndex(defendingCountry)]->setBattlesWon();
-				playerArray[map->getCountryOwnerIndex(attackingCountry)]->setBattlesLost();
-			}
-			outString += "the attack " + intToString(dice->getFirstAttackDie()) + ":" + intToString(dice->getFirstDefendDie());
-			lastAttackDice = dice->getFirstAttackDie();
-		}
 
 
-		View::inform(outString);
+			View::inform(outString);
 
-		//output updated army counts 
-		View::inform(attackingCountry + ": " + intToString(attackingArmies) + " armies remaining \n" + defendingCountry + ": " + intToString(defendingArmies) + " armies remaining");
+			//output updated army counts 
+			View::inform(attackingCountry + ": " + intToString(attackingArmies) + " armies remaining \n" + defendingCountry + ": " + intToString(defendingArmies) + " armies remaining");
 
 
-		//BATTLE OUTCOME CALCULATIONS--------------------------------------------------------------
-		outString = "";
-		if (attackingArmies <= 1)    //Verify whether the attacker has no army left
-		{
-			continueBattle = false;
-			outString += "\n" + attackingCountry + " does not have enough armies to continue the attack";
-
-		}
-		else if (defendingArmies <= 0)    //Verify whether the defender has no army left
-		{
-			continueBattle = false;
-			outString += "\nYou have conquered " + defendingCountry + ".";
-			outString += "\nYou must settle at least " + intToString(lastAttackDice) + " armies in this newly conquered territory.";
-			
-			//The attacker won, so now he must deploy his army
-			if (attackingArmies > lastAttackDice)
+			//BATTLE OUTCOME CALCULATIONS--------------------------------------------------------------
+			outString = "";
+			if (attackingArmies <= 1)    //Verify whether the attacker has no army left
 			{
-				View::inform(outString);
-				outString = "";
-				inInt = currentPlayer->chooseNumberOfConsolidationArmies(getMap(),lastAttackDice, attackingArmies - 1);
+				continueBattle = false;
+				outString += "\n" + attackingCountry + " does not have enough armies to continue the attack";
+
+			}
+			else if (defendingArmies <= 0)    //Verify whether the defender has no army left
+			{
+				continueBattle = false;
+				outString += "\nYou have conquered " + defendingCountry + ".";
+				outString += "\nYou must settle at least " + intToString(lastAttackDice) + " armies in this newly conquered territory.";
+			
+				//The attacker won, so now he must deploy his army
+				if (attackingArmies > lastAttackDice)
+				{
+					View::inform(outString);
+					outString = "";
+					inInt = currentPlayer->chooseNumberOfConsolidationArmies(getMap(),lastAttackDice, attackingArmies - 1);
 				
-				if (inInt < lastAttackDice){
-				  inInt = lastAttackDice;
-				}else if (inInt > attackingArmies - 1){
-				  inInt = attackingArmies - 1;
+					if (inInt < lastAttackDice){
+					  inInt = lastAttackDice;
+					}else if (inInt > attackingArmies - 1){
+					  inInt = attackingArmies - 1;
+					}
+
+					//Update the number of armies in the two countries
+					defendingArmies = inInt;
+					attackingArmies -= inInt;
+
+					outString = intToString(inInt) + " armies moved from " + attackingCountry + " to " + defendingCountry + ".\n";
+				}
+				else    // This is when the attacker won but doesn't have enough army greater than his previous rolled dice
+				{
+					outString += "\nBecause you have only " + intToString(attackingArmies) + " armies left in " + attackingCountry + ", you automatically settle " + intToString(attackingArmies - 1) + " in " + defendingCountry + ".";
+
+					//Update the army counts
+					defendingArmies = attackingArmies - 1;
+					attackingArmies = 1;
 				}
 
-				//Update the number of armies in the two countries
-				defendingArmies = inInt;
-				attackingArmies -= inInt;
-
-				outString = intToString(inInt) + " armies moved from " + attackingCountry + " to " + defendingCountry + ".\n";
+				//change the owner of the country
+				map->setCountryOwnerIndex(defendingCountry, map->getCountryOwnerIndex(attackingCountry), false);
+				//transfer cards if required
+				int playerLostInd = map->getCountryOwnerIndex(defendingCountry);
+				int playerWonInd = map->getCountryOwnerIndex(attackingCountry);
+				if (map->countCountriesOwned(playerLostInd) < 1)
+				{
+					playerArray[playerLostInd]->transferCards(playerArray[playerWonInd]);
+				}
 			}
-			else    // This is when the attacker won but doesn't have enough army greater than his previous rolled dice
+
+			//If both sides attacker and defender still have armies left after the battle phase then the attacker will receive the choice to continue attacking or stop
+			else
 			{
-				outString += "\nBecause you have only " + intToString(attackingArmies) + " armies left in " + attackingCountry + ", you automatically settle " + intToString(attackingArmies - 1) + " in " + defendingCountry + ".";
-
-				//Update the army counts
-				defendingArmies = attackingArmies - 1;
-				attackingArmies = 1;
+				inString = currentPlayer->chooseContinueAttack(getMap());
+				continueBattle = inString.compare("n") != 0;
 			}
 
-			//change the owner of the country
-			map->setCountryOwnerIndex(defendingCountry, map->getCountryOwnerIndex(attackingCountry), false);
-			//transfer cards if required
-			int playerLostInd = map->getCountryOwnerIndex(defendingCountry);
-			int playerWonInd = map->getCountryOwnerIndex(attackingCountry);
-			if (map->countCountriesOwned(playerLostInd) < 1)
-			{
-				playerArray[playerLostInd]->transferCards(playerArray[playerWonInd]);
-			}
+
+		} while (continueBattle);
+
+
+
+
+		//Update the number of armies in the two countries before terminating the function
+		map->setCountryArmies(defendingCountry, defendingArmies, false);
+		map->setCountryArmies(attackingCountry, attackingArmies);
+
+
+		//Output summary of the battle via outString
+		outString += "\nAt the end of battle:";
+		outString += "\n  " + attackingCountry + " has " + intToString(attackingArmies) + " armies";
+		outString += "\n  " + defendingCountry + " has " + intToString(defendingArmies) + " armies";
+		outString += "\n  " + defendingCountry;
+
+		if (map->getCountryOwnerIndex(defendingCountry) == map->getCountryOwnerIndex(attackingCountry)){
+			outString += " now";
 		}
-
-		//If both sides attacker and defender still have armies left after the battle phase then the attacker will receive the choice to continue attacking or stop
 		else
 		{
-			inString = currentPlayer->chooseContinueAttack(getMap());
-			continueBattle = inString.compare("n") != 0;
+			outString += " still";
 		}
 
-
-	} while (continueBattle);
-
-
-
-
-	//Update the number of armies in the two countries before terminating the function
-	map->setCountryArmies(defendingCountry, defendingArmies, false);
-	map->setCountryArmies(attackingCountry, attackingArmies);
-
-
-	//Output summary of the battle via outString
-	outString += "\nAt the end of battle:";
-	outString += "\n  " + attackingCountry + " has " + intToString(attackingArmies) + " armies";
-	outString += "\n  " + defendingCountry + " has " + intToString(defendingArmies) + " armies";
-	outString += "\n  " + defendingCountry;
-
-	if (map->getCountryOwnerIndex(defendingCountry) == map->getCountryOwnerIndex(attackingCountry)){
-		outString += " now";
+		defendingPlayer = findPlayerByIndex(map->getCountryOwnerIndex(defendingCountry));
+		outString += " belongs to " + defendingPlayer->getName() + "\n";
+		totalBattles++;
+		View::inform(outString);
 	}
 	else
 	{
-		outString += " still";
+		View::inform("\n" + attackingCountry + " does not have enough armies to launch an attack.");
 	}
-
-	for (int i = 0; i < numOfPlayers; i++){
-		if (playerArray[i]->getPlayerIndex() == map->getCountryOwnerIndex(defendingCountry)){
-			defendingPlayer = playerArray[i];
-		}
-	}
-
-	outString += " belongs to " + defendingPlayer->getName() + "\n";
-	totalBattles++;
-	View::inform(outString);
 
 }//END battle function
 
@@ -599,7 +619,6 @@ void Game::displayStatistics(){
 		if (totalBattles != 0){
 			roundedBattlesWon = floor(percentBattlesWon / scale + 0.5)*scale;
 		}
-
 
 		//convert double to string for countries owned
 		std::ostringstream countries;

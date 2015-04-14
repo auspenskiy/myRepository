@@ -10,7 +10,7 @@ void View::prompt(std::string msg){
   std::cout << "--> "  << msg << std::endl;
 }
 
-
+//takes int from line, loops until an int is found
 int View::getInt(){
   using std::cin;
   

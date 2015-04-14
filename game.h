@@ -16,6 +16,7 @@ public:
 	//Game(int newNumOfPlayers, std::string * newPlayerNames);
 	Game(int newNumOfPlayers, Player ** playaArray, Map * newMap, int newPlayerTurns=0, 
 	     int newPlayerIndex=0, int newBonusArmies=0, bool newJustLoaded=false);
+	Game(std::string);
 	~Game();
 	int play();
 	Player * findPlayerByIndex(int i);	//function to find a player using index
@@ -44,6 +45,7 @@ private:
 	void handleCards(int playerNum);
 	void saveGame();
 	
+
 	bool justLoaded;
 	int bonusArmies;
 	int playerTurns;
@@ -51,6 +53,7 @@ private:
 	Observer * mapView;
 	Dice * dice;
 	Map * map;
+	std::string fileName;
 	std::string * playerNames;
 	int numOfPlayers;
 	int totalBattles;

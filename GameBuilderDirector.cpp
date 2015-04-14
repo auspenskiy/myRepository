@@ -1,7 +1,7 @@
 #include "GameBuilderDirector.h"
 
-  GameBuilderDirector::GameBuilderDirector(){
-  }
+GameBuilderDirector::GameBuilderDirector(){
+}
 
 void GameBuilderDirector::setGameBuilder(GameBuilder * gb){
   gameBuilderUsed = gb;

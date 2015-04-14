@@ -4,12 +4,11 @@
 
 Continent::Continent()
 {
+	countryCount = 0;
 }
 
 void Continent::addCountry(Country & newCountry){
   countries = insertElement(countries, countryCount, newCountry);
-  
-  //std::cout << newCountry.getName() << " added to " << name << std::endl;
 }
 
 const Country& Continent::getCountry(std::string countryName){

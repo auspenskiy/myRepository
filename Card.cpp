@@ -29,6 +29,8 @@ void Card::setType(int num)
 	}
 	type = cardType;
 }
+
+//return name of the card type
 std::string Card::getType(int num)
 {
 	std::string cardType;

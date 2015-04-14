@@ -2,7 +2,6 @@
 #include <string>
 #include "country.h"
 #include "Card.h"
-
 #include <typeinfo>
 #include "View.h"
 #include <ctime>
@@ -18,6 +17,7 @@ public:
 	Player(std::string aName, int newPlayerIndex);
 	~Player();
 	
+	//functions to simulate AI behavior
 	virtual int chooseAction(Map * gameMap)=0;
 	
 	virtual std::string chooseCountryToReinforce(Map * gameMap, int maxNumOfReinforcements)=0;
@@ -32,32 +32,38 @@ public:
 	virtual bool chooseContinueAttack(Map * gameMap)=0;
 	virtual int chooseNumberOfConsolidationArmies(Map * gameMap, int minConsolidationArmies, int maxConsolidationArmies)=0;
 	
+	//ACCESSORS
 	void setName(std::string);
 	std::string getName();
 	void setPlayerIndex(int index);
+	void setArmiesOwned(int armiesOwned);
+	void setCountriesOwned(int countriesOwned);
+	void setBattlesWon();
+	void setBattlesLost();
+	void setDeath();
+	void setHasConquered(bool mIsConquered);
+	void incrementArmies(int incrementValue);
+
+	//MUTATORS
 	int getBattlesWon();
 	int getBattlesLost();
 	int getNumCountriesOwned();
 	int getNumArmiesOwned();
-	void setArmiesOwned(int armiesOwned);
-	void setCountriesOwned(int countriesOwned);
+	int getTotalCards();
 	int getPlayerIndex();
-	void setBattlesWon();
-	void setBattlesLost();
+	Card** getCards();
 	bool getIsAlive();
-	void setDeath();
-	std::string statistics();
+	inline std::string getPlayerType(){return typeid(*this).name();}
+	bool getHasConquered();
+
+	//CARD FUNCTIONS
 	void exchangeCards(int* choices);
 	void addCard();
-	void setHasConquered(bool mIsConquered);
-	bool getHasConquered();
-	Card** getCards();
 	void processCardExchange();
-	void incrementArmies(int incrementValue);
 	void transferCards(Player * player);
 	bool canExchangeCards();
-	int getTotalCards();
-	inline std::string getPlayerType(){return typeid(*this).name();}
+	
+	
 private:
 	bool isAlive;
 	int battlesWon;
@@ -65,11 +71,7 @@ private:
 	int playerIndex;
 	int numCountriesOwned;
 	int numArmiesOwned;
-	//int totalPlayers = 0;
 	std::string name;	
 	Card** cards;
 	bool hasConquered;
-	//int* getExchangeChoices();
-	
-	//std::string playerType;
 };

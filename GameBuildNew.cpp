@@ -6,6 +6,7 @@
 #include "PlayerAggressive.h"
 #include "PlayerDefensive.h"
 #include "PlayerRandom.h"
+#include "MapFileAdapter.h"
 
 GameBuildNew::GameBuildNew(){
   
@@ -14,25 +15,26 @@ GameBuildNew::GameBuildNew(){
 void GameBuildNew::buildMap(){
   std::string loadFile;
   std::ifstream inStream;
+  std::string extension;
   bool mapLoaded = false;
     
   do{
     View::prompt("Please enter the name of the map you would like to play");
-    loadFile = View::getString();
-    inStream.open (loadFile.c_str());
-    
-    
-    if (!inStream.good())
+	loadFile = View::getString();
+	inStream.open(loadFile.c_str());
+	extension = loadFile.substr(loadFile.find_last_of(".")+1);
+
+	if (!fileExists(loadFile) || extension != "map")
     {
-      View::inform("Map file not found");
+      View::inform("Map file not found or wrong file format");
       inStream.close();
     }
     else
     {
-      inStream.close();
+      //inStream.close();
       //!!!future improvement: try and catch exceptions of bad map formats
-      MapConfig mapLoad;
-      newMap = mapLoad.loadMap(loadFile);
+		MapFileAdapter *mapLoad = new MapFileAdapter;
+		newMap = mapLoad->loadMap(loadFile);
       mapLoaded = true;
 
     }

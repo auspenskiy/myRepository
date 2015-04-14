@@ -26,8 +26,6 @@ void Country::addNeighbour(Country & newNeighbour, bool unidirectional){
   if (!unidirectional){
     newNeighbour.addNeighbourLink(*this);
   }
-  
-  //std::cout << this->getName() << " connected to "<< newNeighbour.getName() << std::endl;
 }
 
 //ACCESSORS------------------------------------
@@ -54,7 +52,6 @@ void Country::setArmies(int newArmies){armies = newArmies;}
 
 void Country::addNeighbourLink(Country &newNeighbour){
   this->neighbours = insertElement(this->neighbours, this->neighbourCount, newNeighbour);
-  //std::cout << newNeighbour.getName() << " connected to " << this->getName() << std::endl;
 }
 
 std::string Country::to_string() const{

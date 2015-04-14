@@ -29,11 +29,12 @@ Player::Player(std::string aName, int newPlayerIndex)
 }
 
 
-
+//holds the total number of armies of the player
 void Player::setArmiesOwned(int armiesOwned){
 	numArmiesOwned = armiesOwned;
 }
 
+//holds the total number of countries of the player
 void Player::setCountriesOwned(int countriesOwned){
 	numCountriesOwned = countriesOwned;
 }
@@ -46,6 +47,7 @@ bool Player::getIsAlive(){
 	return isAlive;
 }
 
+//set the player as dead - a player is dead when he has 0 countries
 void Player::setDeath(){
 	isAlive = false;
 }
@@ -58,10 +60,12 @@ void Player::setName(std::string initialName){
 	name = initialName;
 }
 
+//returns number of battles lost - used for statistics
 int Player::getBattlesLost(){
 	return battlesLost;
 }
 
+//returns number of battles won - used for statistics
 int Player::getBattlesWon(){
 	return battlesWon;
 }
@@ -73,6 +77,7 @@ int Player::getNumArmiesOwned(){
 int Player::getNumCountriesOwned(){
 	return numCountriesOwned;
 }
+
 void Player::setBattlesWon(){
 	battlesWon++;
 }
@@ -84,6 +89,8 @@ void Player::setBattlesLost(){
 int Player::getPlayerIndex(){
 	return playerIndex;
 }
+
+//checks if player is eligible to exchange cards
 bool Player::canExchangeCards()
 {
 	int infantry = cards[0]->getQuantity();
@@ -111,37 +118,6 @@ bool Player::canExchangeCards()
 	}
 	return false;
 }
-/*void Player::processCardExchange()
-{
-	int infantry = cards[0].getQuantity();
-	int cavalry = cards[1].getQuantity();
-	int artillery = cards[2].getQuantity();
-	std::cout << "You have " << infantry << " infantry cards, " << cavalry << " calavry cards, and " << artillery << " artillery cards" << std::endl;
-
-	if (canExchangeCards())
-	{
-		std::cout << "You can exchange 3 cards of the same type or three cards of all different types for armies. " << std::endl;
-		exchangeCards(getExchangeChoices());
-	}
-	else
-	{
-		std::cout << "You are not eligible to exchange cards for armies. " << std::endl;
-	}
-}*/
-
-/*void Player::exchangeCards(int* choices)
-{
-	static int numOfArmiesExchange = 5;
-
-	for (int i = 0; i < 3; i++)
-	{
-		cards[i].decrementQuantity(choices[i]);
-	}
-
-	incrementArmies(numOfArmiesExchange);
-
-	//return cards;
-}*/
 
 void Player::addCard()
 {
@@ -155,11 +131,13 @@ void Player::addCard()
 	}
 }
 
+//returns total number of cards
 int Player::getTotalCards()
 {
 	return cards[0]->getQuantity() + cards[1]->getQuantity() + cards[2]->getQuantity();
 }
 
+//returns cards
 Card** Player::getCards()
 {
 	return cards;

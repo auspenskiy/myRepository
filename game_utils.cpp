@@ -16,6 +16,7 @@ bool listContains(std::list<std::string> & lst, std::string str){
   return findIter != lst.end() || findIter == lst.end() && lst.back().compare(str) == 0;
 }
 
+//checks if fileName exists as a file
 bool fileExists(std::string fileName){
   std::ifstream inStream;
   bool fileExists = false;
@@ -29,6 +30,7 @@ bool fileExists(std::string fileName){
   return fileExists;
 }
 
+//function to convert integer to string - used in conjunction with View
 std::string intToString(int i){
   int temp = i;
   int digit = 0;
@@ -44,8 +46,8 @@ std::string intToString(int i){
   
   if (i < 0){
    length++; 
-   temp = -1 * i;
-  }else{
+   temp = -1 * i;}
+  else{
     temp = i;
     counter --;
   }
@@ -70,7 +72,6 @@ std::string intToString(int i){
   delete [] toString;
       
   return returnString;
-
 }
 
 Player * tinyFactory(std::string playerType, std::string newName, int newPlayerIndex){
@@ -89,7 +90,5 @@ Player * tinyFactory(std::string playerType, std::string newName, int newPlayerI
       return new PlayerRandom(newName, newPlayerIndex);
   }
   
-  return new PlayerHuman(newName, newPlayerIndex);
-  
-  
+  return new PlayerHuman(newName, newPlayerIndex);  
 }

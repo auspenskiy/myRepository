@@ -5,11 +5,7 @@ PlayerAggressive::PlayerAggressive(std::string newPlayerName, int newPlayerIndex
   defendingCountry = "";
 }
 
-/*
- *      View::inform("1 - Attack");
- *      View::inform("2 - Fortify");
- *      View::inform("0 - End turn");
- */
+
 int PlayerAggressive::chooseAction(Map * gameMap){
   for(int x = 0; x < gameMap->getCountryCount() ; x++){
     if (gameMap->getCountries()[x]->getOwnerIndex() == this->getPlayerIndex()){
@@ -31,10 +27,10 @@ int PlayerAggressive::chooseAction(Map * gameMap){
 std::string PlayerAggressive::chooseCountryToReinforce( Map * gameMap,  int maxNumOfReinforcements){
   int choice = chooseAction(gameMap);
   
-  if (choice = 0){
+  if (choice == 0){
     for(int x = 0; x < gameMap->getCountryCount() ; x++){
       if (gameMap->getCountries()[x]->getOwnerIndex() == this->getPlayerIndex()){
-	attackingCountry= gameMap->getCountries()[x]->getName();
+		attackingCountry= gameMap->getCountries()[x]->getName();
       }
     }
   }

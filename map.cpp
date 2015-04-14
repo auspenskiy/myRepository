@@ -2,11 +2,11 @@
 
 
 Map::Map(int numOfCountries, Country ** newCountries, int numOfContinents, Continent ** newContinents, 
-	 std::string newAuthor, std::string newImage, std::string newWrap, std::string newScroll, std::string newWarn){
-  countryCount = numOfCountries;
-  continentCount = numOfContinents;
-  countries = newCountries;
-  continents = newContinents;
+	std::string newAuthor, std::string newImage, std::string newWrap, std::string newScroll, std::string newWarn){
+	countryCount = numOfCountries;
+	continentCount = numOfContinents;
+	countries = newCountries;
+	continents = newContinents;
   
   author = newAuthor;
   image = newImage;
@@ -34,12 +34,6 @@ Map::~Map(){
   continents = NULL;
   
 }
-/*
-//retrieve a continent based on its name alone
-const Continent& Map::getContinent(std::string continentName){
-  return findElement(continents, continentCount, continentName);
-}
-*/
 
 //Returns the number of countries owned by the given player
 int Map::countCountriesOwned(int playerIndex){
@@ -102,13 +96,6 @@ void Map::setupCountryOwners(int numOfPlayers)
 
 	numPlayers = numOfPlayers;
 }
-
-/*
-//retrieve a country based on its name alone
-const Country& Map::getCountry(std::string countryName){
-  return findElement(countries, countryCount, countryName);   
-}
-*/
 
 //IMPLEMENTING OBSERVABLE-----------------------
 void Map::attach(Observer & ob){
@@ -188,9 +175,6 @@ std::list<std::string> Map::getConnectedFriendlyCountries(std::string &startCoun
   return connectedCountryList;
   
 }
-
-
-
 
 //COUNTRY ACCESSORS & MUTATORS---------------------------------------------------
 int Map::setCountryArmies(std::string countryName, int numOfArmies, bool updateMap){

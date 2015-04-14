@@ -18,7 +18,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v110</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -65,34 +65,55 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\continent.cpp" />
-    <ClCompile Include="..\controller.cpp" />
     <ClCompile Include="..\country.cpp" />
     <ClCompile Include="..\dice.cpp" />
     <ClCompile Include="..\game.cpp" />
+    <ClCompile Include="..\GameBuilderDirector.cpp" />
+    <ClCompile Include="..\GameBuildLoad.cpp" />
+    <ClCompile Include="..\GameBuildNew.cpp" />
+    <ClCompile Include="..\GameBuildSave.cpp" />
     <ClCompile Include="..\game_utils.cpp" />
     <ClCompile Include="..\main.cpp" />
     <ClCompile Include="..\map.cpp" />
     <ClCompile Include="..\MapConfig.cpp" />
+    <ClCompile Include="..\MapFile.cpp" />
+    <ClCompile Include="..\MapFileAdapter.cpp" />
     <ClCompile Include="..\Player.cpp" />
     <ClCompile Include="..\Card.cpp" />
-    <ClCompile Include="..\Territory.cpp" />
+    <ClCompile Include="..\PlayerAggressive.cpp" />
+    <ClCompile Include="..\PlayerDefensive.cpp" />
+    <ClCompile Include="..\PlayerHuman.cpp" />
+    <ClCompile Include="..\PlayerRandom.cpp" />
+    <ClCompile Include="..\TempCountry.cpp" />
     <ClCompile Include="..\textview.cpp" />
+    <ClCompile Include="..\View.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Card.h" />
     <ClInclude Include="..\continent.h" />
-    <ClInclude Include="..\controller.h" />
     <ClInclude Include="..\country.h" />
     <ClInclude Include="..\dice.h" />
     <ClInclude Include="..\game.h" />
+    <ClInclude Include="..\GameBuilder.h" />
+    <ClInclude Include="..\GameBuilderDirector.h" />
+    <ClInclude Include="..\GameBuildLoad.h" />
+    <ClInclude Include="..\GameBuildNew.h" />
+    <ClInclude Include="..\GameBuildSave.h" />
     <ClInclude Include="..\game_utils.h" />
     <ClInclude Include="..\map.h" />
     <ClInclude Include="..\MapConfig.h" />
+    <ClInclude Include="..\MapFile.h" />
+    <ClInclude Include="..\MapFileAdapter.h" />
     <ClInclude Include="..\observable.h" />
     <ClInclude Include="..\observer.h" />
     <ClInclude Include="..\Player.h" />
-    <ClInclude Include="..\Territory.h" />
+    <ClInclude Include="..\PlayerAggressive.h" />
+    <ClInclude Include="..\PlayerDefensive.h" />
+    <ClInclude Include="..\PlayerHuman.h" />
+    <ClInclude Include="..\PlayerRandom.h" />
+    <ClInclude Include="..\TempCountry.h" />
     <ClInclude Include="..\textview.h" />
+    <ClInclude Include="..\View.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\World.map" />
