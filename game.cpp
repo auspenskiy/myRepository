@@ -59,7 +59,7 @@ int Game::play(){
 
 		if (currentPlayer->getIsAlive()){
 
-			View::inform("Round " + intToString(playerTurns / numOfPlayers + 1) + " : " + currentPlayer->getName() + " (player " + intToString(playerIndex) + ")'s turn");
+			View::inform("Round " + intToString(playerTurns / numOfPlayers + 1) + " : " + currentPlayer->getName() + " (player " + intToString(playerIndex + 1) + ")'s turn");
 
 			//reinforce, attack and move are the 3 actions a given player can do during his turn
 			reinforce(playerIndex);

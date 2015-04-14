@@ -47,8 +47,8 @@ void GameBuildNew::buildMap(){
     {
       //inStream.close();
       //!!!future improvement: try and catch exceptions of bad map formats
-		MapConfig mapLoad;
-		newMap = mapLoad.loadMap(loadFile);
+		MapFileAdapter* mapLoad = new MapFileAdapter();
+		newMap = mapLoad->loadMap(loadFile);
       mapLoaded = true;
 
     }
@@ -70,7 +70,7 @@ void GameBuildNew::buildPlayers(){
   for (int a = 0; a < numOfPlayers; a++)
   {
     do{
-      View::inform("Player "+ intToString(a) + ": Please select player type");
+      View::inform("Player "+ intToString(a+1) + ": Please select player type");
       View::inform("1 - Human");
       View::inform("2 - Aggressive Computer");
       View::inform("3 - Defensive Computer");
@@ -82,11 +82,11 @@ void GameBuildNew::buildPlayers(){
     }while(inInt < 1 || inInt > 4);
     
     if(inInt == 1){
-	View::prompt("Please enter the name of player " + intToString(a) + ":");
+	View::prompt("Please enter the name of player " + intToString(a+1) + ":");
 	playerArray[a] = new PlayerHuman(View::getString(), a);
     }
     else{
-      View::prompt("Please enter the name of computer player " + intToString(a) + ":");
+      View::prompt("Please enter the name of computer player " + intToString(a+1) + ":");
       if (inInt ==2){
 	playerArray[a] = new PlayerAggressive(View::getString()+ " (Aggressive Computer)", a);
       }
