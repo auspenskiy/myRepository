@@ -1,7 +1,7 @@
 #include "GameBuildNew.h"
 #include <fstream>
 #include "game_utils.h"
-#include "MapConfig.h"
+#include "MapFileAdapter.h"
 
 GameBuildNew::GameBuildNew(){
   
@@ -14,9 +14,8 @@ void GameBuildNew::buildMap(){
     
   do{
     View::prompt("Please enter the name of the map you would like to play");
-    loadFile = View::getString();
-    inStream.open (loadFile.c_str());
-    
+    //loadFile = View::getString();
+    inStream.open ("../Resources/World.map");
     
     if (!inStream.good())
     {
@@ -25,10 +24,10 @@ void GameBuildNew::buildMap(){
     }
     else
     {
-      inStream.close();
+      //inStream.close();
       //!!!future improvement: try and catch exceptions of bad map formats
-      MapConfig mapLoad;
-      newMap = mapLoad.loadMap("m");
+		MapFileAdapter* mapLoad = new MapFileAdapter();
+	  newMap = mapLoad->loadMap("../Resources/World.map");
       mapLoaded = true;
 
     }

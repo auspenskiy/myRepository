@@ -1,6 +1,7 @@
 #include "game.h"
 #include <sstream>
 #include <iostream>
+#include <string>
 #include <cmath>
 #include "GameBuilderDirector.h"
 #include "GameBuildSave.h"

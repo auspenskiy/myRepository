@@ -1,5 +1,5 @@
 #include "GameBuildSave.h"
-#include "MapConfig.h"
+#include "MapFileAdapter.h"
 
 GameBuildSave::GameBuildSave(int saveSlotNum, Game * newGameToSave){
   gameToSave = newGameToSave;
@@ -7,9 +7,9 @@ GameBuildSave::GameBuildSave(int saveSlotNum, Game * newGameToSave){
 }
 
 void GameBuildSave::buildMap(){
-  MapConfig mapSave;
+	MapFileAdapter* mapSave = new MapFileAdapter();
   
-  mapSave.saveMap(gameToSave->getMap(), "save" +intToString(gameSaveSlotNum) + ".map");
+  mapSave->saveMapToFile(gameToSave->getMap(), "save" + intToString(gameSaveSlotNum) + ".map");
   
   outStream.open (("save" +intToString(gameSaveSlotNum) + ".msv").c_str());
     outStream << gameToSave->getMap()->getCountryCount() << "\n";

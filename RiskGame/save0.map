@@ -1,0 +1,58 @@
+[Map]
+author=Sean O'Connor
+image=world.bmp
+wrap=no
+scroll=horizontal
+warn=yes
+
+[Continents]
+Africa=3
+Asia=7
+Australia=2
+Europe=5
+North America=5
+South America=2
+
+[Territories]
+Afghanistan,585,192,Asia,China,India,Middle East,Ukraine,Ural
+Alaska,70,126,North America,Alberta,Kamchatka,Northwest Territory
+Alberta,147,163,North America,Alaska,Northwest Territory,Ontario,Western United States
+Argentina,263,407,South America,Brazil,Peru
+Brazil,308,337,South America,Argentina,North Africa,Peru,Venezuala
+Central America,183,262,North America,Eastern United States,Venezuala,Western United States
+China,662,217,Asia,Afghanistan,India,Mongolia,Siam,Siberia,Ural
+Congo,475,318,Africa,East Africa,North Africa,South Africa
+East Africa,517,298,Africa,Congo,Egypt,Madagascar,Middle East,North Africa,South Africa
+Eastern Australia,779,381,Australia,New Guinea,Western Australia
+Eastern United States,219,216,North America,Central America,Ontario,Quebec,Western United States
+Egypt,480,249,Africa,East Africa,Middle East,North Africa,Southern Europe
+Great Britain,419,169,Europe,Iceland,Northern Europe,Scandinavia,Western Europe
+Greenland,324,76,North America,Iceland,Northwest Territory,Ontario,Quebec
+Iceland,380,126,Europe,Great Britain,Greenland,Scandinavia
+India,612,249,Asia,Afghanistan,China,Middle East,Siam
+Indonesia,698,314,Australia,New Guinea,Siam,Western Australia
+Irkutsk,698,152,Asia,Kamchatka,Mongolia,Siberia,Yatusk
+Japan,759,220,Asia,Kamchatka,Mongolia
+Kamchatka,806,125,Asia,Alaska,Irkutsk,Japan,Mongolia,Yatusk
+Madagascar,536,361,Africa,East Africa,South Africa
+Middle East,530,234,Asia,Afghanistan,East Africa,Egypt,India,Southern Europe,Ukraine
+Mongolia,707,188,Asia,China,Irkutsk,Japan,Kamchatka,Siberia
+New Guinea,768,325,Australia,Eastern Australia,Indonesia,Western Australia
+North Africa,420,264,Africa,Brazil,Congo,East Africa,Egypt,Southern Europe,Western Europe
+Northern Europe,460,173,Europe,Great Britain,Scandinavia,Southern Europe,Ukraine,Western Europe
+Northwest Territory,148,127,North America,Alaska,Alberta,Greenland,Ontario
+Ontario,199,167,North America,Alberta,Eastern United States,Greenland,Northwest Territory,Quebec,Western United States
+Peru,262,349,South America,Argentina,Brazil,Venezuala
+Quebec,253,166,North America,Eastern United States,Greenland,Ontario
+Scandinavia,463,127,Europe,Great Britain,Iceland,Northern Europe,Ukraine
+Siam,671,270,Asia,China,India,Indonesia
+Siberia,666,110,Asia,China,Irkutsk,Mongolia,Ural,Yatusk
+South Africa,483,371,Africa,Congo,East Africa,Madagascar
+Southern Europe,473,197,Europe,Egypt,Middle East,North Africa,Northern Europe,Ukraine,Western Europe
+Ukraine,524,157,Europe,Afghanistan,Middle East,Northern Europe,Scandinavia,Southern Europe,Ural
+Ural,613,136,Asia,Afghanistan,China,Siberia,Ukraine
+Venezuala,259,303,South America,Brazil,Central America,Peru
+Western Australia,729,373,Australia,Eastern Australia,Indonesia,New Guinea
+Western Europe,423,202,Europe,Great Britain,North Africa,Northern Europe,Southern Europe
+Western United States,159,204,North America,Alberta,Central America,Eastern United States,Ontario
+Yatusk,738,118,Asia,Irkutsk,Kamchatka,Siberia

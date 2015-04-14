@@ -1,5 +1,5 @@
 #include "GameBuildLoad.h"
-#include "MapConfig.h"
+#include "MapFileAdapter.h"
 #include <sstream>
 #include <stdlib.h> 
 #include <fstream>
@@ -9,13 +9,13 @@ GameBuildLoad::GameBuildLoad(int saveSlotNum){
 }
 
 void GameBuildLoad::buildMap(){
-  MapConfig mapLoad;
+	MapFileAdapter* mapLoad = new MapFileAdapter();
   int countryCount;
   std::string inCountryName;
   int inArmies;
   int inOwner;
   
-  newMap = mapLoad.loadMap("save" +intToString(gameSaveSlotNum) + ".map");
+  newMap = mapLoad->loadMap("save" +intToString(gameSaveSlotNum) + ".map");
   
   inStream.open (("save" +intToString(gameSaveSlotNum) + ".msv").c_str());
   

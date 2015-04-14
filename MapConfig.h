@@ -1,43 +1,27 @@
-#pragma once
-
 #include<string>
 #include <iostream>
 #include <fstream>
 #include <list>
-#include "TempCountry.h"
-#include "continent.h"
-#include "map.h"
-#include "country.h"
+#include "Continent.h"
+#include <sstream>
+#include <stdlib.h>
+
 using namespace std;
+
+#pragma once
 
 class MapConfig
 {
 public:
 	MapConfig(void);
 	~MapConfig(void);
-	
-	void saveMap(const Map * mapToSave, std::string mapFilePath);
-	Map * loadMap(std::string mapFilePath);
-	  
+
+	void readMapFromFile(string fileName);
+	void setContinents(std::list<Continent> cContinents);
+
 private:
-  	void openInputFile(string path);
-	void closeInputFile();
-
-	void openOutputFile(string path) ;
-	void closeOutputFile();
-
-	Map * loadMapFromFile();
-	void saveMapToFile(const Map * mapToSave);
-
-	//void displayMapFileContent();
-
-	//list<Territory> MapConfig::getTerritoriesArray();
-	bool isConnectedGraph() ;
-	bool areContinentsSubGraphs() ;
-	bool isOneCountyPerContinent() ;
-	
-	
-//PRIVATE ATTRIBUTES-------------------------------------------------
-	std::ifstream inStream;
-	std::ofstream outStream;
+	std::list<Continent> continents;
+	std::ifstream openInputFile(string path);
+	std::ofstream openOutputFile(string path);
 };
+
