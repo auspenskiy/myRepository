@@ -2,6 +2,10 @@
 #include <fstream>
 #include "game_utils.h"
 #include "MapConfig.h"
+#include "PlayerHuman.h"
+#include "PlayerAggressive.h"
+#include "PlayerDefensive.h"
+#include "PlayerRandom.h"
 
 GameBuildNew::GameBuildNew(){
   
@@ -28,7 +32,7 @@ void GameBuildNew::buildMap(){
       inStream.close();
       //!!!future improvement: try and catch exceptions of bad map formats
       MapConfig mapLoad;
-      newMap = mapLoad.loadMap("m");
+      newMap = mapLoad.loadMap(loadFile);
       mapLoaded = true;
 
     }
@@ -36,7 +40,7 @@ void GameBuildNew::buildMap(){
 } 
 
 void GameBuildNew::buildPlayers(){
-  
+  int inInt;
   View::inform("How many people are playing?");
   
   do{
@@ -48,8 +52,34 @@ void GameBuildNew::buildPlayers(){
   
   for (int a = 0; a < numOfPlayers; a++)
   {
-    View::prompt("What is the name of player " + intToString(a) + "?");
-    playerArray[a] = new Player(View::getString(), a);
+    do{
+      View::inform("Player "+ intToString(a) + ": Please select player type");
+      View::inform("1 - Human");
+      View::inform("2 - Aggressive Computer");
+      View::inform("3 - Defensive Computer");
+      View::inform("4 - Unpredictable Computer");
+      inInt = View::getInt();
+      if (inInt < 1 || inInt > 4){
+	View::inform("\nInvalid input.  Please select an option between 1 and 4");
+      }
+    }while(inInt < 1 || inInt > 4);
+    
+    if(inInt == 1){
+	View::prompt("Please enter the name of player " + intToString(a) + ":");
+	playerArray[a] = new PlayerHuman(View::getString(), a);
+    }
+    else{
+      View::prompt("Please enter the name of computer player " + intToString(a) + ":");
+      if (inInt ==2){
+	playerArray[a] = new PlayerAggressive(View::getString()+ " (Aggressive Computer)", a);
+      }
+      else if (inInt ==3){
+	playerArray[a] = new PlayerDefensive(View::getString()+" (Defensive Computer)", a);
+      }
+      else if (inInt ==4){
+	playerArray[a] = new PlayerRandom(View::getString()+" (Unpredictable Computer)", a);
+      }
+    }
   }
 }
 

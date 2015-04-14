@@ -8,8 +8,11 @@
 #include "observable.h"
 #include "game_utils.h"
 #include "Player.h"
+#include <iostream>
+#include <sstream>
+#include <time.h>
 
-class MapView;
+class Player;
 
 class Map: public Observable{
 public:
@@ -25,18 +28,20 @@ public:
   int countCountriesOwned(int playerIndex);
   int countArmiesOwned(int playerIndex);
   int computeContinentsBonuses(int playerIndex);
+  
 
   void updateCountriesAndArmies();
 
   std::list<std::string> getEnemyNeighbours(std::string &countryName, int playerIndex);
   std::list<std::string> getConnectedFriendlyCountries(std::string &startCountry, int playerIndex);
   
-//STRING BASED "SAFETY COUNTRY ACCESSORS & MUTATORS---------------------------------------------------
-  int setCountryArmies(std::string countryName, int numOfArmies, bool updateMap = true);
-  int setCountryOwnerIndex(std::string countryName, int playerIndex, bool updateMap = true);
+//STRING BASED "SAFETY" COUNTRY ACCESSORS & MUTATORS---------------------------------------------------
+  int setCountryArmies(std::string countryName, int numOfArmies, bool updateMap = false);
+  int setCountryOwnerIndex(std::string countryName, int playerIndex, bool updateMap = false);
   int getCountryArmies(std::string countryName);
   int getCountryOwnerIndex(std::string countryName);
   bool countryExists(std::string countryName);
+  bool countryIsFriendly(const std::string country, const int playerIndex);
 
 //IMPLEMENTING OBSERVABLE FUNCTIONS-----------------------
   void attach(Observer & ob);
@@ -62,14 +67,7 @@ public:
 private:
  
   //getConnectedFriendlyCountries HELPER FUNCTIONS---------------------------------------------------
-  void recursiveGetConnectedFriendlyCountries(const Country &startCountry, int playerIndex, std::list<std::string> &connectedCountryList);
-  
-  //!!!I don't think these are needed anymore
-  //MAP SETUP HELPER FUNCTIONS------------------------------------------
-  /*
-  Continent& getContinent(std::string continentName);
-  Country& getCountry(std::string countryName);
-  */
+  void recursiveGetConnectedFriendlyCountries(const Country &startCountry, int playerIndex, std::list<std::string> &connectedCountryList) const;
 
   //PRIVATE ATTRIBUTES-------------------------------------------------  
   int countryCount;

@@ -40,6 +40,7 @@ void GameBuildLoad::buildMap(){
 
 void GameBuildLoad::buildPlayers(){
   int inInt;
+  std::string newName;
   std::string inString;
   
   inStream.open (("save" +intToString(gameSaveSlotNum) + ".psv").c_str());
@@ -49,11 +50,11 @@ void GameBuildLoad::buildPlayers(){
   playerArray = new Player*[numOfPlayers];
   
   for(int x = 0; x < numOfPlayers; x++){
-    getline(inStream, inString, ',');//getName
+    getline(inStream, newName, ',');//getName
     inStream >> inInt;//getPlayer index
     inStream.get();
-    
-    playerArray[x] = new Player(inString, inInt);
+    getline(inStream, inString, ',');
+    playerArray[x] = tinyFactory(inString, newName, inInt);
     
     inStream >> inInt;//getDeath
     inStream.get();

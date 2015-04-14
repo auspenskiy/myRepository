@@ -3,6 +3,11 @@
 
 #include <algorithm> //std::find function
 #include <fstream>
+#include "PlayerHuman.h"
+#include "PlayerAggressive.h"
+#include "PlayerDefensive.h"
+#include "PlayerRandom.h"
+#include <cstring>
 
 //HELPER METHOD FOR FORTIFY
 bool listContains(std::list<std::string> & lst, std::string str){
@@ -66,4 +71,25 @@ std::string intToString(int i){
       
   return returnString;
 
+}
+
+Player * tinyFactory(std::string playerType, std::string newName, int newPlayerIndex){
+  View::inform(playerType);
+  
+  if (strstr(playerType.c_str(), "PlayerHuman") != NULL){
+      return new PlayerHuman(newName, newPlayerIndex);
+  }
+  if (strstr(playerType.c_str(), "PlayerAggressive") != NULL){
+      return new PlayerAggressive(newName, newPlayerIndex);
+  }
+  if (strstr(playerType.c_str(), "PlayerDefensive") != NULL){
+      return new PlayerDefensive(newName, newPlayerIndex);
+  }
+  if (strstr(playerType.c_str(), "PlayerRandom") != NULL){
+      return new PlayerRandom(newName, newPlayerIndex);
+  }
+  
+  return new PlayerHuman(newName, newPlayerIndex);
+  
+  
 }

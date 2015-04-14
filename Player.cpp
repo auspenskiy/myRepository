@@ -1,8 +1,8 @@
 #include "Player.h"
-#include <ctime>
-#include <cstdlib>
 
-#include <iostream>
+Player::Player(){
+  
+}
 
 Player::~Player()
 {

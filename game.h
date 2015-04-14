@@ -23,7 +23,7 @@ public:
 	int countPlayersAlive();
 	
 //CONST ACCESSORS-------------------------------
-	inline const Map * getMap(){return map;}
+	inline Map * getMap(){return map;}
 	inline Player ** getPlayerArray(){return playerArray;}
 	inline int getNumOfPlayers(){return numOfPlayers;}
 	inline int getPlayerTurns(){return playerTurns;}
@@ -33,17 +33,13 @@ public:
 private:
 	void fortify(int playerNum);
 	void reinforce(int playerNum);
-	void attack(int playerNum);
 	void battle(std::string attackingCountry, std::string defendingCountry);
 	void displayStatistics();
 	int getCardsExchange(int playerNum);
 	int* getExchangeChoices(int playerNum);
 	int exchangeCards(int* choices, int playerNum);//returns number of armies which the player got as a result of exchange for cards
 	void updateCountriesAndArmies();
-	void outputCountryList(std::list<std::string> countryList);
-	bool countryExistsAndFriendly(std::string country, int playerIndex);
-
-	void setupHardcodedMap(Map & mainMap);
+	
 	void setupCountryOwners();
 	void handleCards(int playerNum);
 	void saveGame();
@@ -52,7 +48,7 @@ private:
 	int bonusArmies;
 	int playerTurns;
 	int playerIndex;
-	Observer * textview;
+	Observer * mapView;
 	Dice * dice;
 	Map * map;
 	std::string * playerNames;

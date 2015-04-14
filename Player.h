@@ -3,24 +3,35 @@
 #include "country.h"
 #include "Card.h"
 
+#include <typeinfo>
+#include "View.h"
+#include <ctime>
+#include <cstdlib>
+#include <iostream>
+#include "map.h"
+
+class Map;
+
 class Player{
 public:
-	inline Player(){}
+	Player();
 	Player(std::string aName, int newPlayerIndex);
 	~Player();
 	
-	/*
-	virtual std::string chooseCountryToReinforce()=0;
-	virtual int chooseNumberToReinforce()=0;
+	virtual int chooseAction(Map * gameMap)=0;
 	
-	virtual std::string chooseSourceFortificationCountry()=0;
-	virtual std::string chooseDestinationFortificationCountry()=0;
-	virtual int chooseNumberOfFortificationArmies()=0;
+	virtual std::string chooseCountryToReinforce(Map * gameMap, int maxNumOfReinforcements)=0;
+	virtual int chooseNumberToReinforce(Map * gameMap, int maxNumOfReinforcements)=0;
 	
-	virtual std::string chooseAttackingCountry()=0;
-	virtual std::string chooseDefendingCountry()=0;
-	virtual bool chooseContinueAttack()=0;
-	*/
+	virtual std::string chooseSourceFortificationCountry(Map * gameMap)=0;
+	virtual std::string chooseDestinationFortificationCountry(Map * gameMap, std::list<std::string> & connectedCountries)=0;
+	virtual int chooseNumberOfFortificationArmies(Map * gameMap)=0;
+	
+	virtual std::string chooseAttackingCountry(Map * gameMap)=0;
+	virtual std::string chooseDefendingCountry(Map * gameMap)=0;
+	virtual bool chooseContinueAttack(Map * gameMap)=0;
+	virtual int chooseNumberOfConsolidationArmies(Map * gameMap, int minConsolidationArmies, int maxConsolidationArmies)=0;
+	
 	void setName(std::string);
 	std::string getName();
 	void setPlayerIndex(int index);
@@ -46,18 +57,19 @@ public:
 	void transferCards(Player * player);
 	bool canExchangeCards();
 	int getTotalCards();
-	inline bool getIsHuman(){return isHuman;}
+	inline std::string getPlayerType(){return typeid(*this).name();}
 private:
 	bool isAlive;
-	bool isHuman;
 	int battlesWon;
 	int battlesLost;
 	int playerIndex;
 	int numCountriesOwned;
 	int numArmiesOwned;
 	//int totalPlayers = 0;
-	std::string name;
+	std::string name;	
 	Card** cards;
 	bool hasConquered;
 	//int* getExchangeChoices();
+	
+	//std::string playerType;
 };
