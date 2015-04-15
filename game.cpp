@@ -36,10 +36,6 @@ Game::Game(int newNumOfPlayers, Player ** playaArray, Map * newMap, int newPlaye
 
 }
 
-Game::Game(std::string aFileName){
-	fileName = aFileName;
-}
-
 Game::~Game(){
 	delete map;
 	delete mapView;

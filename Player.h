@@ -69,9 +69,7 @@ public:
 	void addCard();
 	void processCardExchange();
 	void transferCards(Player * player);
-	int getTotalCards();
 	bool canExchangeCards();
-	inline std::string getPlayerType(){return typeid(*this).name();}
 	static int getNumOfArmiesExchange();
 	static void setNumOfArmiesExchange(int newNumOfArmiesExchange);
 
@@ -85,9 +83,7 @@ private:
 	std::string name;	
 	Card** cards;
 	bool hasConquered;
-<<<<<<< HEAD
 	static int numOfArmiesExchange;
 
-=======
->>>>>>> 6485d835a9a9f45568a02f03c64cc076ec13cb15
+
 };
