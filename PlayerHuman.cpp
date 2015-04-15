@@ -61,13 +61,13 @@
     do{
       do{
 	
-	View::prompt("Choose a country you wish to launch your attack from.");
-	attackingCountry = View::getString();
+		View::prompt("Choose a country you wish to launch your attack from.");
+		attackingCountry = View::getString();
 	
-	//if country doesn't have enough armies to attack another country
-	if (this->getPlayerIndex() == gameMap->getCountryOwnerIndex(attackingCountry) && gameMap->countryExists(attackingCountry) && gameMap->getCountryArmies(attackingCountry) < 2){
-	  View::inform(attackingCountry + " does not have enough armies to launch an attack.");
-	}
+		//if country doesn't have enough armies to attack another country
+		if (this->getPlayerIndex() == gameMap->getCountryOwnerIndex(attackingCountry) && gameMap->countryExists(attackingCountry) && gameMap->getCountryArmies(attackingCountry) < 2){
+		  View::inform(attackingCountry + " does not have enough armies to launch an attack.");
+		}
 	
       } while (!(View::putCountryExistsAndFriendly(attackingCountry, this->getPlayerIndex(), gameMap) && gameMap->getCountryArmies(attackingCountry) > 1));
       

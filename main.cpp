@@ -18,7 +18,7 @@ int main(){
   GameBuilderDirector gbd;
   GameBuilder * gb;
   Game * game;
-  
+
   while (inString.compare("n") != 0 && inString.compare("l") != 0){
     View::inform("Please select:\n n - start a new game\n l - load an existing game");
     inString = View::getString();

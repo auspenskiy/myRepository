@@ -34,9 +34,6 @@ Game::Game(int newNumOfPlayers, Player ** playaArray, Map * newMap, int newPlaye
 
 }
 
-Game::Game(std::string aFileName){
-	fileName = aFileName;
-}
 
 Game::~Game(){
 	delete map;
@@ -69,12 +66,17 @@ int Game::play(){
 			do{
 				
 			  choice = currentPlayer->chooseAction(getMap());
+
+				//used to open file for editing
+				std::string path;
+				std::string command = "Start notepad ";
+				std::string appended;
+				const char * c = NULL;
+
 				switch (choice){
 				case 0:
 					turnIsOver = true;
-
 					handleCards(playerIndex);
-
 					break;
 				case 1:
 					attackingCountry = currentPlayer->chooseAttackingCountry(getMap());
@@ -92,8 +94,13 @@ int Game::play(){
 					map->updateCountriesAndArmies();
 					displayStatistics();
 					break;
-				case 5:
-					system("Start notepad \"../World.map\"");
+				case 5:				
+					View::inform("Type in the file you want to edit");
+					path = View::getString();
+					appended = command.append(path);
+					c = appended.c_str();
+					//system(c) is equivalent to system("Start notepad" + filePath);
+					system(c);
 					break;
 				case 6:
 					saveGame();

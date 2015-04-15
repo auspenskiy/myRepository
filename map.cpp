@@ -77,8 +77,7 @@ void Map::setupCountryOwners(int numOfPlayers)
 
 	int playerIndex = 0;
 	int countryIndex = 0;
-	Player* player;
-	srand(time(NULL));   //Allows to generate unique numbers
+	srand(static_cast<unsigned int>(time(NULL)));   //Allows to generate unique numbers
 	
 	for(int i = 0;i< countryCount;i++){
 		//randomly assign a country to the player

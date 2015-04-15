@@ -246,7 +246,7 @@ Map* MapFile::createMapFile()
 		std::list<string> continentNames;
 		for (int k = 0; k < contNum; k++)
 			{
-				View::prompt("Enter the name of the continent");
+				View::prompt("Enter the name of the continent " + intToString(k));
 				cin.get();
 				getline(cin, contName);
 				newContinent = new Continent();
@@ -273,7 +273,7 @@ Map* MapFile::createMapFile()
 			for (int i = 0; i < numTer; i++)
 			{
 					std::list<string> adjacent;
-					View::prompt("Enter country name: ");
+					View::prompt("Enter country name " + intToString(i) + ": ");
 					//cin.get();
 					getline(cin, tempCountryName, '\n');
 					tempCountry.setName(tempCountryName);

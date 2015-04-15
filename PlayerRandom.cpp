@@ -4,7 +4,7 @@
 #include <cstdlib>
 
 PlayerRandom::PlayerRandom(std::string newPlayerName, int newPlayerIndex):Player(newPlayerName, newPlayerIndex){
-  srand(time(NULL));
+  srand(static_cast<unsigned int>(time(NULL)));
 }
 
  int PlayerRandom::getRandomFriendlyCountryIndex(Country const* const* countryArray, int arraySize){

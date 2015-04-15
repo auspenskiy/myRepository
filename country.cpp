@@ -56,7 +56,7 @@ void Country::addNeighbourLink(Country &newNeighbour){
 
 std::string Country::to_string() const{
   std::ostringstream oss;
-  oss << name << " : player "  << ownerIndex <<" : " <<  armies << " armies" << " : Connected to " ;
+  oss << name << " : player "  << ownerIndex+1 <<" : " <<  armies << " armies" << " : Connected to " ;
   if(neighbourCount == 0){
   oss << "no one.";  
   }

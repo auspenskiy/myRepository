@@ -124,7 +124,7 @@ void Player::addCard()
 	if (hasConquered)
 	{
 		int xRan;
-		srand(time(0)); // This will ensure a really randomized number by help of time.
+		srand(static_cast<unsigned int>(time(0))); // This will ensure a really randomized number by help of time.
 		xRan = rand() % 3;
 		cards[xRan]->incrementQuantity();
 		hasConquered = false;
