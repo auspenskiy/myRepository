@@ -13,5 +13,6 @@ TextView::~TextView(){
 //update simply outputs the map's string representation
 void TextView::update(){
   View::inform(m->to_string());
+  //updates statistics
   m->updateCountriesAndArmies();
 }

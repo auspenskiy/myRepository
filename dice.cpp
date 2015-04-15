@@ -5,10 +5,14 @@
 void Dice::roll_dice(int attackingArmies, int defendingArmies)
 {		
 	int replace;
-
+	//dice to determine attacker outcome
 	attack_dice[2] = 0;
 	attack_dice[1] = 0;
 	attack_dice[0] = 0;
+	//dice to deterine defender outcome
+	defend_dice[1] = 0; 
+	defend_dice[0] = 0;
+	
 
 	//Assigning numbers 1 to 6 to dices for attacker, also includes validation
 	if(attackingArmies >= 3)          
@@ -40,8 +44,6 @@ void Dice::roll_dice(int attackingArmies, int defendingArmies)
 	  }
 	}
 	
-	defend_dice[1] = 0; 
-	defend_dice[0] = 0;
 	
 	//Assigning numbers 1 to 6 to dices for defender, also includes validation
 	if(defendingArmies >= 2)        

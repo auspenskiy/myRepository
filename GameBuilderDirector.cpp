@@ -1,7 +1,7 @@
 #include "GameBuilderDirector.h"
 
-  GameBuilderDirector::GameBuilderDirector(){
-  }
+GameBuilderDirector::GameBuilderDirector(){
+}
 
 //save the initialized polymorphic builder object
 void GameBuilderDirector::setGameBuilder(GameBuilder * gb){

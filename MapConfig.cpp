@@ -34,6 +34,7 @@ void MapConfig::readMapFromFile(string fileName)
 		continent.setControlValue(atoi(scoreCont.c_str()));
 		continents.push_back(continent);
 		index++;
+
 }
 
 	setContinents(continents);

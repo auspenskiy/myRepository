@@ -36,6 +36,10 @@ Game::Game(int newNumOfPlayers, Player ** playaArray, Map * newMap, int newPlaye
 
 }
 
+Game::Game(std::string aFileName){
+	fileName = aFileName;
+}
+
 Game::~Game(){
 	delete map;
 	delete mapView;
@@ -55,6 +59,7 @@ int Game::play(){
 	do{
 		currentPlayer = playerArray[playerIndex];
 		turnIsOver = false;
+
 		
 		if (currentPlayer->getIsAlive()){
 			map->notify();
@@ -70,7 +75,9 @@ int Game::play(){
 				switch (choice){
 				case 0:
 					turnIsOver = true;
+
 					handleCards(playerIndex);
+
 					break;
 				case 1:
 					attackingCountry = currentPlayer->chooseAttackingCountry(getMap());
@@ -85,10 +92,10 @@ int Game::play(){
 					map->notify();					
 					break;
 				case 4:
+					map->updateCountriesAndArmies();
 					displayStatistics();
 					break;
 				case 5:
-					//the map editor is simply a text editor
 					system("Start notepad \"../World.map\"");
 					break;
 				case 6:
@@ -103,9 +110,9 @@ int Game::play(){
 				}
 			} while (!turnIsOver);
 		}
+
 		playerTurns++;
 		playerIndex = playerTurns % numOfPlayers;
-
 	} while (playersAlive > 1);
 
 	//if a player wins, find that player
@@ -113,6 +120,7 @@ int Game::play(){
 	View::inform("The winner is " + winner->getName());
 	View::inform("(Enter any key to exit the game)");
 	View::getString();
+
 
 	return 0;
 }
@@ -151,7 +159,6 @@ void Game::fortify(int playerIndex){
   lst = map->getConnectedFriendlyCountries(sourceCountry, playerIndex);
   
   if (lst.size() > 1){
-    
     destinationCountry = currentPlayer->chooseDestinationFortificationCountry(getMap(), lst);
     
     if (listContains(lst, destinationCountry) && destinationCountry.compare(sourceCountry) != 0){
@@ -159,9 +166,9 @@ void Game::fortify(int playerIndex){
       numToMove = currentPlayer->chooseNumberOfFortificationArmies(getMap());
       
       if (numToMove > 1 && numToMove < map->getCountryArmies(sourceCountry) - 1){ 
-	map->setCountryArmies(sourceCountry, map->getCountryArmies(sourceCountry) - numToMove, false);
-	map->setCountryArmies(destinationCountry, map->getCountryArmies(destinationCountry) + numToMove);
-	View::inform(intToString(numToMove) + " armies moved from " + sourceCountry + " to " + destinationCountry + ".");
+		map->setCountryArmies(sourceCountry, map->getCountryArmies(sourceCountry) - numToMove, false);
+		map->setCountryArmies(destinationCountry, map->getCountryArmies(destinationCountry) + numToMove);
+		View::inform(intToString(numToMove) + " armies moved from " + sourceCountry + " to " + destinationCountry + ".");
       }
     }
   }
@@ -411,7 +418,6 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 		map->setCountryArmies(attackingCountry, attackingArmies);
 
 
-
 		//Output summary of the battle via outString
 		outString += "\nAt the end of battle:";
 		outString += "\n  " + attackingCountry + " has " + intToString(attackingArmies) + " armies";
@@ -425,6 +431,7 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 		{
 			outString += " still";
 		}
+
 		
 		outString += " belongs to " + playerArray[map->getCountryOwnerIndex(defendingCountry)]->getName() + "\n";
 
@@ -480,7 +487,6 @@ void Game::displayStatistics(){
 		if (totalBattles != 0){
 			roundedBattlesWon = floor(percentBattlesWon / scale + 0.5)*scale;
 		}
-
 
 		//convert double to string for countries owned
 		std::ostringstream countries;

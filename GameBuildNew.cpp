@@ -16,6 +16,7 @@ void GameBuildNew::buildMap(){
 	std::string inString = "";
   std::string loadFile;
   std::ifstream inStream;
+  std::string extension;
   bool mapLoaded = false;
     
 	View::prompt("Would you like to create a custom map or play on an existing map?");
@@ -34,19 +35,19 @@ void GameBuildNew::buildMap(){
 
   do{
     View::prompt("Please enter the name of the map you would like to play");
-    loadFile = View::getString();
-	inStream.open(loadFile.c_str());
-    //inStream.open ("../Resources/World.map");
-    
-    if (!inStream.good())
+	loadFile = View::getString();
+	extension = loadFile.substr(loadFile.find_last_of(".")+1);
+
+	if (!fileExists(loadFile) || extension != "map")
     {
-      View::inform("Map file not found");
+      View::inform("Map file not found or wrong file format");
       inStream.close();
     }
     else
     {
       //inStream.close();
       //!!!future improvement: try and catch exceptions of bad map formats
+
 		MapFileAdapter* mapLoad = new MapFileAdapter();
 		newMap = mapLoad->loadMap(loadFile);
       mapLoaded = true;

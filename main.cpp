@@ -31,15 +31,32 @@ int main(){
   }
   else{    
     int inInt;
-    
-    do{
-      std::cout << "Please input a save slot (0-9)" << std::endl;
-      inInt = View::getInt();
-      
-    }while(!(inInt >= 0 && inInt <= 9) || !fileExists("save" +intToString(inInt) + ".msv"));
-    
-    gb = new GameBuildLoad(inInt);
+	int savedFiles = 0;
+
+	//checks if there are any saved games
+	for(int i = 0;i<10;i++){
+		if(fileExists("save"+intToString(i)+ ".msv"))
+		{
+			View::inform("Saved game in slot " + intToString(i) + " is ready to be loaded.");
+			savedFiles++;
+		}
+	}
+	//if there are no saved games, start a new one
+    if(savedFiles == 0){
+		View::inform("No saved game detected");
+		View::inform("Starting new game..");
+		gb = new GameBuildNew();	 
+	}
+	else{
+		do{
+			View::inform("Please input a save slot (0-9)");
+			inInt = View::getInt();      
+		}while(!(inInt >= 0 && inInt <= 9) || !fileExists("save" +intToString(inInt) + ".msv"));
+		gb = new GameBuildLoad(inInt);
+	}
   }
+
+
   gbd.setGameBuilder(gb);
   
   gbd.constructGame();

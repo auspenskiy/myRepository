@@ -1,0 +1,74 @@
+Resources/World.map
+
+- Make another view that extends a general view class
+- Create a "menu" by putting a scanner for options right in the view parser (or use the parser to call a function to this effect anyway). 
+
+Send link to outstanding issues/features file
+
+
+User interface needs to get beefed up so that it can be called at any time, not just when convenient to the game (i.e. at the start of an attack cycle)
+	I would also make it silent... so that it doesn't constantly display a list of menu items.  Maybe instead anytime the punch in a country name that isn't valid it reminds them of the option to see the menu?
+
+Make functions in main user controller and view objects
+
+I think the way playerArray is implemented in the Game Constructer is bad convention.  Don't have time to make sure and/or fix right now.
+
+TextView: //Need to add error checking to make sure this doesn't explode everything due to lack of map
+
+Use namespaces... maybe for utils class?
+
+
+To do:
+
+
+Integrate Andy A2
+	- Create action for post battle optional reinforcements
+	- Create action for cards related actions
+Integrate Brandon A2
+
+Test Save/Load
+Test game actually ends when win conditions are hit
+Cards are clearly not operational.  Tell Andrey
+
+Change view and model architecture
+Fix text view so that you have access to the io methods without the poorly instatiated mapless object created using the default constructor
+Make Map singleton
+Make Game singleton
+Make MapIO factory
+
+Need option to exit the game
+Update destructors, especially game
+Move fileExists and inToString from game_utils to View
+Rename everything in player that increments instead of sets to "increment"
+Change game.getMap back to const Map * getMap()
+Take "You" out of all of the battle updates
+Move everything into const variables
+Point out to Andrey if his randomizer is hurting randomization
+Add timer to slow down actions of computer opponents
+AI can hang
+
+STRETCH GOALS--------------------------------------------------
+Overcome dependance on "addNeighbour" method so that countries can't be modified after creation
+Make continents created by a single constructor call like map
+Make countries created by a single constructor call like map
+--> Mother of god, these all need builder patterns to accomplish this.
+Go through everything and pull out needless includes
+Go through everything and pull out needless functions
+Go through everything and pull out needless attributes
+
+TUESDAY GOALS-------------------------------------------------
+Monday: We need to agree on a naming convention and go back through and make everything agree
+Abstract all hard-coded values into const variables and pre-processor calls
+Cavalry is mispelt
+
+
+DONE------------------------------------------------------------------
+Change Map to have const accessors
+Change Contient to have const accessors
+Change Country to have const accessors
+Change Game to have const accessors
+Integrate A3
+map IO has a tonne of garbage functions.  Wipe 'em out
+mapIO: split it so that map carries all the requisite data, and map IO just does the IO-ing and doesn't have to be persistant.
+The entire way map interacts with mapIO is extremely awkward.  Rework it
+Apparently fortify goes badly if there's only 2 armies

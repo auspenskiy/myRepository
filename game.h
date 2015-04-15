@@ -48,6 +48,7 @@ private:
 	void handleCards(int playerNum);
 	void saveGame();
 	
+
 	bool justLoaded;
 	int bonusArmies;
 	int playerTurns;
@@ -55,6 +56,7 @@ private:
 	Observer * mapView;
 	Dice * dice;
 	Map * map;
+	std::string fileName;
 	std::string * playerNames;
 	int numOfPlayers;
 	int totalBattles;

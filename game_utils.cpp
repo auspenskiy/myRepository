@@ -31,7 +31,7 @@ bool fileExists(std::string fileName){
   return fileExists;
 }
 
-//converts integers to string values
+//function to convert integer to string - used in conjunction with View
 std::string intToString(int i){
   int temp = i;
   int digit = 0;
@@ -47,8 +47,8 @@ std::string intToString(int i){
   
   if (i < 0){
    length++; 
-   temp = -1 * i;
-  }else{
+   temp = -1 * i;}
+  else{
     temp = i;
     counter --;
   }
@@ -73,7 +73,6 @@ std::string intToString(int i){
   delete [] toString;
       
   return returnString;
-
 }
 
 //Creates player objects based on the string used to save them in save files
@@ -93,7 +92,5 @@ Player * tinyFactory(std::string playerType, std::string newName, int newPlayerI
       return new PlayerRandom(newName, newPlayerIndex);
   }
   
-  return new PlayerHuman(newName, newPlayerIndex);
-  
-  
+  return new PlayerHuman(newName, newPlayerIndex);  
 }

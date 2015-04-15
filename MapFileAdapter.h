@@ -1,8 +1,10 @@
+#pragma once
 #include "MapFile.h"
 #include "MapConfig.h"
+#include "Game.h"
 
 
-#pragma once
+
 class MapFileAdapter : public MapConfig
 {
 private:

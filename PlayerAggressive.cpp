@@ -5,11 +5,7 @@ PlayerAggressive::PlayerAggressive(std::string newPlayerName, int newPlayerIndex
   defendingCountry = "";
 }
 
-/*
- *      View::inform("1 - Attack");
- *      View::inform("2 - Fortify");
- *      View::inform("0 - End turn");
- */
+
 int PlayerAggressive::chooseAction(Map * gameMap){
 	//for all countries
   for(int x = 0; x < gameMap->getCountryCount() ; x++){

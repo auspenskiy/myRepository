@@ -29,6 +29,7 @@ int PlayerRandom::chooseAction(Map * gameMap){
   return rand() % 2;
 }
 
+//chooseCountryToReinforce calls chooseAttackingCountry since the function returns a friendly country
 std::string PlayerRandom::chooseCountryToReinforce( Map * gameMap,  int maxNumOfReinforcements){
   return chooseAttackingCountry(gameMap);
 }
@@ -47,7 +48,9 @@ std::string PlayerRandom::chooseAttackingCountry( Map * gameMap) {
       if (gameMap->getCountries()[attackingCountryIndex]->getAllNeighbours()[x]->getOwnerIndex() != this->getPlayerIndex()){
 		hasEnemyCountries = true;
       }
+
     }
+	
   } while (!hasEnemyCountries);
   
   return gameMap->getCountries()[attackingCountryIndex]->getName();
