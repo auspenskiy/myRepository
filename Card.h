@@ -1,6 +1,10 @@
 #pragma once
 #include <string>
 
+/*
+Class Card: 
+	A collection of the number a single type of card held by a player
+*/
 class Card
 {
 public:

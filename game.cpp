@@ -6,7 +6,8 @@
 #include "GameBuilderDirector.h"
 #include "GameBuildSave.h"
 
-Game::Game(int newNumOfPlayers, Player ** playaArray, Map * newMap, int newPlayerTurns, int newPlayerIndex, int newBonusArmies, bool newJustLoaded){
+//Main constructor for the game class
+Game::Game(int newNumOfPlayers, Player ** playaArray, Map * newMap, int newPlayerTurns, int newPlayerIndex, int newBonusArmies, bool newJustLoaded, int numOfExchangeArmies){
 	numOfPlayers = newNumOfPlayers;
 	playerTurns = newPlayerTurns;
 	playerIndex = newPlayerIndex;
@@ -14,6 +15,7 @@ Game::Game(int newNumOfPlayers, Player ** playaArray, Map * newMap, int newPlaye
 	justLoaded = newJustLoaded;
 	
 	playerArray = playaArray;
+	playerArray[0]->setNumOfArmiesExchange(numOfExchangeArmies);
 	
 	totalBattles = 0;
 	playersAlive = 0;
@@ -34,7 +36,6 @@ Game::Game(int newNumOfPlayers, Player ** playaArray, Map * newMap, int newPlaye
 
 }
 
-
 Game::~Game(){
 	delete map;
 	delete mapView;
@@ -43,6 +44,7 @@ Game::~Game(){
 	delete[] playerArray;
 }
 
+//main loop of the game
 int Game::play(){
 	int choice;
 	bool turnIsOver = false;
@@ -129,7 +131,7 @@ int Game::play(){
 	return 0;
 }
 
-
+//returns number of players alive.  Helper function for determining if the game is over
 int Game::countPlayersAlive(){
 	int alive = 0;
 	for (int x = 0; x < numOfPlayers; x++){
@@ -140,6 +142,7 @@ int Game::countPlayersAlive(){
 	return alive;
 }
 
+//returns a player if that player is the only one left alive
 Player* Game::findWinner(){
 	Player *p = NULL;
 	for (int x = 0; x < numOfPlayers; x++){
@@ -150,6 +153,7 @@ Player* Game::findWinner(){
 	return p;
 }
 
+//Executes all the game logic for the fortification/move process
 void Game::fortify(int playerIndex){  
   std::string sourceCountry;
   std::string destinationCountry;
@@ -176,197 +180,58 @@ void Game::fortify(int playerIndex){
   }
 }
 
+//executes all the game logic for converting cards into bonus armies
 int Game::getCardsExchange(int playerNum)
 {
-	int infantry = playerArray[playerNum]->getCards()[0]->getQuantity();
-	int cavalry = playerArray[playerNum]->getCards()[1]->getQuantity();
-	int artillery = playerArray[playerNum]->getCards()[2]->getQuantity();
+	bool doExchange = false;
+	int armiesAdded = 0;	
 
-	int armiesAdded = 0;
+	do{
+		int infantry = playerArray[playerNum]->getCards()[0]->getQuantity();
+		int cavalry = playerArray[playerNum]->getCards()[1]->getQuantity();
+		int artillery = playerArray[playerNum]->getCards()[2]->getQuantity();
+		
 
-	std::cout << "You have " << infantry << " infantry cards, " << cavalry << " cavalry cards, and " << artillery << " artillery cards" << std::endl;
+		std::cout << "You have " << infantry << " infantry cards, " << cavalry << " cavalry cards, and " << artillery << " artillery cards" << std::endl;
+		if (playerArray[playerNum]->canExchangeCards()){
+			
+		
 
-	if (playerArray[playerNum]->canExchangeCards())
-	{
-		std::cout << "You can exchange 3 cards of the same type or three cards of all different types for armies. " << std::endl;
-		armiesAdded = exchangeCards(getExchangeChoices(playerNum), playerNum);
+			if (infantry + cavalry+artillery >= 5){
+				doExchange = true;
+				View::inform("You have " + intToString(infantry + cavalry+artillery) + " cards and must trade in 3.");
+			}else{
+				doExchange = playerArray[playerNum]->chooseExchangeCards(getMap());
+			}
+
+			if (doExchange){
+				if (infantry > 0 && cavalry > 0 && artillery > 0){
+					playerArray[playerNum]->getCards()[0]->decrementQuantity(1);
+					playerArray[playerNum]->getCards()[1]->decrementQuantity(1);
+					playerArray[playerNum]->getCards()[2]->decrementQuantity(1);
+				}else if (infantry > 2){
+					playerArray[playerNum]->getCards()[0]->decrementQuantity(3);
+
+				}else if (cavalry > 2){
+					playerArray[playerNum]->getCards()[1]->decrementQuantity(3);
+
+				}else if (artillery > 2){
+					playerArray[playerNum]->getCards()[2]->decrementQuantity(3);
+
+				}
+				std::cout << "You now have " << playerArray[playerNum]->getCards()[0]->getQuantity() << " infantry cards, " << playerArray[playerNum]->getCards()[1]->getQuantity() << " cavalry cards, and " << playerArray[playerNum]->getCards()[2]->getQuantity() << " artillery cards" << std::endl;
+				armiesAdded += playerArray[playerNum]->getNumOfArmiesExchange();
+				playerArray[playerNum]->setNumOfArmiesExchange(playerArray[playerNum]->getNumOfArmiesExchange() + 5);
+			}
+		}
+	}while(doExchange && playerArray[playerNum]->canExchangeCards());
+	if (armiesAdded > 0){
+		View::inform(playerArray[playerNum]->getName() + " has exchanged cards for " + intToString(armiesAdded) + " bonus armies.");
 	}
-	else
-	{
-		std::cout << "You are not eligible to exchange cards for armies. " << std::endl;
-	}
-
 	return armiesAdded;
 }
 
-int Game::exchangeCards(int* choices, int playerNum)
-{
-	static int numOfArmiesExchange = 5;//local static incremented by 5 every time the function is called by any player - the requirement to update the value is met; be careful if change it
-	int localNumOfArmiesExchanged = numOfArmiesExchange;
-	for (int i = 0; i < 3; i++)
-	{
-		playerArray[playerNum]->getCards()[i]->decrementQuantity(choices[i]);
-	}
-	numOfArmiesExchange += 5;
-	return localNumOfArmiesExchanged;
-}
-
-int* Game::getExchangeChoices(int playerNum)
-{
-	int* choices = new int[3];
-	std::fill(choices, choices + 3, 0);
-
-	std::cout << "You need to choose 3 cards of the same type or three cards of all different types to exchange for armies. " << std::endl;
-
-	if (playerArray[playerNum]->getTotalCards() >= 5)
-	{
-		std::cout << "You have more than 5 cards. You must exchange three of them for armies. " << std::endl;
-		int sumOfChoices = choices[0] + choices[1] + choices[2];
-		do
-		{
-			//check if a player will exchange all cards of the same type
-			for (int i = 0; i < 3; i++)
-			{
-				if (playerArray[playerNum]->getCards()[i]->getQuantity() > 3)
-				{
-					std::cout << "You have more than 3 cards of " << playerArray[playerNum]->getCards()[i]->getType(i) << ". Would you like to exchange all of them for armies ? (y / n)" << std::endl;
-					char decision = 'n';
-					do
-					{
-						if (decision != 'n' && decision != 'y')
-						{
-							std::cout << "Your choice is invalid. Please choose y or n " << std::endl;
-						}
-						std::cin >> decision;
-					} while (decision != 'n' && decision != 'y');
-
-					if (decision == 'y')
-					{
-						choices[i] = 3;
-						return choices;
-					}
-					else
-					{
-						continue;
-					}
-				}
-			}
-
-			for (int i = 0; i < 3; i++)
-			{
-				if (playerArray[playerNum]->getCards()[i]->getQuantity() > 0)
-				{
-					char choice;
-					std::cout << "You have " << playerArray[playerNum]->getCards()[i]->getQuantity() << " of " << playerArray[playerNum]->getCards()[i]->getType(i) << ". Would you like to use " << playerArray[playerNum]->getCards()[i]->getType(i) << " cards for exchange (y/n): ";
-					std::cin >> choice;
-					do
-					{
-						if (choice != 'y' && choice != 'n')
-						{
-							std::cout << "Your choice is invalid. Please choose y or n " << std::endl;
-						}
-
-					} while (choice != 'y' && choice != 'n');
-
-					if (choice == 'y')
-					{
-						int numChoice = 1;
-						do
-						{
-							if (numChoice < 0 && numChoice > playerArray[playerNum]->getCards()[i]->getQuantity())
-							{
-								std::cout << "Your choice is invalid " << std::endl;
-							}
-							std::cout << "How many " << playerArray[playerNum]->getCards()[i]->getType(i) << " cards would you like to exchange? Enter the number between 1 and " << playerArray[playerNum]->getCards()[i]->getQuantity() << std::endl;
-							std::cin >> numChoice;
-						} while (numChoice < 1 && numChoice > playerArray[playerNum]->getCards()[i]->getQuantity());
-
-						choices[i] = numChoice;
-					}
-					else
-					{
-						continue;
-					}
-				}
-			}
-			sumOfChoices = choices[0] + choices[1] + choices[2];
-
-			if (sumOfChoices > 3)
-			{
-				return choices;
-			}
-
-		} while (sumOfChoices < 3);
-	}
-	//check if a player will exchange all cards of the same type
-	for (int i = 0; i < 3; i++)
-	{
-		if (playerArray[playerNum]->getCards()[i]->getQuantity() > 3)
-		{
-			std::cout << "You have more than 3 cards of " << playerArray[playerNum]->getCards()[i]->getType(i) << ". Would you like to exchange all of them for armies ? (y / n)" << std::endl;
-			char decision = 'n';
-			do
-			{
-				if (decision != 'n' && decision != 'y')
-				{
-					std::cout << "Your choice is invalid. Please choose y or n " << std::endl;
-				}
-				std::cin >> decision;
-			} while (decision != 'n' && decision != 'y');
-
-			if (decision == 'y')
-			{
-				choices[i] = 3;
-				return choices;
-			}
-			else
-			{
-				continue;
-			}
-		}
-	}
-
-	for (int i = 0; i < 3; i++)
-	{
-		if (playerArray[playerNum]->getCards()[i]->getQuantity() > 0)
-		{
-			char choice;
-			std::cout << "You have " << playerArray[playerNum]->getCards()[i]->getQuantity() << " of " << playerArray[playerNum]->getCards()[i]->getType(i) << ". Would you like to use " << playerArray[playerNum]->getCards()[i]->getType(i) << " cards for exchange (y/n): ";
-			std::cin >> choice;
-			do
-			{
-				if (choice != 'y' && choice != 'n')
-				{
-					std::cout << "Your choice is invalid. Please choose y or n " << std::endl;
-				}
-
-			} while (choice != 'y' && choice != 'n');
-
-			if (choice == 'y')
-			{
-				int numChoice = 1;
-				do
-				{
-					if (numChoice < 0 && numChoice > playerArray[playerNum]->getCards()[i]->getQuantity())
-					{
-						std::cout << "Your choice is invalid " << std::endl;
-					}
-					std::cout << "How many " << playerArray[playerNum]->getCards()[i]->getType(i) << " cards would you like to exchange? Enter the number between 1 and " << playerArray[playerNum]->getCards()[i]->getQuantity() << std::endl;
-					std::cin >> numChoice;
-				} while (numChoice < 1 && numChoice > playerArray[playerNum]->getCards()[i]->getQuantity());
-
-				choices[i] = numChoice;
-			}
-			else
-			{
-				continue;
-			}
-		}
-	}
-
-	return choices;
-}
-
+//executes all the game logic for calculating and deploying bonus "reinforcement" armies at the start of the turn
 void Game::reinforce(int playerNum){
   int numToReinforce = 0;
   std::string countryToReinforce;
@@ -395,13 +260,13 @@ void Game::reinforce(int playerNum){
       //put the number of armies specified in the country specifeid and decrement the number of bonus armies
       map->setCountryArmies(countryToReinforce, map->getCountryArmies(countryToReinforce) + numToReinforce);
       bonusArmies -= numToReinforce;
-      View::inform(currentPlayer->getName() + " reinforced " + countryToReinforce + " with " + intToString(numToReinforce) + " armies and now has " + intToString(map->getCountryArmies(countryToReinforce)) + " armies.");
+      View::inform(currentPlayer->getName() + " reinforced " + countryToReinforce + " with " + intToString(numToReinforce) + " armies which now has " + intToString(map->getCountryArmies(countryToReinforce)) + " armies.");
     }
   }
 }
 
 //Pre: attackingCountry and defendingCountry are validly selected countries to do battle.
-//DO BATTLE**************************************************************
+//battle calculates all the game logic behind the attack of one country against another
 void Game::battle(std::string attackingCountry, std::string defendingCountry)
 {
 	// Boolean variable which will verify whether the attacker wants to keep attacking, it's gonna be used at very end of the while loop
@@ -527,6 +392,8 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 
 				//change the owner of the country
 				map->setCountryOwnerIndex(defendingCountry, map->getCountryOwnerIndex(attackingCountry), false);
+
+				playerArray[attackingPlayerIndex]->setHasConquered(true);
 				
 				//transfer cards and update death status and country counts if required 
 				if (map->countCountriesOwned(defendingPlayerIndex) < 1)
@@ -589,7 +456,7 @@ void Game::battle(std::string attackingCountry, std::string defendingCountry)
 }//END battle function
 
 
-
+//returns a player based on their index in the player array
 Player* Game::findPlayerByIndex(int i){
 	Player* _player = NULL;
 	for (int x = 0; x < numOfPlayers; x++){
@@ -601,6 +468,7 @@ Player* Game::findPlayerByIndex(int i){
 	return _player;
 }
 
+//displays in-game statistics for all the players
 void Game::displayStatistics(){
 	for (int x = 0; x < numOfPlayers; x++){
 		//various numbers used to calculate the percentages
@@ -645,14 +513,18 @@ void Game::displayStatistics(){
 	}
 	View::inform("--------------------------------------");
 }
+
+//determines if a player should be awarded cards for the current turn
 void Game::handleCards(int playerNum)
 {
 	if (playerArray[playerNum]->getHasConquered())
 	{
 		playerArray[playerNum]->addCard();
+		playerArray[playerNum]->setHasConquered(false);
 	}
 }
 
+//Starts the process for mid-game saving before handing it off to the appropriate builder class
 void Game::saveGame(){
   GameBuilderDirector gbd;
   int inInt;

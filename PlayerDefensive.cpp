@@ -95,3 +95,7 @@ std::string PlayerDefensive::chooseDestinationFortificationCountry( Map * gameMa
 int PlayerDefensive::chooseNumberOfFortificationArmies( Map * gameMap){
   return 1;
 }
+
+bool PlayerDefensive::chooseExchangeCards(Map * gameMap){
+	return false;
+}

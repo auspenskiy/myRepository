@@ -26,6 +26,8 @@ Player::Player(std::string aName, int newPlayerIndex)
 	{
 		cards[i] = new Card(0,i);
 	}
+
+	srand(static_cast<unsigned int>(time(0))); // This will ensure a really randomized number by help of time.
 }
 
 
@@ -124,7 +126,6 @@ void Player::addCard()
 	if (hasConquered)
 	{
 		int xRan;
-		srand(static_cast<unsigned int>(time(0))); // This will ensure a really randomized number by help of time.
 		xRan = rand() % 3;
 		cards[xRan]->incrementQuantity();
 		hasConquered = false;
@@ -170,3 +171,9 @@ void Player::incrementArmies(int incrementValue)
 {
 	numCountriesOwned += incrementValue;
 }
+
+int Player::getNumOfArmiesExchange(){return numOfArmiesExchange;}
+
+void Player::setNumOfArmiesExchange(int newNumOfArmiesExchange){numOfArmiesExchange = newNumOfArmiesExchange;}
+
+int Player::numOfArmiesExchange = 5; //local static incremented by 5 every time the function is called by any player - the requirement to update the value is met; be careful if change it

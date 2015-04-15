@@ -5,6 +5,10 @@
 
 class Continent; //forward declaration needed due to circular dependancy between Continent and Country;
 
+/*
+Class Contient: A collection of te data related to a country in the map
+	Considered part of the model
+*/
 class Country{
 public:
   Country(std::string cName, Continent & setContinent, int newX, int newY);

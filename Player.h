@@ -11,11 +11,17 @@
 
 class Map;
 
+/*
+Class Player: Virtual class that sets the parent class in the player stategy pattern.
+	Holds all info relating to players and the virtual functions for all their behaviours
+*/
 class Player{
 public:
 	Player();
 	Player(std::string aName, int newPlayerIndex);
 	~Player();
+
+//VIRTUAL FUNCTIONS USED IN STRATEGY PATTERN-----------------------------------------------------
 	
 	//functions to simulate AI behavior
 	virtual int chooseAction(Map * gameMap)=0;
@@ -31,7 +37,9 @@ public:
 	virtual std::string chooseDefendingCountry(Map * gameMap)=0;
 	virtual bool chooseContinueAttack(Map * gameMap)=0;
 	virtual int chooseNumberOfConsolidationArmies(Map * gameMap, int minConsolidationArmies, int maxConsolidationArmies)=0;
+	virtual bool chooseExchangeCards(Map * gameMap)=0;
 	
+//COMMON PLAYER FUNCTIONS-----------------------------------------------------
 	//ACCESSORS
 	void setName(std::string);
 	std::string getName();
@@ -62,8 +70,9 @@ public:
 	void processCardExchange();
 	void transferCards(Player * player);
 	bool canExchangeCards();
-	
-	
+	static int getNumOfArmiesExchange();
+	static void setNumOfArmiesExchange(int newNumOfArmiesExchange);
+
 private:
 	bool isAlive;
 	int battlesWon;
@@ -74,4 +83,7 @@ private:
 	std::string name;	
 	Card** cards;
 	bool hasConquered;
+	static int numOfArmiesExchange;
+
+
 };

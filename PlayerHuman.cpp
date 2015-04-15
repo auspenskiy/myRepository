@@ -207,3 +207,15 @@
     
     //update the two countries army counts
   }
+
+
+
+bool PlayerHuman::chooseExchangeCards(Map * gameMap){
+	View::prompt("Would you like to trade in cards? (y/n)");
+	
+	if(View::getString().compare("y") ==0){
+		return true;
+	}
+	return false;
+
+}

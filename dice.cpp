@@ -1,5 +1,7 @@
 #include "dice.h"
 
+
+//simulates a roll of the dice required for the attack phase.
 void Dice::roll_dice(int attackingArmies, int defendingArmies)
 {		
 	int replace;

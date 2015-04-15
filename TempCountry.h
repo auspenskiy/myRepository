@@ -4,7 +4,9 @@
 #include <list>
 using namespace std;
 
-
+/*
+Class TempCountry: A class used for temporary storage in the loading and saving process of country objects
+*/
 class TempCountry
 {
 public:

@@ -6,6 +6,7 @@ GameBuildSave::GameBuildSave(int saveSlotNum, Game * newGameToSave){
   gameSaveSlotNum = saveSlotNum;
 }
 
+//builds the game map
 void GameBuildSave::buildMap(){
 	MapFileAdapter* mapSave = new MapFileAdapter();
   
@@ -19,6 +20,7 @@ void GameBuildSave::buildMap(){
   outStream.close();
 }
 
+//builds the game's player array
 void GameBuildSave::buildPlayers(){
   outStream.open (("save" +intToString(gameSaveSlotNum) + ".psv").c_str());
   
@@ -44,16 +46,16 @@ void GameBuildSave::buildPlayers(){
   
 }
 
+//builds the game object and its specific instance varibles
 void GameBuildSave::buildGameState(){
   outStream.open (("save" +intToString(gameSaveSlotNum) + ".gsv").c_str());
     outStream << gameToSave->getPlayerTurns() << std::endl;
     outStream << gameToSave->getPlayerIndex() << std::endl;
     outStream << gameToSave->getBonusArmies() << std::endl;
+	outStream << gameToSave->getPlayerArray()[0]->getNumOfArmiesExchange() << std::endl;
   outStream.close();
 }
 
 Game * GameBuildSave::getResult(){  
-  //need new constructor for mid-game initialization
   return NULL;
-  
 }

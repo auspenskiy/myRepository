@@ -19,8 +19,10 @@ int main(){
   GameBuilder * gb;
   Game * game;
 
+  View::inform("Welcome to Textual Conquest\n");
+
   while (inString.compare("n") != 0 && inString.compare("l") != 0){
-    View::inform("Please select:\n n - start a new game\n l - load an existing game");
+    std::cout << "What would you like to do today?:\n n - start a new game\n l - load an existing game" << std::endl;
     inString = View::getString();
   }
   

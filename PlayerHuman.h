@@ -7,6 +7,10 @@
 
 class Map;
 
+/*
+Class PlayerHuman: Implementation of Player Strategy Pattern
+	Prompts for and gathers all appropriate inputs from the human players throughout the game
+*/
 class PlayerHuman: public Player{
 public:
   PlayerHuman(std::string newPlayerName, int newPlayerIndex);
@@ -24,6 +28,8 @@ public:
   std::string chooseDefendingCountry( Map * gameMap);
   bool chooseContinueAttack( Map * gameMap);
   int chooseNumberOfConsolidationArmies(Map * gameMap, int minConsolidationArmies, int maxConsolidationArmies);
+
+  bool chooseExchangeCards(Map * gameMap);
  
 private:
   std::list<std::string> enemyNeighbourList;

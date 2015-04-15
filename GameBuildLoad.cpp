@@ -114,9 +114,13 @@ void GameBuildLoad::buildGameState(){
     inStream.get();
     bonusArmies = inInt;
 
+	inStream >> inInt;
+    inStream.get();
+    numOfArmiesExchange = inInt;
+
   inStream.close();
 }
 
 Game * GameBuildLoad::getResult(){  
-  return new Game(numOfPlayers, playerArray, newMap, playerTurns, playerIndex, bonusArmies, true);
+  return new Game(numOfPlayers, playerArray, newMap, playerTurns, playerIndex, bonusArmies, true, numOfArmiesExchange);
 }

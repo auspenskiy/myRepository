@@ -1,6 +1,10 @@
 #pragma once
 #include "Player.h"
 
+/*
+Class PlayerRandom: Implementation of Player Strategy Pattern
+	A computer opponent who leaves all his decisions to random varibles.
+*/
 class PlayerRandom : public Player{
 public:
   PlayerRandom(std::string newPlayerName, int newPlayerIndex);
@@ -18,6 +22,8 @@ public:
   std::string chooseDefendingCountry( Map * gameMap);
   bool chooseContinueAttack( Map * gameMap);
   int chooseNumberOfConsolidationArmies(Map * gameMap, int minConsolidationArmies, int maxConsolidationArmies);
+
+  bool chooseExchangeCards(Map * gameMap);
  
 private:
   int getRandomFriendlyCountryIndex(Country const* const* countryArray, int arraySize);

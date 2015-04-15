@@ -8,6 +8,9 @@
 class Map;
 class Player;
 
+/*
+Class View: A collection of static methods used to interact with the user via the terminal
+*/
 class View{
 public:
   static std::string getString();

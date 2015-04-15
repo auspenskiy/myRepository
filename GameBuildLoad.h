@@ -5,7 +5,9 @@
 #include "GameBuilder.h"
 #include "game.h"
 
-
+/*
+Class GameBuildLoad: implementation of the build pattern used to load games from file
+*/
 class GameBuildLoad: public GameBuilder{
 public:
   GameBuildLoad(int saveSlotNum);
@@ -24,6 +26,7 @@ private:
   Player ** playerArray;
   int numOfPlayers;
   Map * newMap;
+  int numOfArmiesExchange;
   
   std::ifstream inStream;
 

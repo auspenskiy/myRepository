@@ -3,7 +3,9 @@
 #include "GameBuilder.h"
 
 
-
+/*
+Class GameBuildLoad: implementation of the build pattern used to create new games
+*/
 class GameBuildNew: public GameBuilder{
 public:
   GameBuildNew();
