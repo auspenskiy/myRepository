@@ -6,6 +6,10 @@
 
 class Map; //forward declaration
 
+/*
+Class TextView: Implementation of Map Observer Pattern
+	Used to observe and output updates of the map class
+*/
 class TextView : public Observer{
 public:
   inline TextView(){};

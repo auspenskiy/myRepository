@@ -92,3 +92,6 @@ int PlayerAggressive::chooseNumberOfFortificationArmies( Map * gameMap){
   return 0;
 }
 
+bool PlayerAggressive::chooseExchangeCards(Map * gameMap){
+	return true;
+}

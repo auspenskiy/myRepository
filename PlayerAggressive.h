@@ -1,6 +1,10 @@
 #pragma once
 #include "Player.h"
 
+/*
+Class PlayerAggressive: Implementation of Player Strategy Pattern
+	A computer opponent who attack as much as possible
+*/
 class PlayerAggressive : public Player
 {
 public:
@@ -19,6 +23,8 @@ public:
   std::string chooseDefendingCountry( Map * gameMap);
   bool chooseContinueAttack( Map * gameMap);
   int chooseNumberOfConsolidationArmies(Map * gameMap, int minConsolidationArmies, int maxConsolidationArmies);
+
+  bool chooseExchangeCards(Map * gameMap);
  
 private:
   std::string attackingCountry;

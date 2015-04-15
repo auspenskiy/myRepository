@@ -74,3 +74,7 @@ std::string PlayerRandom::chooseDestinationFortificationCountry( Map * gameMap, 
 int PlayerRandom::chooseNumberOfFortificationArmies( Map * gameMap){
   return 1;
 }
+
+bool PlayerRandom::chooseExchangeCards(Map * gameMap){
+	return ((int)rand % 2) == 1;
+}

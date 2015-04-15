@@ -84,7 +84,8 @@ void Player::setBattlesLost(){
 int Player::getPlayerIndex(){
 	return playerIndex;
 }
-bool Player::canExchangeCards()
+
+ bool Player::canExchangeCards()
 {
 	int infantry = cards[0]->getQuantity();
 	int cavalry = cards[1]->getQuantity();
@@ -111,6 +112,7 @@ bool Player::canExchangeCards()
 	}
 	return false;
 }
+
 /*void Player::processCardExchange()
 {
 	int infantry = cards[0].getQuantity();
@@ -192,3 +194,9 @@ void Player::incrementArmies(int incrementValue)
 {
 	numCountriesOwned += incrementValue;
 }
+
+int Player::getNumOfArmiesExchange(){return numOfArmiesExchange;}
+
+void Player::setNumOfArmiesExchange(int newNumOfArmiesExchange){numOfArmiesExchange = newNumOfArmiesExchange;}
+
+int Player::numOfArmiesExchange = 5; //local static incremented by 5 every time the function is called by any player - the requirement to update the value is met; be careful if change it

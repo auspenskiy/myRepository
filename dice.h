@@ -2,6 +2,10 @@
 
 #include <time.h>
 #include <cstdlib>
+
+/*
+Class Dice: Class used to represent the dice rolled in the attack phase of the game
+*/
 class Dice
 {
 public:

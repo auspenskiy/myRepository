@@ -40,7 +40,6 @@ bool Country::isNeighbour(std::string countryName) {
 }
 
 //MUTATORS------------------------------------
-
 void Country::setOwnerIndex(int newOwnerIndex){ownerIndex = newOwnerIndex;}
 void Country::setArmies(int newArmies){armies = newArmies;}
 
@@ -57,6 +56,7 @@ void Country::addNeighbourLink(Country &newNeighbour){
   //std::cout << newNeighbour.getName() << " connected to " << this->getName() << std::endl;
 }
 
+//returns a string representation of the country.
 std::string Country::to_string() const{
   std::ostringstream oss;
   oss << name << " : player "  << ownerIndex <<" : " <<  armies << " armies" << " : Connected to " ;

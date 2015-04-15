@@ -10,12 +10,14 @@
 #include <cstring>
 
 //HELPER METHOD FOR FORTIFY
+//checks if a list of string contains a given string
 bool listContains(std::list<std::string> & lst, std::string str){
   std::list<std::string>::iterator findIter = std::find(lst.begin(), lst.end(), str);
   
   return findIter != lst.end() || findIter == lst.end() && lst.back().compare(str) == 0;
 }
 
+//returns true if a given file exists on the hard disk
 bool fileExists(std::string fileName){
   std::ifstream inStream;
   bool fileExists = false;
@@ -29,6 +31,7 @@ bool fileExists(std::string fileName){
   return fileExists;
 }
 
+//converts integers to string values
 std::string intToString(int i){
   int temp = i;
   int digit = 0;
@@ -73,6 +76,7 @@ std::string intToString(int i){
 
 }
 
+//Creates player objects based on the string used to save them in save files
 Player * tinyFactory(std::string playerType, std::string newName, int newPlayerIndex){
   View::inform(playerType);
   

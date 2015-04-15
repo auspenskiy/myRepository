@@ -5,6 +5,10 @@
 #include <sstream>
 class Country; //forward declaration needed due to circular dependancy between Continent and Country;
 
+/*
+Class Contient: A collection of te data related to a continent in the map
+	Considered part of the model
+*/
 class Continent{
 public:
   Continent();

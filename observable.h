@@ -1,6 +1,9 @@
 #pragma once
 #include "observer.h"
 
+/*
+Class Observable: Abstract class used to implement the map observer pattern
+*/
 class Observable{
   
 public:

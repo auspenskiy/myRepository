@@ -12,8 +12,12 @@
 #include <sstream>
 #include <time.h>
 
-class Player;
+class Player; //forward declatation
 
+/*
+Class Map: Aggregation of continents, countries, and the methods used to manage them and their information
+	Considered the main component of the model.
+*/
 class Map: public Observable{
 public:
   Map(int numOfCountries, Country ** newCountries, int numOfContinents, Continent ** newContinents, 

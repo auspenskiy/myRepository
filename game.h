@@ -10,12 +10,16 @@
 #include <string>
 #include <cstdlib>
 
+/*
+Class Game: A collection of methods and attributes that implement the majority of the game logic
+	Considered primary component of the controller. 
+*/
 
 class Game{
 public:
 	//Game(int newNumOfPlayers, std::string * newPlayerNames);
 	Game(int newNumOfPlayers, Player ** playaArray, Map * newMap, int newPlayerTurns=0, 
-	     int newPlayerIndex=0, int newBonusArmies=0, bool newJustLoaded=false);
+	     int newPlayerIndex=0, int newBonusArmies=0, bool newJustLoaded=false, int numOfExchangeArmies = 5);
 	~Game();
 	int play();
 	Player * findPlayerByIndex(int i);	//function to find a player using index
